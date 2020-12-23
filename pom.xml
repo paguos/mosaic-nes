@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.paguos</groupId>
+    <artifactId>mosaic-nes-applications</artifactId>
+    <version>0.0.1</version>
+
+    <repositories>
+        <repository>
+            <id>repo.eclipse.org</id>
+            <name>MOSAIC Repository</name>
+            <url>https://repo.eclipse.org/content/repositories/mosaic</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <properties>
+        <mosaic.version>20.0</mosaic.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.mosaic</groupId>
+            <artifactId>mosaic-application</artifactId>
+            <version>${mosaic.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>stream.nebula</groupId>
+            <artifactId>nebulastream-java-client</artifactId>
+            <version>0.0.15-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+</project>
