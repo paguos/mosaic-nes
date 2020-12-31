@@ -1,0 +1,37 @@
+{
+    "simulation": {
+        "id": "ernst-reuter",
+        "duration": "320s",
+        "randomSeed": 268965854,
+        "projection": {
+            "centerCoordinates": {
+                "latitude": 52.5047675,
+                "longitude": 13.3156317
+            },
+            "cartesianOffset": {
+                "x": -384341.36,
+                "y": -5818097.61
+            }
+        },
+        "network": {
+            "netMask": "255.255.0.0",
+            "vehicleNet": "10.1.0.0",
+            "rsuNet": "10.2.0.0",
+            "tlNet": "10.3.0.0",
+            "csNet": "10.4.0.0",
+            "serverNet": "10.5.0.0",
+            "tmcNet": "10.6.0.0"
+        }
+    },
+    "federates": {
+        "application": true,
+        "environment": false,
+        "cell": false,
+        "ns3": false,
+        "omnetpp": false,
+        "output": true,
+        "sns": false,
+        "sumo": true,
+        "phabmacs": false
+    }
+}

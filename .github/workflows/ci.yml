@@ -10,7 +10,15 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Install SUMO
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --allow-unauthenticated software-properties-common
+          sudo add-apt-repository ppa:sumo/stable
+          sudo apt-get install -y sumo
       - name: Build NES Java Client
         run: gradle --project-dir libs/nebulastream-java-client install
       - name: Build MOSAIC NES Applications
         run: mvn clean install
+      - name: MOSAIC Integration Tests
+        run: mvn test -fae -P integration-tests
