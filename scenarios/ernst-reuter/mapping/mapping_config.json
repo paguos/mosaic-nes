@@ -1,0 +1,96 @@
+{
+    "prototypes": [
+      {
+        "name": "Car",
+        "length": 4.0,
+        "minGap": 2.5,
+        "maxSpeed": 70.0,
+        "vehicleClass": "Car",
+        "accel": 2.6,
+        "decel": 4.5,
+        "sigma": 0.5,
+        "tau": 1.0,
+        "speedFactor": 1.0,
+        "deviations": {
+          "length": 0.0,
+          "minGap": 0.0,
+          "maxSpeed": 0.0,
+          "speedFactor": 0.1,
+          "accel": 0.0,
+          "decel": 0.0,
+          "tau": 0.0
+        }
+      }
+    ],
+    "vehicles": [
+      {
+        "startingTime": 5.0,
+        "maxTime": 700.0,
+        "targetFlow": 1.0,
+        "maxNumberVehicles": 1,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0.0,
+        "departSpeedMode": "MAXIMUM",
+        "types": [
+          {
+            "name": "Car",
+            "weight": 1.0
+          }
+        ],
+        "deterministic": true,
+        "pos": 0,
+        "route": "4970"
+      },
+      {
+        "startingTime": 5.0,
+        "targetDensity": 360,
+        "maxNumberVehicles": 5,
+        "departSpeed": 0.0,
+        "types": [
+          {
+            "name": "Car"
+          }
+        ],
+        "pos": 0,
+        "route": "3640"
+      },
+      {
+        "startingTime": 5.0,
+        "maxTime": 700.0,
+        "targetFlow": 1.0,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 1,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0.0,
+        "departSpeedMode": "MAXIMUM",
+        "types": [
+          {
+            "name": "Car",
+            "weight": 1.0
+          }
+        ],
+        "deterministic": true,
+        "pos": 0,
+        "route": "12733"
+      },
+      {
+        "startingTime": 5.0,
+        "maxTime": 700.0,
+        "targetFlow": 1.0,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 1,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0.0,
+        "departSpeedMode": "MAXIMUM",
+        "types": [
+          {
+            "name": "Car",
+            "weight": 1.0
+          }
+        ],
+        "deterministic": true,
+        "pos": 0,
+        "route": "10096"
+      }
+    ]
+}
