@@ -38,6 +38,6 @@ public class ErnstReuterIT {
 
     @Test
     public void allVehiclesLoaded() throws Exception {
-        LogAssert.contains(simulationRule, "Traffic.log", ".*SumoAmbassador :  Inserted: 8.*");
+        LogAssert.contains(simulationRule, "Traffic.log", ".*SumoAmbassador - Process sumo :  Inserted: 8.*");
     }
 }
