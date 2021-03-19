@@ -49,7 +49,7 @@
                             <outputDirectory>${project.basedir}/target/test-classes</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/src/test/resources/etc</directory>
+                                    <directory>${project.basedir}/src/test/resources</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
@@ -75,7 +75,7 @@
     </repositories>
 
     <properties>
-        <mosaic.version>20.1-SNAPSHOT</mosaic.version>
+        <mosaic.version>21.0</mosaic.version>
     </properties>
 
     <dependencies>
