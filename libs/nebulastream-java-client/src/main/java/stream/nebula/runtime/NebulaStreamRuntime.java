@@ -69,7 +69,8 @@ public class NebulaStreamRuntime {
         }
     }
 
-    public String executeQuery(String queryString, String strategyName) throws IOException, RESTExecption {
+    public int executeQuery(String queryString, String strategyName) throws IOException, RESTExecption {
+        Integer queryId = null;
         // Check if config is not null
         assert config != null;
 
@@ -91,7 +92,9 @@ public class NebulaStreamRuntime {
         CloseableHttpResponse response = httpClient.execute(request);
 
         if (response.getStatusLine().getStatusCode() == 200) {
-            return EntityUtils.toString(response.getEntity());
+            String responseString = EntityUtils.toString(response.getEntity());
+            JSONObject responseJson = new JSONObject(responseString);
+            return responseJson.getInt("queryId");
         } else {
             throw new RESTExecption(response.getStatusLine().getStatusCode());
         }

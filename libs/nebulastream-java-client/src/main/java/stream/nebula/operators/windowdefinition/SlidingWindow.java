@@ -1,9 +1,9 @@
-package stream.nebula.operators.windowtype;
+package stream.nebula.operators.windowdefinition;
 
 import stream.nebula.operators.TimeCharacteristic;
 import stream.nebula.operators.TimeMeasure;
 
-public class SlidingWindow extends WindowType {
+public class SlidingWindow extends WindowDefinition {
     TimeCharacteristic timeCharacteristic;
     TimeMeasure size;
     TimeMeasure slide;

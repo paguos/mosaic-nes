@@ -3,7 +3,7 @@ package stream.nebula.queryinterface;
 import stream.nebula.exceptions.*;
 import stream.nebula.model.logicalstream.Field;
 import stream.nebula.operators.*;
-import stream.nebula.operators.windowtype.WindowType;
+import stream.nebula.operators.windowdefinition.WindowDefinition;
 import stream.nebula.model.logicalstream.LogicalStream;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class Query {
                         break;
                     }
                 }
-                // Throw filedNotFoundException if the fieldName is not in the list
+                // Throw fieldNotFoundException if the fieldName is not in the list
                 if (!(isFieldInTheLogicalStreamFieldList)) {
                     throw new FieldNotFoundException(predicate.getField(), this.logicalStream.getName());
                 }
@@ -124,7 +124,7 @@ public class Query {
                         break;
                     }
                 }
-                // Throw filedNotFoundException if the fieldName is not in the list
+                // Throw fieldNotFoundException if the fieldName is not in the list
                 if (!(isLeftFieldInTheLogicalStreamFieldList)) {
                     throw new FieldNotFoundException(map.getOperation().getLeftFieldName(), this.logicalStream.getName());
                 }
@@ -138,13 +138,12 @@ public class Query {
                         break;
                     }
                 }
-                // Throw filedNotFoundException if the fieldName is not in the list
+                // Throw fieldNotFoundException if the fieldName is not in the list
                 if (!(isRightFieldInTheLogicalStreamFieldList)) {
                     throw new FieldNotFoundException(map.getOperation().getRightFieldName(), this.logicalStream.getName());
                 }
             }
         }
-
 
         this.operators.add(new MapOperator(map));
         return this;
@@ -153,6 +152,16 @@ public class Query {
     public Query from(LogicalStream logicalStream) {
         this.operators.add(new From(logicalStream));
         this.logicalStream = logicalStream;
+        return this;
+    }
+
+    public Query unionWith(Query other) {
+        this.operators.add(new UnionWith(other));
+        return this;
+    }
+
+    public Query joinWith(Query other, String leftKey, String rightKey, WindowDefinition windowDefinition) {
+        this.operators.add(new JoinWithOperator(other, leftKey, rightKey, windowDefinition));
         return this;
     }
 
@@ -185,7 +194,60 @@ public class Query {
         return this;
     }
 
-    public Query window(WindowType windowDefinition, Aggregation aggregation) throws FieldNotFoundException, InvalidAggregationFieldException {
+    public Query window(WindowDefinition windowDefinition, Aggregation aggregation) throws FieldNotFoundException, InvalidAggregationFieldException {
+        // If aggregationFieldName not provided, set the fieldName using aggregationFieldIndex, otherwise (i.e. fieldName provided) set
+        // aggregationFieldIndex using fieldName
+        if (aggregation.getAggregationFieldName() == null) {
+            // Check if index in the bound
+            boolean isAggregationFieldInLogicalStreamListBound = (aggregation.getAggregationFieldIndex() >= 0)
+                    && (aggregation.getAggregationFieldIndex() < this.logicalStream.getFieldList().size());
+            if (isAggregationFieldInLogicalStreamListBound) {
+                aggregation.setAggregationFieldName(this.logicalStream.getFieldList().get(aggregation.getAggregationFieldIndex()).getName());
+            } else {
+                throw new FieldIndexOutOfBoundException(aggregation.getAggregationFieldIndex(),
+                        logicalStream.getName(), this.logicalStream.getFieldList().size());
+            }
+        } else {
+            // Check if aggregationFieldName is in the LogicalStream's fieldList
+            boolean isFieldInTheLogicalStreamFieldList = false;
+            for (int i = 0; i < this.logicalStream.getFieldList().size(); i++) {
+                if (this.logicalStream.getFieldList().get(i).getName().equals(aggregation.getAggregationFieldName())) {
+                    isFieldInTheLogicalStreamFieldList = true;
+                    aggregation.setAggregationFieldIndex(i);
+                    break;
+                }
+            }
+            // Throw fieldNotFoundException if the aggregationFieldName is not in the list
+            if (!(isFieldInTheLogicalStreamFieldList)) {
+                throw new FieldNotFoundException(aggregation.getAggregationFieldName(), this.logicalStream.getName());
+            }
+        }
+
+        // Perform type Checking
+        Field aggregationField = this.logicalStream.getFieldList().get(aggregation.getAggregationFieldIndex());
+        // check if aggregated field has type of subclass of Number
+        if (Number.class.isAssignableFrom(aggregationField.getJavaDataType())) {
+            // set the aggregation field
+            this.operators.add(new WindowOperator( windowDefinition, aggregation));
+            return this;
+        } else {
+            throw new InvalidAggregationFieldException(aggregationField.getType(), aggregationField.getJavaDataType().getSimpleName());
+        }
+    }
+
+    public Query windowByKey(String fieldName, WindowDefinition windowDefinition, Aggregation aggregation) throws FieldNotFoundException, InvalidAggregationFieldException {
+        // Check if key is in the LogicalStream's fieldList
+        boolean iskeyInTheLogicalStreamFieldList = false;
+        for (int i = 0; i < this.logicalStream.getFieldList().size(); i++) {
+            if (this.logicalStream.getFieldList().get(i).getName().equals(fieldName)) {
+                iskeyInTheLogicalStreamFieldList = true;
+                break;
+            }
+        }
+        // Throw fieldNotFoundException if the aggregationFieldName is not in the list
+        if (!(iskeyInTheLogicalStreamFieldList)) {
+            throw new FieldNotFoundException(fieldName, this.logicalStream.getName());
+        }
 
         // If aggregationFieldName not provided, set the fieldName using aggregationFieldIndex, otherwise (i.e. fieldName provided) set
         // aggregationFieldIndex using fieldName
@@ -209,25 +271,22 @@ public class Query {
                     break;
                 }
             }
-            // Throw filedNotFoundException if the aggregationFieldName is not in the list
+            // Throw fieldNotFoundException if the aggregationFieldName is not in the list
             if (!(isFieldInTheLogicalStreamFieldList)) {
                 throw new FieldNotFoundException(aggregation.getAggregationFieldName(), this.logicalStream.getName());
             }
         }
 
-
         // Perform type Checking
         Field aggregationField = this.logicalStream.getFieldList().get(aggregation.getAggregationFieldIndex());
-        // check if aggregated filed has type of subclass of Number
+        // check if aggregated field has type of subclass of Number
         if (Number.class.isAssignableFrom(aggregationField.getJavaDataType())) {
             // set the aggregation field
-            this.operators.add(new WindowOperator(windowDefinition, aggregation));
+            this.operators.add(new WindowByKeyOperator(fieldName, windowDefinition, aggregation));
             return this;
         } else {
             throw new InvalidAggregationFieldException(aggregationField.getType(), aggregationField.getJavaDataType().getSimpleName());
         }
-
-
     }
 
     public String generateCppCode() {
@@ -240,6 +299,4 @@ public class Query {
         cppCode.append(";");
         return cppCode.toString();
     }
-
-
 }

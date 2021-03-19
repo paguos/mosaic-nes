@@ -1,18 +1,18 @@
 package stream.nebula.operators;
 
-import stream.nebula.operators.windowtype.WindowType;
+import stream.nebula.operators.windowdefinition.WindowDefinition;
 
 public class WindowOperator extends Operator {
 
-    WindowType windowType;
+    WindowDefinition windowDefinition;
     Aggregation aggregation;
-    public WindowOperator(WindowType windowType, Aggregation aggregation) {
-        this.windowType = windowType;
+    public WindowOperator(WindowDefinition windowDefinition, Aggregation aggregation) {
+        this.windowDefinition = windowDefinition;
         this.aggregation = aggregation;
     }
 
     @Override
     public String getCppCode() {
-        return ".window("+windowType.toString()+", "+aggregation.toString()+")";
+        return ".window("+ windowDefinition.toString()+", "+aggregation.toString()+")";
     }
 }

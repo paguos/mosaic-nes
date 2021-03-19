@@ -26,7 +26,7 @@ import java.util.List;
  * to see the query-id returned by the NES system.
  **/
 
-public class QueryQueryExample {
+public class QueryExample {
     public static void main(String[] args) throws Exception {
 
         // Configure network connection to NES REST server
@@ -50,7 +50,7 @@ public class QueryQueryExample {
         System.out.println(query.generateCppCode());
 
         // Execute the query to NES system. Additionally print the response to get the query-id.
-        String response = ner.executeQuery(query.generateCppCode(), "BottomUp");
+        int response = ner.executeQuery(query.generateCppCode(), "BottomUp");
         System.out.println("RESPONSE:\n"+response);
     }
 }
