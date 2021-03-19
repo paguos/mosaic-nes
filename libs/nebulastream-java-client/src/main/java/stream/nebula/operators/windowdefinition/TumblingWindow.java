@@ -1,9 +1,9 @@
-package stream.nebula.operators.windowtype;
+package stream.nebula.operators.windowdefinition;
 
 import stream.nebula.operators.TimeCharacteristic;
 import stream.nebula.operators.TimeMeasure;
 
-public class TumblingWindow extends WindowType {
+public class TumblingWindow extends WindowDefinition {
     TimeCharacteristic timeCharacteristic;
     TimeMeasure size;
     private TumblingWindow(TimeCharacteristic timeCharacteristic, TimeMeasure size){

@@ -24,7 +24,7 @@ public class Aggregation {
     }
 
     public String toString(){
-        return this.aggregationFunction+"(Attribute(\""+this.aggregationFieldName +"\")";
+        return this.aggregationFunction+"(Attribute(\""+this.aggregationFieldName +"\"))";
     }
 
     public String getAggregationFieldName() {

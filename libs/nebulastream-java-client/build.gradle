@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
         classpath 'net.researchgate:gradle-release:2.6.0'
+        classpath "com.palantir.gradle.docker:gradle-docker:0.25.0"
     }
 }
 
@@ -16,6 +17,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'net.researchgate.release'
 apply plugin: 'maven'
+apply plugin: 'com.palantir.docker-run'
 
 
 shadowJar {
@@ -37,6 +39,26 @@ dependencies {
     implementation group: 'org.jgrapht', name: 'jgrapht-core', version: '1.4.0'
     implementation group: 'org.jgrapht', name: 'jgrapht-io', version: '1.4.0'
 }
+
+dockerRun {
+    name 'nes-executable'
+    image 'nebulastream/nes-executable-image'
+    ports '8081:8081'
+    arguments '-d'
+}
+
+test {
+    useJUnit()
+    filter {
+        //query submission test
+        includeTestsMatching "com.nebula.stream.QuerySubmissionTest"
+    }
+}
+
+// make sure we run the nes docker before running the test
+test.dependsOn("dockerRun")
+// stop and cleanup the container after test
+test.finalizedBy(dockerStop).finalizedBy(dockerRemoveContainer)
 
 publishing {
     repositories {

@@ -18,7 +18,7 @@ import stream.nebula.queryinterface.Query;
 
 import java.util.ArrayList;
 
-public class WindowOperatorTest {
+public class WindowByKeyOperatorTest {
     private static LogicalStream defaultLogical;
 
     @BeforeClass
@@ -37,30 +37,38 @@ public class WindowOperatorTest {
         // Test Tumbling Window
         query = new Query();
         query.from(defaultLogical)
-                .window(TumblingWindow.of(new EventTime("timestamp"),TimeMeasure.milliseconds(10)), Aggregation.sum(1));
+                .windowByKey("id", TumblingWindow.of(new EventTime("timestamp"),TimeMeasure.milliseconds(10)), Aggregation.sum(1));
 
         Assert.assertEquals("Query::from(\""+defaultLogical.getName()+"\")" +
-                        ".window(TumblingWindow::of(EventTime(Attribute(\"timestamp\")), Milliseconds(10)), " +
+                        ".windowByKey(Attribute(\"id\"), TumblingWindow::of(EventTime(Attribute(\"timestamp\")), Milliseconds(10)), " +
                         "Sum(Attribute(\"value\")));"
                 , query.generateCppCode());
 
         // Test Sliding Window
         query = new Query();
         query.from(defaultLogical)
-                .window(SlidingWindow.of(new EventTime("timestamp"), TimeMeasure.minutes(1), TimeMeasure.seconds(30)), Aggregation.sum(1));
+                .windowByKey("id", SlidingWindow.of(new EventTime("timestamp"), TimeMeasure.minutes(1), TimeMeasure.seconds(30)), Aggregation.sum(1));
 
         Assert.assertEquals("Query::from(\""+defaultLogical.getName()+"\")" +
-                        ".window(SlidingWindow::of(EventTime(Attribute(\"timestamp\")), Minutes(1), Seconds(30)), Sum(Attribute(\"value\")));"
+                        ".windowByKey(Attribute(\"id\"), SlidingWindow::of(EventTime(Attribute(\"timestamp\")), Minutes(1), Seconds(30)), Sum(Attribute(\"value\")));"
                 , query.generateCppCode());
 
         // Test Aggregation using fieldName
         query = new Query();
         query.from(defaultLogical)
-                .window(TumblingWindow.of(new EventTime("timestamp"),TimeMeasure.milliseconds(10)), Aggregation.sum("value"));
+                .windowByKey("id", TumblingWindow.of(new EventTime("timestamp"),TimeMeasure.milliseconds(10)), Aggregation.sum("value"));
 
         Assert.assertEquals("Query::from(\""+defaultLogical.getName()+"\")" +
-                        ".window(TumblingWindow::of(EventTime(Attribute(\"timestamp\")), Milliseconds(10)), Sum(Attribute(\"value\")));"
+                        ".windowByKey(Attribute(\"id\"), TumblingWindow::of(EventTime(Attribute(\"timestamp\")), Milliseconds(10)), Sum(Attribute(\"value\")));"
                 , query.generateCppCode());
+    }
+
+    @Test (expected = FieldNotFoundException.class)
+    public void providingNonExistentKeyFieldProduceFieldNotFoundException() throws FieldIndexOutOfBoundException, InvalidAggregationFieldException, FieldNotFoundException {
+        Query query;
+        query = new Query();
+        query.from(defaultLogical)
+                .windowByKey("non-existent-field", TumblingWindow.of(new EventTime("timestamp"),TimeMeasure.milliseconds(10)), Aggregation.sum("non-existent-field"));
     }
 
     @Test (expected = InvalidAggregationFieldException.class)
@@ -68,7 +76,7 @@ public class WindowOperatorTest {
         Query query;
         query = new Query();
         query.from(defaultLogical)
-                .window(TumblingWindow.of(new EventTime("timestamp"),TimeMeasure.milliseconds(10)), Aggregation.sum(2));
+                .windowByKey("id", TumblingWindow.of(new EventTime("timestamp"),TimeMeasure.milliseconds(10)), Aggregation.sum(2));
     }
 
     @Test (expected = FieldIndexOutOfBoundException.class)
@@ -76,14 +84,14 @@ public class WindowOperatorTest {
         Query query;
         query = new Query();
         query.from(defaultLogical)
-                .window(TumblingWindow.of(new EventTime("timestamp"),TimeMeasure.milliseconds(10)), Aggregation.sum(99));
+                .windowByKey("id", TumblingWindow.of(new EventTime("timestamp"),TimeMeasure.milliseconds(10)), Aggregation.sum(99));
     }
 
     @Test (expected = FieldNotFoundException.class)
-    public void aggregatingNonNonExistentFieldProduceFieldNotFoundException() throws FieldIndexOutOfBoundException, InvalidAggregationFieldException, FieldNotFoundException {
+    public void aggregatingNonExistentFieldProduceFieldNotFoundException() throws FieldIndexOutOfBoundException, InvalidAggregationFieldException, FieldNotFoundException {
         Query query;
         query = new Query();
         query.from(defaultLogical)
-                .window(TumblingWindow.of(new EventTime("timestamp"),TimeMeasure.milliseconds(10)), Aggregation.sum("non-existent-field"));
+                .windowByKey("id", TumblingWindow.of(new EventTime("timestamp"),TimeMeasure.milliseconds(10)), Aggregation.sum("non-existent-field"));
     }
 }
