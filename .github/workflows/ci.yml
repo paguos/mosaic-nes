@@ -1,8 +1,8 @@
-name: Java CI
+name: MOSAIC NES CI
 on: [push]
 
 jobs:
-  build:
+  mosaic-nes:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,8 +17,23 @@ jobs:
           sudo add-apt-repository ppa:sumo/stable
           sudo apt-get install -y sumo
       - name: Build NES Java Client
-        run: gradle --project-dir libs/nebulastream-java-client install
+        working-directory: ./libs/nebulastream-java-client
+        run: ./gradlew install
       - name: Build MOSAIC NES Applications
         run: mvn clean install
       - name: MOSAIC Integration Tests
         run: mvn test -fae -P integration-tests
+  tool-scenario-generator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v1.9
+        with:
+          cmake-version: '3.17.2'
+      - name: Build
+        working-directory: ./tools/scenario-generator
+        run: make build-cmake
+      - name: Run tests
+        working-directory: ./tools/scenario-generator
+        run: make tests 

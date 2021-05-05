@@ -1,0 +1,3 @@
+add_subdirectory(Executables)
+add_subdirectory(Generator)
+add_subdirectory(Mosaic)

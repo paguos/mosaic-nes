@@ -1,0 +1,32 @@
+{
+  "vehicles": [
+    {
+      "randomInt": 5,
+      "randomFloat": 50.5,
+      "randomString": "TEST",
+      "randomBoolean": true
+    }
+  ],
+  "routes": [
+    {
+      "source": {
+        "latitude": "test_source_lat_1",
+        "longitude": "test_source_long_1"
+      },
+      "target": {
+        "latitude": "test_target_lat_1",
+        "longitude": "test_target_long_1"
+      }
+    },
+    {
+      "source": {
+        "latitude": "test_source_lat_2",
+        "longitude": "test_source_long_2"
+      },
+      "target": {
+        "latitude": "test_target_lat_2",
+        "longitude": "test_target_long_2"
+      }
+    }
+  ]
+}
