@@ -1,4 +1,4 @@
-# mosaic-nes-applications
+# mosaic-nes
 Eclipse MOSAIC integration with NebulaStream.
 
 ## Project
