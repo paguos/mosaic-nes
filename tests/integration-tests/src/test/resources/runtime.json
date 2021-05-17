@@ -2,6 +2,11 @@
     "threads": 1,
     "federates": [
         {
+            "id": "nes",
+            "classname": "com.github.paguos.mosaic.fed.ambassador.NesAmbassador",
+            "configuration": "nes_config.json"
+        },
+        {
             "id": "application",
             "classname": "org.eclipse.mosaic.fed.application.ambassador.ApplicationAmbassador",
             "configuration": "application_config.json",

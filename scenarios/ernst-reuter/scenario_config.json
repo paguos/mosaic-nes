@@ -27,6 +27,7 @@
         "application": true,
         "environment": false,
         "cell": false,
+        "nes": true,
         "ns3": false,
         "omnetpp": false,
         "output": true,

@@ -5,7 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.paguos</groupId>
-    <artifactId>mosaic-nes-applications</artifactId>
+    <artifactId>mosaic-nes</artifactId>
+    <packaging>pom</packaging>
     <version>0.0.1</version>
     <build>
         <plugins>
@@ -35,30 +36,12 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-defaults-xml-for-test</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/target/test-classes</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/src/test/resources</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
+    <modules>
+        <module>fed/nes-federate</module>
+        <module>tests/integration-tests</module>
+    </modules>
 
     <repositories>
         <repository>
@@ -88,25 +71,6 @@
             <groupId>stream.nebula</groupId>
             <artifactId>nebulastream-java-client</artifactId>
             <version>0.0.33</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.mosaic</groupId>
-            <artifactId>mosaic-starter</artifactId>
-            <version>${mosaic.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.mosaic</groupId>
-            <artifactId>mosaic-integration-tests</artifactId>
-            <version>${mosaic.version}</version>
-            <scope>test</scope>
-            <type>test-jar</type>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.mosaic</groupId>
