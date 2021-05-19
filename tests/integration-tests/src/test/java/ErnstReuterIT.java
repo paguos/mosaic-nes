@@ -18,7 +18,8 @@ public class ErnstReuterIT {
 
     @BeforeClass
     public static void runSimulation() {
-        simulationResult = simulationRule.executeSimulation("scenarios", "ernst-reuter");
+        String scenariosDirectory = System.getProperty("scenariosDirectory");
+        simulationResult = simulationRule.executeSimulation(scenariosDirectory, "ernst-reuter");
     }
 
     @Test
