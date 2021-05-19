@@ -1,0 +1,5 @@
+{
+  "coordinator": {
+    "image": "test-coordinator:latest"
+  }
+}
