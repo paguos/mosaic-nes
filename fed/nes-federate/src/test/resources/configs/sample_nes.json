@@ -1,9 +1,9 @@
 {
   "coordinator" : {
-    "image" : "yobasystems/alpine-nginx:stable"
+    "image" : "test-coordinator:latest"
   },
   "worker": {
-    "image" : "yobasystems/alpine-nginx:stable"
+    "image" : "test-worker:latest"
   },
   "nodes": [
     {
