@@ -1,9 +1,16 @@
 package com.github.paguos.mosaic.fed.ambassador;
 
+import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.paguos.mosaic.fed.config.CNes;
-import com.github.paguos.mosaic.fed.config.model.CNesNode;
+import com.github.paguos.mosaic.fed.config.util.ConfigurationParser;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
-import com.github.paguos.mosaic.fed.docker.DockerContainerController;
+import com.github.paguos.mosaic.fed.docker.ContainerController;
+import com.github.paguos.mosaic.fed.docker.NetworkController;
+import com.github.paguos.mosaic.fed.docker.nebulastream.NesCmdFactory;
+import com.github.paguos.mosaic.fed.model.NesCoordinator;
+import com.github.paguos.mosaic.fed.model.NesNode;
+import com.github.paguos.mosaic.fed.model.NesTopology;
+import com.github.paguos.mosaic.fed.model.NesWorker;
 import org.eclipse.mosaic.lib.util.scheduling.Event;
 import org.eclipse.mosaic.lib.util.scheduling.EventManager;
 import org.eclipse.mosaic.rti.api.AbstractFederateAmbassador;
@@ -19,7 +26,7 @@ import java.util.List;
  */
 public class NesAmbassador extends AbstractFederateAmbassador implements EventManager {
 
-    private CNes config;
+    private NesTopology topology;
 
     public NesAmbassador(AmbassadorParameter ambassadorParameter) {
         super(ambassadorParameter);
@@ -32,6 +39,7 @@ public class NesAmbassador extends AbstractFederateAmbassador implements EventMa
         log.info("Initializing NES Federate ...");
 
         readConfiguration();
+        NetworkController.createNetwork(NetworkController.DEFAULT_NETWORK_NAME);
         startContainers();
 
         if (log.isTraceEnabled()) {
@@ -49,27 +57,32 @@ public class NesAmbassador extends AbstractFederateAmbassador implements EventMa
         }
 
         String nesConfigurationPath = ambassadorParameter.configuration.getAbsolutePath();
-        config = ConfigurationReader.importNesConfiguration(nesConfigurationPath);
+        ConfigurationReader.importNesConfiguration(nesConfigurationPath);
+        CNes config = ConfigurationReader.getConfig();
+        topology = ConfigurationParser.parseTopology(config);
     }
 
-    private void startContainers() {
-        DockerContainerController.run("coordinator", config.coordinator.image);
-        startWorkers(config.nodes);
+    private void startContainers() throws InternalFederateException {
+        CreateContainerCmd coordinatorCmd = NesCmdFactory.createNesCoordinatorCmd(topology.getCoordinator());
+        ContainerController.run(coordinatorCmd);
+        startNodes(topology.getRootNodes(), topology.getCoordinator());
     }
 
-    private void startWorkers(List<CNesNode> nodes) {
-        for (CNesNode node : nodes) {
-            DockerContainerController.run(node.name, config.worker.image);
-            startWorkers(node.nodes);
+    private void startNodes(List<NesNode> nodes, NesCoordinator coordinator) throws InternalFederateException {
+        for (NesNode node : nodes) {
+            NesWorker worker = (NesWorker) node;
+            CreateContainerCmd createWorkerCmd = NesCmdFactory.createNesWorkerCmd(worker, coordinator);
+            ContainerController.run(createWorkerCmd);
+            startNodes(worker.getChildren(), coordinator);
         }
     }
 
     @Override
     public void finishSimulation() throws InternalFederateException {
         super.finishSimulation();
-
         log.info("Cleaning up NES containers ...");
-        DockerContainerController.stopAll();
+        ContainerController.stopAll();
+        NetworkController.removeNetworks();
         log.info("NES containers cleaned!");
     }
 

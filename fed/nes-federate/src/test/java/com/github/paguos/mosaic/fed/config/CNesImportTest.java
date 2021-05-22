@@ -1,6 +1,5 @@
 package com.github.paguos.mosaic.fed.config;
 
-import com.github.paguos.mosaic.fed.config.CNes;
 import com.github.paguos.mosaic.fed.config.model.CNesNode;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
@@ -20,7 +19,8 @@ public class CNesImportTest {
 
     private CNes getNesConfig() throws InternalFederateException {
         // Read the region configuration file
-        return ConfigurationReader.importNesConfiguration(NES_CONF_PATH);
+        ConfigurationReader.importNesConfiguration(NES_CONF_PATH);
+        return ConfigurationReader.getConfig();
     }
 
     @Test
