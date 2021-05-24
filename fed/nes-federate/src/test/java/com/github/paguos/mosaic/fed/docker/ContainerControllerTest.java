@@ -1,6 +1,7 @@
 package com.github.paguos.mosaic.fed.docker;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
@@ -12,16 +13,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-public class DockerContainerControllerTest {
+public class ContainerControllerTest {
 
     private final String TEST_IMAGE = "yobasystems/alpine-nginx:stable";
     private DockerClient dockerClient;
 
     @Before
-    public void setup() {
+    public void setup() throws InterruptedException {
         DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
         DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
                 .dockerHost(config.getDockerHost())
@@ -30,13 +32,15 @@ public class DockerContainerControllerTest {
                 .build();
 
         dockerClient = DockerClientImpl.getInstance(config, httpClient);
-
-        dockerClient.pullImageCmd(TEST_IMAGE).exec(new PullImageResultCallback());
+        dockerClient.pullImageCmd(TEST_IMAGE)
+                .exec(new PullImageResultCallback())
+                .awaitCompletion(60, TimeUnit.SECONDS);
     }
 
     @Test
     public void runAndStopContainerTest() {
-        DockerContainerController.run("test", TEST_IMAGE);
+        CreateContainerCmd testCmd = dockerClient.createContainerCmd(TEST_IMAGE).withName("test");
+        ContainerController.run(testCmd);
 
         List<Container> containers = dockerClient.listContainersCmd().exec();
         assertEquals(1, containers.size());
@@ -46,7 +50,7 @@ public class DockerContainerControllerTest {
                 testContainer.getNames()[0]);
         assertEquals(TEST_IMAGE, testContainer.getImage());
 
-        DockerContainerController.stopAll();
+        ContainerController.stopAll();
         containers = dockerClient.listContainersCmd().exec();
         assertEquals(0, containers.size());
     }

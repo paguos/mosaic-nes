@@ -10,24 +10,29 @@ import java.io.File;
 
 public class ConfigurationReader {
 
+    private static CNes config;
     private static final Logger log = LoggerFactory.getLogger(ConfigurationReader.class);
+
+    public static CNes getConfig() throws InternalFederateException {
+        if (config == null) {
+            throw new InternalFederateException("Configuration was not imported!");
+        }
+        return config;
+    }
 
     /**
      * Small helper class, which returns the instantiated object of a json-configuration.
      *
      * @param path the path to the configuration
-     * @return the instantiated object
      * @throws InstantiationException if there was an error during deserialization/instantiation
      */
-    public static CNes importNesConfiguration(String path) throws InternalFederateException {
+    public static void importNesConfiguration(String path) throws InternalFederateException {
 
         if (!new File(path).exists()) {
             throw new InternalFederateException(
                     String.format("The nes config '%s' does not exist.", new File(path).getName())
             );
         }
-
-        CNes config;
 
         try {
             config = new ObjectInstantiation<>(CNes.class).readFile(new File(path));
@@ -39,7 +44,5 @@ public class ConfigurationReader {
         if (config.coordinator == null || config.worker == null || config.nodes == null) {
             throw new InternalFederateException("Invalid nes config file!");
         }
-
-        return config;
     }
 }

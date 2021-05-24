@@ -1,9 +1,9 @@
 {
   "coordinator" : {
-    "image" : "yobasystems/alpine-nginx:stable"
+    "image" : "nebulastream/nes-executable-image:0.0.408"
   },
   "worker": {
-    "image" : "yobasystems/alpine-nginx:stable"
+    "image" : "nebulastream/nes-executable-image:0.0.408"
   },
   "nodes": [
     {
