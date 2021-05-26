@@ -10,6 +10,11 @@
 
 #include "nlohmann/json.hpp"
 
+#include "Position.h"
+#include "Prototype.h"
+#include "Route.h"
+#include "Vehicle.h"
+
 #ifndef SCENARIO_GENERATOR_SCENARIO_H
 #define SCENARIO_GENERATOR_SCENARIO_H
 
@@ -20,55 +25,27 @@ using std::list;
 using std::map;
 using std::string;
 
+class Scenario {
 
-struct Position {
-    string longitude;
-    string latitude;
-    Position(string longitude, string latitude);
-    ~Position()=default;
+private:
+    void LoadCars(const json& carsJson);
+    void LoadRoutes(json routes);
+    void LoadRoadSideUnits(json rsus);
+    void LoadVehicles(json vehicles);
 
-    bool operator==(const Position &rhs) const;
+    json ExportPrototypes();
+    json ExportRoadSideUnits();
+    json ExportVehicles();
 
-    bool operator!=(const Position &rhs) const;
-};
-
-struct Route {
-    int id;
-    Position source;
-    Position target;
-    map<int, string> metadata;
-
-    bool operator==(const Route &rhs) const;
-
-    bool operator!=(const Route &rhs) const;
-
-    Route(const Position& source, const Position& target);
-
-    Route(int id, const Position &source, const Position &target);
-
-    ~Route()=default;
-
-    void LoadSQLite(const string& sqliteDBPath);
-};
-
-struct Vehicle {
-    int id;
-    json metadata;
-
-    bool operator==(const Vehicle &rhs) const;
-
-    bool operator!=(const Vehicle &rhs) const;
-
-    explicit Vehicle(int id);
-};
-
-struct Scenario {
+public:
+    list<Car> cars;
     list<Route> routes;
+    list<RoadSideUnit> rsus;
     list<Vehicle> vehicles;
 
     static Scenario LoadFile(const string& filePath);
     void exportRoutes(const string& sqlDBPath);
-    void exportVehicles(const string& mappingConfigPath);
+    json ExportToJson();
 };
 
 #endif //SCENARIO_GENERATOR_SCENARIO_H

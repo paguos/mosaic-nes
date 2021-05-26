@@ -1,0 +1,147 @@
+{
+  "vehicles": [
+    {
+      "startingTime": 5,
+      "maxTime": 700,
+      "targetFlow": 500,
+      "spawningMode": "CONSTANT",
+      "maxNumberVehicles": 1000,
+      "laneSelectionMode": "BEST",
+      "departSpeed": 0,
+      "departSpeedMode": "MAXIMUM",
+      "deterministic": true
+    }
+  ],
+  "cars": [
+    {
+      "config" : {
+        "name": "Car",
+        "applications": []
+      },
+      "metadata" : {
+        "accel": 1.5,
+        "decel": 4.5,
+        "length": 5.00,
+        "maxSpeed": 10.0,
+        "minGap": 2.5,
+        "sigma": 0.5,
+        "tau": 1,
+        "color": "red"
+      }
+    }
+  ],
+  "rsus": [
+    {
+      "config": {
+        "name": "NES-Source-RSU",
+        "applications": []
+      },
+      "positions": [{
+        "latitude": "52.5110885",
+        "longitude": "13.3002965"
+      }]
+    }
+  ],
+  "routes": [
+    {
+      "source": {
+        "latitude": "52.5110885",
+        "longitude": "13.3002965"
+      },
+      "target": {
+        "latitude": "52.5130846",
+        "longitude": "13.3302242"
+      }
+    },
+    {
+      "source": {
+        "latitude": "52.5132403",
+        "longitude": "13.3305024"
+      },
+      "target": {
+        "latitude": "52.5112585",
+        "longitude": "13.3002632"
+      }
+    },
+    {
+      "source": {
+        "latitude": "52.5069232",
+        "longitude": "13.331084"
+      },
+      "target": {
+        "latitude": "52.5161348",
+        "longitude": "13.3108088"
+      }
+    },
+    {
+      "source": {
+        "latitude": "52.5160308",
+        "longitude": "13.3106379"
+      },
+      "target": {
+        "latitude": "52.5067654",
+        "longitude": "13.331076"
+      }
+    },
+    {
+      "source": {
+        "latitude": "52.5089098",
+        "longitude": "13.31628"
+      },
+      "target": {
+        "latitude": "52.5072574",
+        "longitude": "13.3299655"
+      }
+    },
+    {
+      "source": {
+        "latitude": "52.5154849",
+        "longitude": "13.3121854"
+      },
+      "target": {
+        "latitude": "52.506543",
+        "longitude": "13.3314175"
+      }
+    },
+    {
+      "source": {
+        "latitude": "52.5166851",
+        "longitude": "13.3241825"
+      },
+      "target": {
+        "latitude": "52.5112585",
+        "longitude": "13.3002632"
+      }
+    },
+    {
+      "source": {
+        "latitude": "52.506289",
+        "longitude": "13.3147445"
+      },
+      "target": {
+        "latitude": "52.5159014",
+        "longitude": "13.3161854"
+      }
+    },
+    {
+      "source": {
+        "latitude": "52.51527",
+        "longitude": "13.3156597"
+      },
+      "target": {
+        "latitude": "52.5051952",
+        "longitude": "13.3137264"
+      }
+    },
+    {
+      "source": {
+        "latitude": "52.5134608",
+        "longitude": "13.3008864"
+      },
+      "target": {
+        "latitude": "52.5133514",
+        "longitude": "13.3349976"
+      }
+    }
+  ]
+}
