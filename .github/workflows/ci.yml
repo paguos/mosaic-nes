@@ -33,9 +33,18 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v1.9
         with:
           cmake-version: '3.17.2'
+      - name: Install SUMO
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --allow-unauthenticated software-properties-common
+          sudo add-apt-repository ppa:sumo/stable
+          sudo apt-get install -y sumo
       - name: Build
         working-directory: ./tools/scenario-generator
         run: make build-cmake
       - name: Run tests
         working-directory: ./tools/scenario-generator
-        run: make tests 
+        run: make tests
+      - name: Run integration test
+        working-directory: ./tools/scenario-generator
+        run: make integration-test
