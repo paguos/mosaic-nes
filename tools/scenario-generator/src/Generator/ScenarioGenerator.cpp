@@ -9,6 +9,7 @@
 #include <utility>
 
 #include <loguru.hpp>
+#include <fstream>
 
 ScenarioGenerator::ScenarioGenerator(GeneratorConfig config, Scenario routes) : config(std::move(config)),
                                                                                 scenario(std::move(routes)) {
@@ -61,9 +62,15 @@ void ScenarioGenerator::generateScenario(ScenarioConvert scenarioConvert) {
     }
     LOG_F(INFO, "Sumo routes generated!");
 
-    LOG_F(INFO, "Exporting vehicles ...");
-    scenario.exportVehicles(config.scenarioPath.string() + "/mapping/mapping_config.json");
-    LOG_F(INFO, "Vehicles mapped!");
+    LOG_F(INFO, "Generating mapping ...");
+    json mappingConfig = scenario.ExportToJson();
+
+    string mappingConfigPath = config.scenarioPath.string() + "/mapping/mapping_config.json";
+    std::filesystem::remove(mappingConfigPath);
+
+    std::ofstream outputFileStream(mappingConfigPath);
+    outputFileStream << std::setw(4) << mappingConfig << std::endl;
+    LOG_F(INFO, "Mapping generated!");
 }
 
 void ScenarioGenerator::run() {

@@ -5,60 +5,65 @@
 #include "Scenario.h"
 
 #include <fstream>
-
 #include <loguru.hpp>
 #include "SQLiteCpp/SQLiteCpp.h"
 
-Position::Position(string longitude, string latitude) : longitude(std::move(longitude)), latitude(std::move(latitude)) {}
+void Scenario::LoadCars(const json& carsJson) {
+    for (auto carJson : carsJson) {
+        json config = carJson["config"];
+        Car car(config["name"], carJson["metadata"]);
 
-bool Position::operator==(const Position &rhs) const {
-    return longitude == rhs.longitude &&
-           latitude == rhs.latitude;
-}
-
-bool Position::operator!=(const Position &rhs) const {
-    return !(rhs == *this);
-}
-
-Route::Route(const Position& source, const Position& target) : source(source), target(target) {}
-Route::Route(int id, const Position &source, const Position &target) : id(id), source(source), target(target) {}
-
-void Route::LoadSQLite(const string& sqliteDBPath) {
-    SQLite::Database    db(sqliteDBPath);
-    const bool tableExists = db.tableExists("Route");
-    if (tableExists) {
-        SQLite::Statement   query(db, "SELECT sequence_number, connection_id FROM Route;");
-        while (query.executeStep())
-        {
-            const int sequenceNr     = query.getColumn(0);
-            const string connectionId  = query.getColumn(1);
-            metadata.insert(std::pair<int, string>(sequenceNr, connectionId));
+        for (const auto& applicationName: config["applications"]) {
+            car.applications.push_back(applicationName);
         }
-    } else {
-        LOG_F(WARNING, "SQLite could not find table 'Route'!");
+
+        this->cars.push_back(car);
     }
 }
 
-bool Route::operator==(const Route &rhs) const {
-    return id == rhs.id &&
-           source == rhs.source &&
-           target == rhs.target &&
-           metadata == rhs.metadata;
+
+void Scenario::LoadRoutes(json routes) {
+    int routeId = 1;
+
+    for (auto routeConfig : routes)
+    {
+        Position sourcePosition(routeConfig["source"]["latitude"], routeConfig["source"]["longitude"]);
+        Position targetPosition(routeConfig["target"]["latitude"], routeConfig["target"]["longitude"]);
+        Route route(routeId, sourcePosition, targetPosition);
+        this->routes.push_back(route);
+
+        routeId++;
+    }
 }
 
-bool Route::operator!=(const Route &rhs) const {
-    return !(rhs == *this);
+void Scenario::LoadRoadSideUnits(json rsus) {
+    for (auto rsuConfig : rsus) {
+        json config = rsuConfig["config"];
+        RoadSideUnit rsu(config["name"]);
+
+        for (auto applicationName: config["applications"]) {
+            rsu.applications.push_back(applicationName);
+        }
+
+        for (auto positionConfig: rsuConfig["positions"]) {
+            Position position(positionConfig["latitude"], positionConfig["longitude"]);
+            rsu.positions.push_back(position);
+        }
+
+        this->rsus.push_back(rsu);
+    }
 }
 
-Vehicle::Vehicle(int id) : id(id) {}
+void Scenario::LoadVehicles(json vehicles) {
+    int vehicleId = 1;
 
-bool Vehicle::operator==(const Vehicle &rhs) const {
-    return id == rhs.id &&
-           metadata == rhs.metadata;
-}
+    for (auto vehicleConfig : vehicles) {
+        Vehicle vehicle(vehicleId);
+        vehicle.metadata = vehicleConfig;
+        this->vehicles.push_back(vehicle);
 
-bool Vehicle::operator!=(const Vehicle &rhs) const {
-    return !(rhs == *this);
+        vehicleId++;
+    }
 }
 
 Scenario Scenario::LoadFile(const string& filePath) {
@@ -68,29 +73,17 @@ Scenario Scenario::LoadFile(const string& filePath) {
     json config;
     inputFileStream >> config;
 
+    const json cars = config["cars"];
+    scenario.LoadCars(cars);
+
     const json routes = config["routes"];
-    int routeId = 1;
+    scenario.LoadRoutes(routes);
 
-    for (auto routeConfig : routes)
-    {
-        Position sourcePosition(routeConfig["source"]["longitude"], routeConfig["source"]["latitude"]);
-        Position targetPosition(routeConfig["target"]["longitude"], routeConfig["target"]["latitude"]);
-        Route route(routeId, sourcePosition, targetPosition);
-        scenario.routes.push_back(route);
+    const json rsus = config["rsus"];
+    scenario.LoadRoadSideUnits(rsus);
 
-        routeId++;
-    }
-
-    int vehicleId = 1;
     const json vehicles = config["vehicles"];
-
-    for (auto vehicleConfig : vehicles) {
-        Vehicle vehicle(vehicleId);
-        vehicle.metadata = vehicleConfig;
-        scenario.vehicles.push_back(vehicle);
-
-        vehicleId++;
-    }
+    scenario.LoadVehicles(vehicles);
 
     return scenario;
 }
@@ -112,23 +105,62 @@ void Scenario::exportRoutes(const string& sqliteDBPath) {
     }
 }
 
-void Scenario::exportVehicles(const string& mappingConfigPath) {
-    std::ifstream inputFileStream(mappingConfigPath);
-    json mappingConfig;
-    inputFileStream >> mappingConfig;
+json Scenario::ExportPrototypes() {
+    list<json> prototypes;
 
+    for (Car car: cars) {
+        prototypes.push_back(car.toJson());
+    }
+
+    for (RoadSideUnit rsu: rsus) {
+        prototypes.push_back(rsu.toJson());
+    }
+
+    return prototypes;
+}
+
+json Scenario::ExportRoadSideUnits() {
+    list<json> rsuList;
+
+    for (const RoadSideUnit& rsu: rsus) {
+        for (const Position& position : rsu.positions) {
+            json rsuJson = {};
+            rsuJson["name"] = rsu.name;
+            rsuJson["applications"] = rsu.applications;
+            rsuJson["position"]["latitude"] = ::atof(position.latitude.c_str());;
+            rsuJson["position"]["longitude"] = ::atof(position.longitude.c_str());
+            rsuList.push_back(rsuJson);
+        }
+    }
+
+    return rsuList;
+}
+
+json Scenario::ExportVehicles() {
     list<json> vehiclesJson;
     for (const Vehicle& v: vehicles){
         for (const Route& r: routes){
             json v_metadata = v.metadata;
+            list<json> types;
+            for (Car car: cars) {
+                types.push_back({{"name", car.name}});
+            }
+
+            v_metadata["types"] = types;
             v_metadata["route"] = std::to_string(r.id);
             v_metadata["pos"] = 0;
             vehiclesJson.push_back(v_metadata);
         }
     }
+    return vehiclesJson;
+}
 
-    mappingConfig["vehicles"] = vehiclesJson;
+json Scenario::ExportToJson() {
+    json mappingJson = {};
 
-    std::ofstream outputFileStream(mappingConfigPath);
-    outputFileStream << std::setw(4) << mappingConfig << std::endl;
+    mappingJson["prototypes"] = ExportPrototypes();
+    mappingJson["rsus"] = ExportRoadSideUnits();
+    mappingJson["vehicles"] = ExportVehicles();
+
+    return mappingJson;
 }
