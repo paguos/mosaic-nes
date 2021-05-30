@@ -1,5 +1,7 @@
 package com.github.paguos.mosaic.fed.model;
 
+import java.util.List;
+
 public class NesCoordinator extends NesComponent {
 
     public static final int DEFAULT_COORDINATOR_PORT = 4000;
@@ -8,14 +10,13 @@ public class NesCoordinator extends NesComponent {
     private final int coordinatorPort;
     private final int restPort;
 
-    public NesCoordinator(String name) {
-        this(name, DEFAULT_COORDINATOR_PORT, DEFAULT_REST_PORT);
-    }
+    private final List<NesNode> children;
 
-    public NesCoordinator(String name, int coordinatorPort, int restPort) {
-        super(name);
-        this.coordinatorPort = coordinatorPort;
-        this.restPort = restPort;
+    public NesCoordinator(NesBuilder.NesCoordinatorBuilder builder) {
+        super(builder.id, builder.name);
+        this.coordinatorPort = builder.coordinatorPort;
+        this.restPort = builder.restPort;
+        this.children = builder.children;
     }
 
     public int getCoordinatorPort() {
@@ -25,4 +26,9 @@ public class NesCoordinator extends NesComponent {
     public int getRestPort() {
         return restPort;
     }
+
+    public List<NesNode> getChildren() {
+        return children;
+    }
+
 }
