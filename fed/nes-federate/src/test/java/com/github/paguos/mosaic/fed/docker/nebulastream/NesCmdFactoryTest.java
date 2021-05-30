@@ -5,8 +5,9 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
 import com.github.paguos.mosaic.fed.model.NesCoordinator;
+import com.github.paguos.mosaic.fed.model.NesSource;
 import com.github.paguos.mosaic.fed.model.NesWorker;
-import com.github.paguos.mosaic.fed.model.NesWorkerBuilder;
+import com.github.paguos.mosaic.fed.model.NesBuilder;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,9 +24,16 @@ public class NesCmdFactoryTest {
             + File.separator + "configs";
     private final static String NES_CONF_PATH = CONFIGS_DIRECTORY + File.separator + "sample_nes.json";
 
+    private NesCmdFactory nesCmdFactory;
+
     @Before
     public void setup() throws InternalFederateException {
         ConfigurationReader.importNesConfiguration(NES_CONF_PATH);
+        NesCoordinator coordinator = NesBuilder.createCoordinator(1, "test-coordinator")
+                .coordinatorPort(1000)
+                .restPort(2000)
+                .build();
+        nesCmdFactory = new NesCmdFactory(coordinator);
     }
 
     private String listToString(String[] list) {
@@ -39,11 +47,10 @@ public class NesCmdFactoryTest {
 
     @Test
     public void createCoordinatorCmd() throws InternalFederateException {
-        NesCoordinator coordinator = new NesCoordinator("test", 1000, 2000);
-        CreateContainerCmd testCmd = NesCmdFactory.createNesCoordinatorCmd(coordinator);
+        CreateContainerCmd testCmd = nesCmdFactory.createNesCoordinatorCmd();
 
         assertEquals("test-coordinator:latest", testCmd.getImage());
-        assertEquals("test", testCmd.getName());
+        assertEquals("test-coordinator", testCmd.getName());
         String expectedCmd = String.format(
                 "/opt/local/nebula-stream/nesCoordinator --coordinatorIp=%s --restIp=%s",
                 "0.0.0.0", "0.0.0.0"
@@ -64,57 +71,71 @@ public class NesCmdFactoryTest {
     }
 
     @Test
-    public void createWorkerCmd() throws InternalFederateException {
-        NesWorker worker = NesWorkerBuilder.createWorker("test-worker", 2)
-                .dataPort(1000)
-                .rpcPort(2000)
+    public void createSourceCmd() throws InternalFederateException {
+        NesSource source = NesBuilder.createSource(2, "test-source" )
+                .dataPort(3000)
+                .rpcPort(4000)
                 .build();
+        CreateContainerCmd testCmd = nesCmdFactory.createNesNodeCmd(source);
 
-        NesCoordinator coordinator = new NesCoordinator("test-coordinator", 3000, 4000);
-        CreateContainerCmd testCmd = NesCmdFactory.createNesWorkerCmd(worker, coordinator);
+        assertEquals("test-source", testCmd.getName());
+        assertEquals("test-worker:latest", testCmd.getImage());
+        String expectedCmd = String.format(
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s",
+                "test-coordinator", 1000, 3001, "0.0.0.0", 4000, "DefaultSource"
+        );
+        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
+        testNodePorts(testCmd);
+    }
 
+    @Test
+    public void createWorkerCmd() throws InternalFederateException {
+        NesWorker worker = NesBuilder.createWorker(2, "test-worker" )
+                .dataPort(3000)
+                .rpcPort(4000)
+                .build();
+        CreateContainerCmd testCmd = nesCmdFactory.createNesNodeCmd(worker);
 
         assertEquals("test-worker", testCmd.getName());
         assertEquals("test-worker:latest", testCmd.getImage());
         String expectedCmd = String.format(
                 "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d",
-                "test-coordinator", 3000, 3001, "0.0.0.0", 2000
+                "test-coordinator", 1000, 3001, "0.0.0.0", 4000
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
-        testWorkerPorts(testCmd);
+        testNodePorts(testCmd);
     }
 
     @Test
     public void createWorkerWithParent () throws InternalFederateException {
-        NesWorker worker = NesWorkerBuilder.createWorker("test-worker-with-parent", 3)
-                .dataPort(1000)
-                .rpcPort(2000)
+        NesWorker worker = NesBuilder.createWorker(3, "test-worker-with-parent")
+                .dataPort(3000)
+                .rpcPort(4000)
                 .parentId(2)
                 .build();
-        NesCoordinator coordinator = new NesCoordinator("test-coordinator", 3000, 4000);
 
-        CreateContainerCmd testCmd = NesCmdFactory.createNesWorkerCmd(worker, coordinator);
+        CreateContainerCmd testCmd = nesCmdFactory.createNesNodeCmd(worker);
         assertEquals("test-worker-with-parent", testCmd.getName());
         assertEquals("test-worker:latest", testCmd.getImage());
 
         String expectedCmd = String.format(
                 "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --parentId=%d",
-                "test-coordinator", 3000, 3001, "0.0.0.0", 2000, 2
+                "test-coordinator", 1000, 3001, "0.0.0.0", 4000, 2
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
-        testWorkerPorts(testCmd);
+        testNodePorts(testCmd);
     }
-    private void testWorkerPorts(CreateContainerCmd testCmd) {
+    private void testNodePorts(CreateContainerCmd testCmd) {
         Map<ExposedPort, Ports.Binding[]> portMap = testCmd.getPortBindings().getBindings();
 
         ExposedPort dataPort = ExposedPort.tcp(3001);
         Ports.Binding[] coordinatorBindings = portMap.get(dataPort);
         assertEquals(1, coordinatorBindings.length);
-        assertEquals("1000", coordinatorBindings[0].getHostPortSpec());
+        assertEquals("3000", coordinatorBindings[0].getHostPortSpec());
 
-        ExposedPort restPort = ExposedPort.tcp(2000);
-        Ports.Binding[] restBindings = portMap.get(restPort);
+        ExposedPort rpcPort = ExposedPort.tcp(4000);
+        Ports.Binding[] restBindings = portMap.get(rpcPort);
         assertEquals(1, restBindings.length);
-        assertEquals("2000", restBindings[0].getHostPortSpec());
+        assertEquals("4000", restBindings[0].getHostPortSpec());
     }
 }

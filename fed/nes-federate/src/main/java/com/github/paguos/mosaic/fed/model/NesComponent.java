@@ -2,23 +2,19 @@ package com.github.paguos.mosaic.fed.model;
 
 public abstract class NesComponent {
 
-    private String containerId;
+    private final int id;
     private final String name;
 
-    public NesComponent(String name) {
+    public NesComponent(int id, String name) {
+        this.id = id;
         this.name = name;
-        this.containerId = "";
-    }
-
-    public String getContainerId() {
-        return containerId;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setContainerId(String containerId) {
-        this.containerId = containerId;
+    public int getId() {
+        return id;
     }
 }

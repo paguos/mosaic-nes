@@ -1,21 +1,21 @@
 package com.github.paguos.mosaic.fed.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class NesNode extends NesComponent {
 
-    protected final int id;
+
+    public static final int DEFAULT_DATA_PORT = 3001;
+    public static final int DEFAULT_RPC_PORT = 3000;
+
     private int parentId;
+    private final int dataPort;
+    private final int rpcPort;
 
-    public NesNode(String name, int id, int parentId) {
-        super(name);
-        this.id = id;
+    public NesNode(int id, String name, int parentId, int dataPort, int rpcPort) {
+        super(id, name);
         this.parentId = parentId;
-    }
-
-    public int getId() {
-        return id;
+        this.dataPort = dataPort;
+        this.rpcPort = rpcPort;
     }
 
     public int getParentId() {
@@ -24,5 +24,13 @@ public abstract class NesNode extends NesComponent {
 
     public void setParentId(int parentId) {
         this.parentId = parentId;
+    }
+
+    public int getDataPort() {
+        return dataPort;
+    }
+
+    public int getRpcPort() {
+        return rpcPort;
     }
 }
