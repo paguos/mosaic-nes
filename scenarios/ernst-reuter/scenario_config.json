@@ -1,7 +1,7 @@
 {
     "simulation": {
         "id": "ernst-reuter",
-        "duration": "320s",
+        "duration": "1000s",
         "randomSeed": 268965854,
         "projection": {
             "centerCoordinates": {

@@ -9,6 +9,7 @@ import com.github.paguos.mosaic.fed.docker.NetworkController;
 import com.github.paguos.mosaic.fed.docker.nebulastream.NesCmdFactory;
 import com.github.paguos.mosaic.fed.model.NesCoordinator;
 import com.github.paguos.mosaic.fed.model.NesNode;
+import com.github.paguos.mosaic.fed.model.NesSource;
 import com.github.paguos.mosaic.fed.model.NesWorker;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
@@ -47,12 +48,20 @@ public class NesController {
         NetworkController.removeNetworks();
     }
 
+    public void addNode(NesNode node) throws InternalFederateException {
+        CreateContainerCmd sourceCmd = nesCmdFactory.createNesNodeCmd(node);
+        ContainerController.run(sourceCmd);
+    }
+
     private void startNodes(List<NesNode> nodes) throws InternalFederateException {
         for (NesNode node : nodes) {
-            NesWorker worker = (NesWorker) node;
-            CreateContainerCmd createWorkerCmd = nesCmdFactory.createNesNodeCmd(worker);
+            CreateContainerCmd createWorkerCmd = nesCmdFactory.createNesNodeCmd(node);
             ContainerController.run(createWorkerCmd);
-            startNodes(worker.getChildren());
+
+            if (node instanceof NesWorker) {
+                NesWorker worker = (NesWorker) node;
+                startNodes(worker.getChildren());
+            }
         }
     }
 
