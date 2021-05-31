@@ -29,7 +29,7 @@ public class NesCmdFactoryTest {
     @Before
     public void setup() throws InternalFederateException {
         ConfigurationReader.importNesConfiguration(NES_CONF_PATH);
-        NesCoordinator coordinator = NesBuilder.createCoordinator(1, "test-coordinator")
+        NesCoordinator coordinator = NesBuilder.createCoordinator("test-coordinator")
                 .coordinatorPort(1000)
                 .restPort(2000)
                 .build();
@@ -72,7 +72,7 @@ public class NesCmdFactoryTest {
 
     @Test
     public void createSourceCmd() throws InternalFederateException {
-        NesSource source = NesBuilder.createSource(2, "test-source" )
+        NesSource source = NesBuilder.createSource("test-source" )
                 .dataPort(3000)
                 .rpcPort(4000)
                 .build();
@@ -90,7 +90,7 @@ public class NesCmdFactoryTest {
 
     @Test
     public void createWorkerCmd() throws InternalFederateException {
-        NesWorker worker = NesBuilder.createWorker(2, "test-worker" )
+        NesWorker worker = NesBuilder.createWorker("test-worker" )
                 .dataPort(3000)
                 .rpcPort(4000)
                 .build();
@@ -108,7 +108,7 @@ public class NesCmdFactoryTest {
 
     @Test
     public void createWorkerWithParent () throws InternalFederateException {
-        NesWorker worker = NesBuilder.createWorker(3, "test-worker-with-parent")
+        NesWorker worker = NesBuilder.createWorker("test-worker-with-parent")
                 .dataPort(3000)
                 .rpcPort(4000)
                 .parentId(2)

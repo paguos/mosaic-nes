@@ -8,44 +8,39 @@ import java.util.List;
  */
 public class NesBuilder {
 
-    protected final int id;
     protected final String name;
 
     /**
      * Create a builder for a nes coordinator
      *
-     * @param id   of the nes coordinator
      * @param name of the nes coordinator
      * @return an instance of the builder
      */
-    public static NesCoordinatorBuilder createCoordinator(int id, String name) {
-        return new NesCoordinatorBuilder(id, name);
+    public static NesCoordinatorBuilder createCoordinator(String name) {
+        return new NesCoordinatorBuilder(name);
     }
 
     /**
      * Create a builder for a nes source
      *
-     * @param id   of the nes source
      * @param name of the nes source
      * @return an instance of the builder
      */
-    public static NesSourceBuilder createSource(int id, String name) {
-        return new NesSourceBuilder(id, name);
+    public static NesSourceBuilder createSource(String name) {
+        return new NesSourceBuilder(name);
     }
 
     /**
      * Create a builder for a nes worker
      *
-     * @param id   of the nes worker
      * @param name of the nes worker
      * @return an instance of the builder
      */
-    public static NesWorkerBuilder createWorker(int id, String name) {
-        return new NesWorkerBuilder(id, name);
+    public static NesWorkerBuilder createWorker(String name) {
+        return new NesWorkerBuilder(name);
     }
 
-    private NesBuilder(int id, String name) {
-        this.id = id;
+    private NesBuilder(String name) {
         this.name = name;
     }
 
@@ -56,8 +51,8 @@ public class NesBuilder {
 
         protected List<NesNode> children;
 
-        private NesCoordinatorBuilder(int id, String name) {
-            super(id, name);
+        private NesCoordinatorBuilder(String name) {
+            super(name);
             this.coordinatorPort = NesCoordinator.DEFAULT_COORDINATOR_PORT;
             this.restPort = NesCoordinator.DEFAULT_REST_PORT;
             this.children = new ArrayList<>();
@@ -90,8 +85,8 @@ public class NesBuilder {
         protected int dataPort;
         protected int rpcPort;
 
-        private NesNodeBuilder(int id, String name) {
-            super(id, name);
+        private NesNodeBuilder(String name) {
+            super(name);
             this.parentId = -1;
             this.dataPort = NesWorker.DEFAULT_DATA_PORT;
             this.rpcPort = NesWorker.DEFAULT_RPC_PORT;
@@ -102,8 +97,8 @@ public class NesBuilder {
 
         protected NesSourceType sourceType;
 
-        private NesSourceBuilder(int id, String name) {
-            super(id, name);
+        private NesSourceBuilder(String name) {
+            super(name);
             this.sourceType = NesSourceType.DefaultSource;
         }
 
@@ -137,8 +132,8 @@ public class NesBuilder {
 
         protected List<NesNode> children;
 
-        protected NesWorkerBuilder(int id, String name) {
-            super(id, name);
+        protected NesWorkerBuilder(String name) {
+            super(name);
             children = new ArrayList<>();
         }
 

@@ -15,14 +15,14 @@ public class NesBuilderTest {
 
     @Before
     public void setup() {
-        defaultWorker = NesBuilder.createWorker(2, "test").build();
+        defaultWorker = NesBuilder.createWorker("test").build();
         nodes = new ArrayList<>();
         nodes.add(defaultWorker);
     }
 
     @Test
     public void createDefaultCoordinator() {
-        NesCoordinator nesCoordinator = NesBuilder.createCoordinator(1, "test-coordinator").build();
+        NesCoordinator nesCoordinator = NesBuilder.createCoordinator("test-coordinator").build();
 
         assertEquals("test-coordinator", nesCoordinator.getName());
         assertEquals(1, nesCoordinator.getId());
@@ -33,7 +33,7 @@ public class NesBuilderTest {
 
     @Test
     public void createCustomCoordinator() {
-        NesCoordinator nesCoordinator = NesBuilder.createCoordinator(1, "custom-coordinator")
+        NesCoordinator nesCoordinator = NesBuilder.createCoordinator("custom-coordinator")
                 .coordinatorPort(1000)
                 .restPort(2000)
                 .children(nodes)
@@ -48,9 +48,8 @@ public class NesBuilderTest {
 
     @Test
     public void createDefaultSource() {
-        NesSource source = NesBuilder.createSource(3, "test-source").build();
+        NesSource source = NesBuilder.createSource("test-source").build();
 
-        assertEquals(3, source.getId());
         assertEquals("test-source", source.getName());
         assertEquals(-1, source.getParentId());
         assertEquals(3001, source.getDataPort());
@@ -60,14 +59,13 @@ public class NesBuilderTest {
 
     @Test
     public void createCustomSource() {
-        NesSource source = NesBuilder.createSource(3, "custom-source")
+        NesSource source = NesBuilder.createSource("custom-source")
                 .parentId(2)
                 .dataPort(1001)
                 .rpcPort(2001)
                 .sourceType(NesSourceType.CSVSource)
                 .build();
 
-        assertEquals(3, source.getId());
         assertEquals("custom-source", source.getName());
         assertEquals(2, source.getParentId());
         assertEquals(1001, source.getDataPort());
@@ -78,7 +76,6 @@ public class NesBuilderTest {
     @Test
     public void createDefaultWorker() {
         assertEquals("test", defaultWorker.getName());
-        assertEquals(2, defaultWorker.getId());
         assertEquals(-1, defaultWorker.getParentId());
         assertEquals(3001, defaultWorker.getDataPort());
         assertEquals(3000, defaultWorker.getRpcPort());
@@ -87,7 +84,7 @@ public class NesBuilderTest {
 
     @Test
     public void createCustomWorker() {
-        NesWorker customWorker = NesBuilder.createWorker(3, "custom-test")
+        NesWorker customWorker = NesBuilder.createWorker( "custom-test")
                 .parentId(10)
                 .rpcPort(9999)
                 .dataPort(9998)
@@ -95,7 +92,6 @@ public class NesBuilderTest {
                 .build();
 
         assertEquals("custom-test", customWorker.getName());
-        assertEquals(3, customWorker.getId());
         assertEquals(10, customWorker.getParentId());
         assertEquals(9998, customWorker.getDataPort());
         assertEquals(9999, customWorker.getRpcPort());

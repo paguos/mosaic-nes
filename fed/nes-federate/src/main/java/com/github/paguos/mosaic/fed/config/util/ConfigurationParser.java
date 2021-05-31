@@ -9,14 +9,13 @@ import java.util.List;
 
 public class ConfigurationParser {
 
-    private static int nodeCount = 1;
     private static int currentDataPort = NesWorker.DEFAULT_DATA_PORT;
     private static int currentRPCPort = NesWorker.DEFAULT_RPC_PORT;
 
     public static NesCoordinator parseConfig(CNes config) {
         List<NesNode> nodes = parseNodes(config.nodes);
 
-        return NesBuilder.createCoordinator(1, "nes-coordinator")
+        return NesBuilder.createCoordinator("nes-coordinator")
                 .children(nodes)
                 .build();
     }
@@ -26,7 +25,7 @@ public class ConfigurationParser {
 
         for (CNesNode nodeConfig :
                 nodeConfigs) {
-            NesWorker worker = NesBuilder.createWorker(++nodeCount, nodeConfig.name)
+            NesWorker worker = NesBuilder.createWorker(nodeConfig.name)
                     .dataPort(currentDataPort)
                     .rpcPort(currentRPCPort)
                     .build();
