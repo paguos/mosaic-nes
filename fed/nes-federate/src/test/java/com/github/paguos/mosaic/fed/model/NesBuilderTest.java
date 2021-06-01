@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class NesBuilderTest {
 
@@ -54,6 +55,9 @@ public class NesBuilderTest {
         assertEquals(-1, source.getParentId());
         assertEquals(3001, source.getDataPort());
         assertEquals(3000, source.getRpcPort());
+        assertEquals("default_logical", source.getLogicalStreamName());
+        assertEquals("default_physical", source.getPhysicalStreamName());
+        assertNull(source.getSourceConfig());
         assertEquals(NesSourceType.DefaultSource, source.getSourceType());
     }
 
@@ -64,12 +68,18 @@ public class NesBuilderTest {
                 .dataPort(1001)
                 .rpcPort(2001)
                 .sourceType(NesSourceType.CSVSource)
+                .logicalStreamName("test_logical")
+                .physicalStreamName("test_physical")
+                .sourceConfig("test_config")
                 .build();
 
         assertEquals("custom-source", source.getName());
         assertEquals(2, source.getParentId());
         assertEquals(1001, source.getDataPort());
         assertEquals(2001, source.getRpcPort());
+        assertEquals("test_logical", source.getLogicalStreamName());
+        assertEquals("test_physical", source.getPhysicalStreamName());
+        assertEquals("test_config", source.getSourceConfig());
         assertEquals(NesSourceType.CSVSource, source.getSourceType());
     }
 

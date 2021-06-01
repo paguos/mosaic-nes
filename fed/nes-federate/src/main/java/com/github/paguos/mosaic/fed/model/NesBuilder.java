@@ -95,17 +95,41 @@ public class NesBuilder {
 
     public static class NesSourceBuilder extends NesNodeBuilder {
 
+        protected String logicalStreamName;
+        protected String physicalStreamName;
+
+        protected String sourceConfig;
         protected NesSourceType sourceType;
 
         private NesSourceBuilder(String name) {
             super(name);
+            this.logicalStreamName = "default_logical";
+            this.physicalStreamName = "default_physical";
+            this.sourceConfig = null;
             this.sourceType = NesSourceType.DefaultSource;
+        }
+
+        public NesSourceBuilder logicalStreamName(String logicalStreamName) {
+            this.logicalStreamName = logicalStreamName;
+            return this;
+        }
+
+        public NesSourceBuilder physicalStreamName(String physicalStreamName) {
+            this.physicalStreamName = physicalStreamName;
+            return this;
+        }
+
+        public NesSourceBuilder sourceConfig(String sourceConfig) {
+            this.sourceConfig = sourceConfig;
+            return this;
         }
 
         public NesSourceBuilder sourceType(NesSourceType sourceType) {
             this.sourceType = sourceType;
             return this;
         }
+
+        /** From Parent **/
 
         public NesSourceBuilder parentId(int parentId) {
             this.parentId = parentId;

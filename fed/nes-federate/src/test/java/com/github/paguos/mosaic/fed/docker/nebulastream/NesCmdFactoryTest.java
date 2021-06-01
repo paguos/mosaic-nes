@@ -4,10 +4,7 @@ import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
-import com.github.paguos.mosaic.fed.model.NesCoordinator;
-import com.github.paguos.mosaic.fed.model.NesSource;
-import com.github.paguos.mosaic.fed.model.NesWorker;
-import com.github.paguos.mosaic.fed.model.NesBuilder;
+import com.github.paguos.mosaic.fed.model.*;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,7 +68,7 @@ public class NesCmdFactoryTest {
     }
 
     @Test
-    public void createSourceCmd() throws InternalFederateException {
+    public void createDefaultSourceCmd() throws InternalFederateException {
         NesSource source = NesBuilder.createSource("test-source" )
                 .dataPort(3000)
                 .rpcPort(4000)
@@ -81,8 +78,30 @@ public class NesCmdFactoryTest {
         assertEquals("test-source", testCmd.getName());
         assertEquals("test-worker:latest", testCmd.getImage());
         String expectedCmd = String.format(
-                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s",
-                "test-coordinator", 1000, 3001, "0.0.0.0", 4000, "DefaultSource"
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --logicalStreamName=%s --physicalStreamName=%s",
+                "test-coordinator", 1000, 3001, "0.0.0.0", 4000, "DefaultSource", "default_logical", "default_physical"
+        );
+        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
+        testNodePorts(testCmd);
+    }
+
+    @Test
+    public void createCSVSourceCmd() throws InternalFederateException {
+        NesSource source = NesBuilder.createSource("test-source" )
+                .dataPort(3000)
+                .rpcPort(4000)
+                .sourceType(NesSourceType.CSVSource)
+                .sourceConfig("test_config")
+                .logicalStreamName("test_logical")
+                .physicalStreamName("test_physical")
+                .build();
+        CreateContainerCmd testCmd = nesCmdFactory.createNesNodeCmd(source);
+
+        assertEquals("test-source", testCmd.getName());
+        assertEquals("test-worker:latest", testCmd.getImage());
+        String expectedCmd = String.format(
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --sourceConfig=%s --logicalStreamName=%s --physicalStreamName=%s",
+                "test-coordinator", 1000, 3001, "0.0.0.0", 4000, "CSVSource", "test_config", "test_logical", "test_physical"
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
         testNodePorts(testCmd);
