@@ -1,4 +1,6 @@
 {
+  "defaultDownlinkCapacity": 100000000000,
+  "defaultUplinkCapacity": 100000000000,
   "globalNetwork": {
     "id": "globalNetwork",
     "uplink": {

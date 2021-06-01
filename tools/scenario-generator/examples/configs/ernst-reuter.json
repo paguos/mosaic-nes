@@ -34,11 +34,11 @@
     {
       "config": {
         "name": "NES-Source-RSU",
-        "applications": []
+        "applications": ["com.github.paguos.mosaic.app.NesSourceApp"]
       },
       "positions": [{
-        "latitude": "52.5110885",
-        "longitude": "13.3002965"
+        "latitude": "52.5128417",
+        "longitude": "13.3213595"
       }]
     }
   ],

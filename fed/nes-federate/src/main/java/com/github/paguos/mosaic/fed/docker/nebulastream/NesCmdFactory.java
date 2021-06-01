@@ -9,10 +9,7 @@ import com.github.paguos.mosaic.fed.config.CNes;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
 import com.github.paguos.mosaic.fed.docker.DockerController;
 import com.github.paguos.mosaic.fed.docker.NetworkController;
-import com.github.paguos.mosaic.fed.model.NesCoordinator;
-import com.github.paguos.mosaic.fed.model.NesNode;
-import com.github.paguos.mosaic.fed.model.NesSource;
-import com.github.paguos.mosaic.fed.model.NesWorker;
+import com.github.paguos.mosaic.fed.model.*;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
 import java.util.ArrayList;
@@ -82,7 +79,15 @@ public class NesCmdFactory {
 
         if (node instanceof NesSource) {
             NesSource source = (NesSource) node;
+
             cmd.add(String.format("--sourceType=%s", source.getSourceType()));
+            if (! source.getSourceType().equals(NesSourceType.DefaultSource)) {
+                cmd.add(String.format("--sourceConfig=%s", source.getSourceConfig()));
+            }
+
+            cmd.add(String.format("--logicalStreamName=%s", source.getLogicalStreamName()));
+            cmd.add(String.format("--physicalStreamName=%s", source.getPhysicalStreamName()));
+
         }
 
         if (node.getParentId() != -1) {

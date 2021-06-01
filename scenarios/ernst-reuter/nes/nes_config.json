@@ -7,13 +7,12 @@
   },
   "nodes": [
     {
-      "name": "worker_00",
-      "nodes" : [
-        {
-          "name": "worker_01",
-          "nodes": []
-        }
-      ]
+      "name": "sources_worker",
+      "nodes" : []
+    },
+    {
+      "name": "sink_worker",
+      "nodes" : []
     }
   ]
 }

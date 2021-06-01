@@ -4,10 +4,7 @@ import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
-import com.github.paguos.mosaic.fed.model.NesCoordinator;
-import com.github.paguos.mosaic.fed.model.NesSource;
-import com.github.paguos.mosaic.fed.model.NesWorker;
-import com.github.paguos.mosaic.fed.model.NesBuilder;
+import com.github.paguos.mosaic.fed.model.*;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +26,7 @@ public class NesCmdFactoryTest {
     @Before
     public void setup() throws InternalFederateException {
         ConfigurationReader.importNesConfiguration(NES_CONF_PATH);
-        NesCoordinator coordinator = NesBuilder.createCoordinator(1, "test-coordinator")
+        NesCoordinator coordinator = NesBuilder.createCoordinator("test-coordinator")
                 .coordinatorPort(1000)
                 .restPort(2000)
                 .build();
@@ -71,8 +68,8 @@ public class NesCmdFactoryTest {
     }
 
     @Test
-    public void createSourceCmd() throws InternalFederateException {
-        NesSource source = NesBuilder.createSource(2, "test-source" )
+    public void createDefaultSourceCmd() throws InternalFederateException {
+        NesSource source = NesBuilder.createSource("test-source" )
                 .dataPort(3000)
                 .rpcPort(4000)
                 .build();
@@ -81,8 +78,30 @@ public class NesCmdFactoryTest {
         assertEquals("test-source", testCmd.getName());
         assertEquals("test-worker:latest", testCmd.getImage());
         String expectedCmd = String.format(
-                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s",
-                "test-coordinator", 1000, 3001, "0.0.0.0", 4000, "DefaultSource"
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --logicalStreamName=%s --physicalStreamName=%s",
+                "test-coordinator", 1000, 3001, "0.0.0.0", 4000, "DefaultSource", "default_logical", "default_physical"
+        );
+        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
+        testNodePorts(testCmd);
+    }
+
+    @Test
+    public void createCSVSourceCmd() throws InternalFederateException {
+        NesSource source = NesBuilder.createSource("test-source" )
+                .dataPort(3000)
+                .rpcPort(4000)
+                .sourceType(NesSourceType.CSVSource)
+                .sourceConfig("test_config")
+                .logicalStreamName("test_logical")
+                .physicalStreamName("test_physical")
+                .build();
+        CreateContainerCmd testCmd = nesCmdFactory.createNesNodeCmd(source);
+
+        assertEquals("test-source", testCmd.getName());
+        assertEquals("test-worker:latest", testCmd.getImage());
+        String expectedCmd = String.format(
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --sourceConfig=%s --logicalStreamName=%s --physicalStreamName=%s",
+                "test-coordinator", 1000, 3001, "0.0.0.0", 4000, "CSVSource", "test_config", "test_logical", "test_physical"
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
         testNodePorts(testCmd);
@@ -90,7 +109,7 @@ public class NesCmdFactoryTest {
 
     @Test
     public void createWorkerCmd() throws InternalFederateException {
-        NesWorker worker = NesBuilder.createWorker(2, "test-worker" )
+        NesWorker worker = NesBuilder.createWorker("test-worker" )
                 .dataPort(3000)
                 .rpcPort(4000)
                 .build();
@@ -108,7 +127,7 @@ public class NesCmdFactoryTest {
 
     @Test
     public void createWorkerWithParent () throws InternalFederateException {
-        NesWorker worker = NesBuilder.createWorker(3, "test-worker-with-parent")
+        NesWorker worker = NesBuilder.createWorker("test-worker-with-parent")
                 .dataPort(3000)
                 .rpcPort(4000)
                 .parentId(2)
