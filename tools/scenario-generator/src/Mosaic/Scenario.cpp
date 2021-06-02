@@ -10,10 +10,9 @@
 
 void Scenario::LoadCars(const json& carsJson) {
     for (auto carJson : carsJson) {
-        json config = carJson["config"];
-        Car car(config["name"], carJson["metadata"]);
+        Car car(carJson["name"], carJson["metadata"]);
 
-        for (const auto& applicationName: config["applications"]) {
+        for (const auto& applicationName: carJson["applications"]) {
             car.applications.push_back(applicationName);
         }
 
@@ -38,10 +37,9 @@ void Scenario::LoadRoutes(json routes) {
 
 void Scenario::LoadRoadSideUnits(json rsus) {
     for (auto rsuConfig : rsus) {
-        json config = rsuConfig["config"];
-        RoadSideUnit rsu(config["name"]);
+        RoadSideUnit rsu(rsuConfig["name"]);
 
-        for (auto applicationName: config["applications"]) {
+        for (const auto& applicationName: rsuConfig["applications"]) {
             rsu.applications.push_back(applicationName);
         }
 
@@ -58,8 +56,17 @@ void Scenario::LoadVehicles(json vehicles) {
     int vehicleId = 1;
 
     for (auto vehicleConfig : vehicles) {
-        Vehicle vehicle(vehicleId);
-        vehicle.metadata = vehicleConfig;
+        Vehicle vehicle(vehicleId, findCar(vehicleConfig["car"]));
+
+        if (vehicleConfig["routes"] == "*") {
+            vehicle.routes = this->routes;
+        } else {
+            string routeStr = vehicleConfig["routes"];
+            int routeId = std::stoi(routeStr);
+            vehicle.routes.push_back(routes.at(routeId - 1));
+        }
+
+        vehicle.metadata = vehicleConfig["metadata"];
         this->vehicles.push_back(vehicle);
 
         vehicleId++;
@@ -139,14 +146,10 @@ json Scenario::ExportRoadSideUnits() {
 json Scenario::ExportVehicles() {
     list<json> vehiclesJson;
     for (const Vehicle& v: vehicles){
-        for (const Route& r: routes){
+        for (const Route& r: v.routes){
             json v_metadata = v.metadata;
-            list<json> types;
-            for (Car car: cars) {
-                types.push_back({{"name", car.name}});
-            }
 
-            v_metadata["types"] = types;
+            v_metadata["types"] = {{{"name", v.car.name}}};
             v_metadata["route"] = std::to_string(r.id);
             v_metadata["pos"] = 0;
             vehiclesJson.push_back(v_metadata);
@@ -163,4 +166,11 @@ json Scenario::ExportToJson() {
     mappingJson["vehicles"] = ExportVehicles();
 
     return mappingJson;
+}
+
+Car Scenario::findCar(const string& carName) {
+    for (Car& car: cars) {
+        if (car.name == carName) { return car; }
+    }
+    return Car("", nlohmann::basic_json());
 }

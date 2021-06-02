@@ -13,8 +13,7 @@ Route::Route(int id, const Position &source, const Position &target) : id(id), s
 bool Route::operator==(const Route &rhs) const {
     return id == rhs.id &&
            source == rhs.source &&
-           target == rhs.target &&
-           metadata == rhs.metadata;
+           target == rhs.target;
 }
 
 bool Route::operator!=(const Route &rhs) const {

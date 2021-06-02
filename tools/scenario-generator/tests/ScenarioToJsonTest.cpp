@@ -17,27 +17,30 @@ protected:
         generatedJson = s.ExportToJson();
     }
 
+    static json getExpectedCar(int i) {
+        json expectedCar = {};
+        expectedCar["name"] = "TEST_CAR_" + std::to_string(i);
+        expectedCar["applications"] = {"TEST_CAR_APP_1", "TEST_CAR_APP_2"};
+        expectedCar["randomInt"] = i;
+        expectedCar["randomFloat"] = i * 10.0;
+        expectedCar["randomString"] = "TEST_" + std::to_string(i);
+        expectedCar["randomBoolean"] = true;
+
+        return expectedCar;
+    }
+
     json generatedJson;
 };
 
 TEST_F(ScenarioToJson, Prototypes) {
     json prototypes = generatedJson["prototypes"];
-    EXPECT_EQ(2, prototypes.size());
-
-    json expectedCar = {};
-    expectedCar["name"] = "TEST_CAR";
-    expectedCar["applications"] = {"TEST_CAR_APP_1", "TEST_CAR_APP_2"};
-    expectedCar["randomInt"] = 6;
-    expectedCar["randomFloat"] = 60.6;
-    expectedCar["randomString"] = "TEST";
-    expectedCar["randomBoolean"] = true;
+    EXPECT_EQ(3, prototypes.size());
 
     json expectedRSU = {};
     expectedRSU["name"] = "TEST_RSU";
     expectedRSU["applications"] = {"TEST_RSU_APP_1", "TEST_RSU_APP_2"};
 
-    json expectedJson = {expectedCar, expectedRSU};
-
+    json expectedJson = {getExpectedCar(1), getExpectedCar(2), expectedRSU};
     EXPECT_EQ(expectedJson, prototypes);
 }
 
@@ -63,28 +66,38 @@ TEST_F(ScenarioToJson, RoadSideUnits) {
 
 TEST_F(ScenarioToJson, Vehicles) {
     json vehicles = generatedJson["vehicles"];
-    EXPECT_EQ(2, vehicles.size());
+    EXPECT_EQ(3, vehicles.size());
 
     json v1 = {};
     v1["randomInt"] = 5;
-    v1["randomFloat"] = 50.5;
-    v1["randomString"] = "TEST";
+    v1["randomFloat"] = 50.0;
+    v1["randomString"] = "TEST_5";
     v1["randomBoolean"] = true;
 
     v1["pos"] = 0;
     v1["route"] = "1";
-    v1["types"] = {{{"name", "TEST_CAR"}}};
+    v1["types"] = {{{"name", "TEST_CAR_1"}}};
 
     json v2 = {};
     v2["randomInt"] = 5;
-    v2["randomFloat"] = 50.5;
-    v2["randomString"] = "TEST";
+    v2["randomFloat"] = 50.0;
+    v2["randomString"] = "TEST_5";
     v2["randomBoolean"] = true;
 
     v2["pos"] = 0;
     v2["route"] = "2";
-    v2["types"] = {{{"name", "TEST_CAR"}}};
+    v2["types"] = {{{"name", "TEST_CAR_1"}}};
 
-    json expectedVehicles = {v1, v2};
+    json v3 = {};
+    v3["randomInt"] = 6;
+    v3["randomFloat"] = 60.0;
+    v3["randomString"] = "TEST_6";
+    v3["randomBoolean"] = true;
+
+    v3["pos"] = 0;
+    v3["route"] = "2";
+    v3["types"] = {{{"name", "TEST_CAR_2"}}};
+
+    json expectedVehicles = {v1, v2, v3};
     EXPECT_EQ(expectedVehicles, vehicles);
 }

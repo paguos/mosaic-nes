@@ -6,9 +6,11 @@
 
 #include <filesystem>
 
+#include "src/Mosaic/Route.h"
 #include "src/Mosaic/Scenario.h"
 
 class ScenarioFromFile : public ::testing::Test {
+
 protected:
     void SetUp() override {
         std::string fixturesDir = TEST_FIXTURES_DIR;
@@ -25,32 +27,60 @@ protected:
         return streamObj.str();
     }
 
+    static Route expectedRoute(int id) {
+        string sourceLat = "test_source_lat_" + std::to_string(id);
+        string sourceLong = "test_source_long_" + std::to_string(id);
+        string targetLat = "test_target_lat_" + std::to_string(id);
+        string targetLong = "test_target_long_" + std::to_string(id);
+
+        return Route(id,
+                Position(sourceLat, sourceLong),
+                Position(targetLat, targetLong)
+                );
+    }
+
+    static json expectedMetadata(int id) {
+        json metadata = {};
+        metadata["randomInt"] = id;
+        float f = id * 10;
+        metadata["randomFloat"] = f;
+        metadata["randomString"] = "TEST_" + std::to_string(id);
+        metadata["randomBoolean"] = true;
+        return metadata;
+    }
+
     Scenario s;
+
 };
 
 TEST_F(ScenarioFromFile, Cars) {
-    const int expectedNumberOfCars = 1;
+    const int expectedNumberOfCars = 2;
     EXPECT_EQ(expectedNumberOfCars, s.cars.size());
 
-    Car car = s.cars.front();
-    EXPECT_EQ("TEST_CAR", car.name);
-    EXPECT_EQ(2, car.applications.size());
+    Car c1 = s.cars.at(0);
+    EXPECT_EQ("TEST_CAR_1", c1.name);
+    EXPECT_EQ(2, c1.applications.size());
 
     int applicationCount = 1;
-    for (auto it = car.applications.begin(); it != car.applications.end(); ++it) {
+    for (auto it = c1.applications.begin(); it != c1.applications.end(); ++it) {
         string expectedName = "TEST_CAR_APP_" + std::to_string(applicationCount++);
         EXPECT_EQ(expectedName, it->c_str());
     }
 
-    json expectedVehicleMetadata = {};
-    expectedVehicleMetadata["randomInt"] = 6;
-    expectedVehicleMetadata["randomFloat"] = 60.6;
-    expectedVehicleMetadata["randomString"] = "TEST";
-    expectedVehicleMetadata["randomBoolean"] = true;
-    EXPECT_EQ(expectedVehicleMetadata, car.metadata);
+    EXPECT_EQ(expectedMetadata(1), c1.metadata);
 
+    Car c2 = s.cars.at(1);
+    EXPECT_EQ("TEST_CAR_2", c2.name);
+    EXPECT_EQ(2, c2.applications.size());
+
+    applicationCount = 1;
+    for (auto it = c2.applications.begin(); it != c2.applications.end(); ++it) {
+        string expectedName = "TEST_CAR_APP_" + std::to_string(applicationCount++);
+        EXPECT_EQ(expectedName, it->c_str());
+    }
+
+    EXPECT_EQ(expectedMetadata(2), c2.metadata);
 }
-
 
 TEST_F(ScenarioFromFile, RoadSideUnits) {
     const int expectedRSUCount = 1;
@@ -85,31 +115,27 @@ TEST_F(ScenarioFromFile, Routes) {
     const int expectedRoutesCount = 2;
     EXPECT_EQ(expectedRoutesCount, s.routes.size());
 
-    Route expectedFirstRoute( 1,
-                              Position("test_source_lat_1", "test_source_long_1"),
-                              Position("test_target_lat_1", "test_target_long_1")
-    );
-    Route expectedSecondRoute( 2,
-                               Position("test_source_lat_2", "test_source_long_2"),
-                               Position("test_target_lat_2", "test_target_long_2")
-    );
-
-    list<Route> expectedRoutes{expectedFirstRoute, expectedSecondRoute};
+    vector<Route> expectedRoutes{expectedRoute(1), expectedRoute(2)};
     EXPECT_EQ(expectedRoutes, s.routes);
 }
 
 TEST_F(ScenarioFromFile, Vehicles){
-    const int expectedVehiclesCount = 1;
-    EXPECT_EQ(expectedVehiclesCount, s.vehicles.size());
+    EXPECT_EQ(2, s.vehicles.size());
 
-    Vehicle v = s.vehicles.front();
-    const int expectedVehicleId = 1;
-    EXPECT_EQ(expectedVehicleId, v.id);
+    // Vehicle #1
+    Vehicle v1 = s.vehicles.at(0);
+    EXPECT_EQ(1, v1.id);
+    EXPECT_EQ(2, v1.routes.size());
 
-    json expectedVehicleMetadata = {};
-    expectedVehicleMetadata["randomInt"] = 5;
-    expectedVehicleMetadata["randomFloat"] = 50.5;
-    expectedVehicleMetadata["randomString"] = "TEST";
-    expectedVehicleMetadata["randomBoolean"] = true;
-    EXPECT_EQ(expectedVehicleMetadata, v.metadata);
+    vector<Route> expectedRoutes{expectedRoute(1), expectedRoute(2)};
+    EXPECT_EQ(expectedRoutes, v1.routes);
+    EXPECT_EQ(expectedMetadata(5), v1.metadata);
+
+    // Vehicle #2
+    Vehicle v2 = s.vehicles.at(1);
+    EXPECT_EQ(2, v2.id);
+    EXPECT_EQ(1, v2.routes.size());
+
+    EXPECT_EQ(vector<Route>{expectedRoute(2)}, v2.routes);
+    EXPECT_EQ(expectedMetadata(6), v2.metadata);
 }
