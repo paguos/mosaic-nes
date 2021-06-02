@@ -4,10 +4,13 @@
 
 #include "Vehicle.h"
 
-Vehicle::Vehicle(int id) : id(id) {}
+
+Vehicle::Vehicle(int id, const Car &car) : id(id), car(car) {}
 
 bool Vehicle::operator==(const Vehicle &rhs) const {
     return id == rhs.id &&
+           car == rhs.car &&
+           routes == rhs.routes &&
            metadata == rhs.metadata;
 }
 

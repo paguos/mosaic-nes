@@ -1,15 +1,34 @@
 {
   "vehicles": [
     {
-      "startingTime": 5,
-      "maxTime": 700,
-      "targetFlow": 500,
-      "spawningMode": "CONSTANT",
-      "maxNumberVehicles": 1000,
-      "laneSelectionMode": "BEST",
-      "departSpeed": 0,
-      "departSpeedMode": "MAXIMUM",
-      "deterministic": true
+      "car" : "Car",
+      "routes": "*",
+      "metadata": {
+        "startingTime": 5,
+        "maxTime": 700,
+        "targetFlow": 500,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 1000,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0,
+        "departSpeedMode": "MAXIMUM",
+        "deterministic": true
+      }
+    },
+    {
+      "car" : "NesSinkCar",
+      "routes": "1",
+      "metadata": {
+        "startingTime": 5,
+        "maxTime": 700,
+        "targetFlow": 500,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 1000,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0,
+        "departSpeedMode": "MAXIMUM",
+        "deterministic": true
+      }
     }
   ],
   "cars": [
@@ -25,6 +44,20 @@
         "sigma": 0.5,
         "tau": 1,
         "color": "red"
+      }
+    },
+    {
+      "name": "NesSinkCar",
+      "applications": [],
+      "metadata": {
+        "accel": 1.5,
+        "decel": 4.5,
+        "length": 5.00,
+        "maxSpeed": 10.0,
+        "minGap": 2.5,
+        "sigma": 0.5,
+        "tau": 1,
+        "color": "blue"
       }
     }
   ],

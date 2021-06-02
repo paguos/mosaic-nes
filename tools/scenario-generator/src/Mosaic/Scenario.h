@@ -38,12 +38,13 @@ private:
     json ExportPrototypes();
     json ExportRoadSideUnits();
     json ExportVehicles();
+    Car findCar(const string& carName);
 
 public:
     vector<Car> cars;
     vector<Route> routes;
-    list<RoadSideUnit> rsus;
-    list<Vehicle> vehicles;
+    vector<RoadSideUnit> rsus;
+    vector<Vehicle> vehicles;
 
     static Scenario LoadFile(const string& filePath);
     void exportRoutes(const string& sqlDBPath);
