@@ -51,7 +51,6 @@ TEST_F(ScenarioFromFile, Cars) {
 
 }
 
-
 TEST_F(ScenarioFromFile, RoadSideUnits) {
     const int expectedRSUCount = 1;
     EXPECT_EQ(expectedRSUCount, s.rsus.size());
@@ -94,7 +93,7 @@ TEST_F(ScenarioFromFile, Routes) {
                                Position("test_target_lat_2", "test_target_long_2")
     );
 
-    list<Route> expectedRoutes{expectedFirstRoute, expectedSecondRoute};
+    vector<Route> expectedRoutes{expectedFirstRoute, expectedSecondRoute};
     EXPECT_EQ(expectedRoutes, s.routes);
 }
 

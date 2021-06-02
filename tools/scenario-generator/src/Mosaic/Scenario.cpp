@@ -10,10 +10,9 @@
 
 void Scenario::LoadCars(const json& carsJson) {
     for (auto carJson : carsJson) {
-        json config = carJson["config"];
-        Car car(config["name"], carJson["metadata"]);
+        Car car(carJson["name"], carJson["metadata"]);
 
-        for (const auto& applicationName: config["applications"]) {
+        for (const auto& applicationName: carJson["applications"]) {
             car.applications.push_back(applicationName);
         }
 
@@ -38,10 +37,9 @@ void Scenario::LoadRoutes(json routes) {
 
 void Scenario::LoadRoadSideUnits(json rsus) {
     for (auto rsuConfig : rsus) {
-        json config = rsuConfig["config"];
-        RoadSideUnit rsu(config["name"]);
+        RoadSideUnit rsu(rsuConfig["name"]);
 
-        for (auto applicationName: config["applications"]) {
+        for (const auto& applicationName: rsuConfig["applications"]) {
             rsu.applications.push_back(applicationName);
         }
 

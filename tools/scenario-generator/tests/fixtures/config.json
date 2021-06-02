@@ -1,12 +1,8 @@
 {
   "cars" : [
     {
-      "config": {
-        "name": "TEST_CAR",
-        "applications": [
-          "TEST_CAR_APP_1", "TEST_CAR_APP_2"
-        ]
-      },
+      "name": "TEST_CAR",
+      "applications": ["TEST_CAR_APP_1", "TEST_CAR_APP_2"],
       "metadata" : {
         "randomInt": 6,
         "randomFloat": 60.6,
@@ -47,12 +43,8 @@
   ],
   "rsus": [
     {
-      "config": {
-        "name": "TEST_RSU",
-        "applications": [
-          "TEST_RSU_APP_1", "TEST_RSU_APP_2"
-        ]
-      },
+      "name": "TEST_RSU",
+      "applications": ["TEST_RSU_APP_1", "TEST_RSU_APP_2"],
       "positions": [{
         "latitude": "51.5067654",
         "longitude": "11.3310764"

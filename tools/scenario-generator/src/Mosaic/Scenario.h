@@ -7,6 +7,7 @@
 #include <list>
 #include <map>
 #include <string>
+#include <vector>
 
 #include "nlohmann/json.hpp"
 
@@ -24,6 +25,7 @@ using json = nlohmann::json;
 using std::list;
 using std::map;
 using std::string;
+using std::vector;
 
 class Scenario {
 
@@ -38,8 +40,8 @@ private:
     json ExportVehicles();
 
 public:
-    list<Car> cars;
-    list<Route> routes;
+    vector<Car> cars;
+    vector<Route> routes;
     list<RoadSideUnit> rsus;
     list<Vehicle> vehicles;
 

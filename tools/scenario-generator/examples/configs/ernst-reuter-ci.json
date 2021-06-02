@@ -14,10 +14,8 @@
   ],
   "cars": [
     {
-      "config" : {
-        "name": "Car",
-        "applications": []
-      },
+      "name": "Car",
+      "applications": [],
       "metadata" : {
         "accel": 1.5,
         "decel": 4.5,
@@ -32,13 +30,11 @@
   ],
   "rsus": [
     {
-      "config": {
-        "name": "NES-Source-RSU",
-        "applications": []
-      },
+      "name": "NES-Source-RSU",
+      "applications": [],
       "positions": [{
-        "latitude": "52.5110885",
-        "longitude": "13.3002965"
+        "latitude": "52.5128417",
+        "longitude": "13.3213595"
       }]
     }
   ],
