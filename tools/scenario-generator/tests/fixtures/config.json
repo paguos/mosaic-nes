@@ -21,28 +21,6 @@
       }
     }
   ],
-  "vehicles": [
-    {
-      "car": "TEST_CAR_1",
-      "routes": "*",
-      "metadata" : {
-        "randomInt": 5,
-        "randomFloat": 50.0,
-        "randomString": "TEST_5",
-        "randomBoolean": true
-      }
-    },
-    {
-      "car": "TEST_CAR_2",
-      "routes": "2",
-      "metadata" : {
-        "randomInt": 6,
-        "randomFloat": 60.0,
-        "randomString": "TEST_6",
-        "randomBoolean": true
-      }
-    }
-  ],
   "routes": [
     {
       "source": {
@@ -77,6 +55,28 @@
         "longitude": "12.3310764"
       }
       ]
+    }
+  ],
+  "vehicles": [
+    {
+      "car": "TEST_CAR_1",
+      "routes": "*",
+      "metadata" : {
+        "randomInt": 5,
+        "randomFloat": 50.0,
+        "randomString": "TEST_5",
+        "randomBoolean": true
+      }
+    },
+    {
+      "car": "TEST_CAR_2",
+      "routes": "2",
+      "metadata" : {
+        "randomInt": 6,
+        "randomFloat": 60.0,
+        "randomString": "TEST_6",
+        "randomBoolean": true
+      }
     }
   ]
 }

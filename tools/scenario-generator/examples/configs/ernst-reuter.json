@@ -1,36 +1,4 @@
 {
-  "vehicles": [
-    {
-      "car" : "Car",
-      "routes": "*",
-      "metadata": {
-        "startingTime": 5,
-        "maxTime": 700,
-        "targetFlow": 500,
-        "spawningMode": "CONSTANT",
-        "maxNumberVehicles": 1000,
-        "laneSelectionMode": "BEST",
-        "departSpeed": 0,
-        "departSpeedMode": "MAXIMUM",
-        "deterministic": true
-      }
-    },
-    {
-      "car" : "NesSinkCar",
-      "routes": "1",
-      "metadata": {
-        "startingTime": 5,
-        "maxTime": 700,
-        "targetFlow": 500,
-        "spawningMode": "CONSTANT",
-        "maxNumberVehicles": 1000,
-        "laneSelectionMode": "BEST",
-        "departSpeed": 0,
-        "departSpeedMode": "MAXIMUM",
-        "deterministic": true
-      }
-    }
-  ],
   "cars": [
     {
       "name": "Car",
@@ -170,6 +138,38 @@
       "target": {
         "latitude": "52.5133514",
         "longitude": "13.3349976"
+      }
+    }
+  ],
+  "vehicles": [
+    {
+      "car" : "Car",
+      "routes": "*",
+      "metadata": {
+        "startingTime": 5,
+        "maxTime": 700,
+        "targetFlow": 500,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 1000,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0,
+        "departSpeedMode": "MAXIMUM",
+        "deterministic": true
+      }
+    },
+    {
+      "car" : "NesSinkCar",
+      "routes": "1",
+      "metadata": {
+        "startingTime": 5,
+        "maxTime": 700,
+        "targetFlow": 500,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 1000,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0,
+        "departSpeedMode": "MAXIMUM",
+        "deterministic": true
       }
     }
   ]
