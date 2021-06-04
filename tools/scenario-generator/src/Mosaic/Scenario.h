@@ -11,6 +11,7 @@
 
 #include "nlohmann/json.hpp"
 
+#include "Nebulastream/NesFederate.h"
 #include "Position.h"
 #include "Prototype.h"
 #include "Route.h"
@@ -45,6 +46,12 @@ public:
     vector<Route> routes;
     vector<RoadSideUnit> rsus;
     vector<Vehicle> vehicles;
+
+    NesFederate nesFederate;
+
+    explicit Scenario(NesFederate nesFederate);
+
+    Scenario();
 
     static Scenario LoadFile(const string& filePath);
     void exportRoutes(const string& sqlDBPath);

@@ -71,6 +71,30 @@ void ScenarioGenerator::generateScenario(ScenarioConvert scenarioConvert) {
     std::ofstream outputFileStream(mappingConfigPath);
     outputFileStream << std::setw(4) << mappingConfig << std::endl;
     LOG_F(INFO, "Mapping generated!");
+
+    LOG_F(INFO, "Generating NesFederate configurations ...");
+    json nesFederateConfig = scenario.nesFederate.generateJson();
+
+    fs::path nesPath(config.scenarioPath.string() + "/nes");
+    fs::create_directory(nesPath);
+    string nesConfigPath = nesPath.string() + "/nes_config.json";
+
+    std::ofstream nesOutputFileStream(nesConfigPath);
+    nesOutputFileStream << std::setw(4) << nesFederateConfig << std::endl;
+    LOG_F(INFO, "NesFederate configurations generated!");
+}
+
+void ScenarioGenerator::updateScenarioConfig() {
+    // read a JSON file
+    string scenarioConfigPath = config.scenarioPath.string() + "/scenario_config.json";
+    std::ifstream inputStream(scenarioConfigPath);
+    json scenarioConfigJson;
+    inputStream >> scenarioConfigJson;
+
+    scenarioConfigJson["federates"]["nes"] = scenario.nesFederate.enabled;
+
+    std::ofstream outputStream(scenarioConfigPath);
+    outputStream << std::setw(4) << scenarioConfigJson << std::endl;
 }
 
 void ScenarioGenerator::run() {
@@ -85,6 +109,7 @@ void ScenarioGenerator::run() {
 
     generateRoutes(scenarioConvert);
     generateScenario( scenarioConvert);
+    updateScenarioConfig();
 
     LOG_F(INFO, "Scenario generator FINISHED!");
 }

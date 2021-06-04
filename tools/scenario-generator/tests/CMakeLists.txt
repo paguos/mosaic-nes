@@ -22,6 +22,10 @@ target_compile_definitions(load-from-db-test PUBLIC TEST_FIXTURES_DIR="${CMAKE_C
 target_link_libraries(load-from-db-test gtest_main gmock_main mosaic)
 add_test(NAME load-from-db-test COMMAND load-from-db-test)
 
+add_executable(nes-federate-to-json-test NesFederateToJsonTest.cpp)
+target_link_libraries(nes-federate-to-json-test gtest_main gmock_main mosaic)
+add_test(NAME nes-federate-to-json-test COMMAND nes-federate-to-json-test)
+
 add_executable(scenario-convert-test ScenarioConvertTest.cpp)
 target_link_libraries(scenario-convert-test  gtest_main gmock_main mosaic)
 add_test(NAME scenario-convert-test COMMAND scenario-convert-test)

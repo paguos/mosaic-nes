@@ -1,36 +1,4 @@
 {
-  "vehicles": [
-    {
-      "car" : "Car",
-      "routes": "*",
-      "metadata": {
-        "startingTime": 5,
-        "maxTime": 700,
-        "targetFlow": 500,
-        "spawningMode": "CONSTANT",
-        "maxNumberVehicles": 1000,
-        "laneSelectionMode": "BEST",
-        "departSpeed": 0,
-        "departSpeedMode": "MAXIMUM",
-        "deterministic": true
-      }
-    },
-    {
-      "car" : "NesSinkCar",
-      "routes": "1",
-      "metadata": {
-        "startingTime": 5,
-        "maxTime": 700,
-        "targetFlow": 500,
-        "spawningMode": "CONSTANT",
-        "maxNumberVehicles": 1000,
-        "laneSelectionMode": "BEST",
-        "departSpeed": 0,
-        "departSpeedMode": "MAXIMUM",
-        "deterministic": true
-      }
-    }
-  ],
   "cars": [
     {
       "name": "Car",
@@ -61,6 +29,27 @@
       }
     }
   ],
+  "federates": {
+    "nes": {
+      "enabled": true,
+      "coordinator": {
+        "image": "nebulastream/nes-executable-image:0.0.408"
+      },
+      "worker": {
+        "image": "nebulastream/nes-executable-image:0.0.408"
+      },
+      "nodes": [
+        {
+          "name": "sources_worker",
+          "nodes": []
+        },
+        {
+          "name": "sink_worker",
+          "nodes": []
+        }
+      ]
+    }
+  },
   "rsus": [
     {
       "name": "NES-Source-RSU",
@@ -170,6 +159,36 @@
       "target": {
         "latitude": "52.5133514",
         "longitude": "13.3349976"
+      }
+    }
+  ],
+  "vehicles": [
+    {
+      "car" : "Car",
+      "routes": "*",
+      "metadata": {
+        "startingTime": 5,
+        "maxTime": 700,
+        "targetFlow": 500,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 1000,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0,
+        "departSpeedMode": "MAXIMUM",
+        "deterministic": true
+      }
+    },
+    {
+      "car" : "NesSinkCar",
+      "routes": "1",
+      "metadata": {
+        "startingTime": 5,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 1,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0,
+        "departSpeedMode": "MAXIMUM",
+        "deterministic": true
       }
     }
   ]
