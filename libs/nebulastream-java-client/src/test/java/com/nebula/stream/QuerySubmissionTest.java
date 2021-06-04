@@ -1,10 +1,11 @@
 package com.nebula.stream;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import stream.nebula.model.logicalstream.LogicalStream;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
 import stream.nebula.operators.*;
+import stream.nebula.operators.sink.*;
 import stream.nebula.operators.windowdefinition.SlidingWindow;
 import stream.nebula.operators.windowdefinition.TumblingWindow;
 import stream.nebula.queryinterface.Query;
@@ -13,9 +14,10 @@ import stream.nebula.runtime.NebulaStreamRuntime;
 /*
 This test check if the nes java client produces queries that can be submitted to the NebulaStream
  */
+//TODO: The QuerySubmissionTest currently uses a outdated way to generate operators(windowQuery), which causes a RESTExecption Issue #97
 public class QuerySubmissionTest {
     private static NebulaStreamRuntime ner;
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         ner = NebulaStreamRuntime.getRuntime();
         ner.getConfig().setHost("localhost")
@@ -29,21 +31,21 @@ public class QuerySubmissionTest {
      */
     @Test
     public void executeFilterOperatorRepliedWithAQueyId() throws Exception {
-        LogicalStream defaultLogical = ner.getLogicalStream("default_logical");
+        String defaultLogical = "default_logical";
 
         // Filter with a single predicate
         Query filterWithOnePredicateQuery = new Query();
         filterWithOnePredicateQuery.from(defaultLogical)
-                .filter(Predicate.onField(1).greaterThan(42))
-                .print();
+                .filter(Predicate.onField("id").greaterThan(42))
+                .sink(new PrintSink());
         int filterWithOnePredicateQueryId = ner.executeQuery(filterWithOnePredicateQuery.generateCppCode(), "BottomUp");
         Assert.assertNotNull(filterWithOnePredicateQueryId);
 
         // Filter with multiple predicates
         Query filterWithMultiplePredicateQuery = new Query();
         filterWithMultiplePredicateQuery.from(defaultLogical)
-                .filter(Predicate.onField(1).greaterThan(100).and(Predicate.onField(1).greaterThan(200)))
-                .print();
+                .filter(Predicate.onField("id").greaterThan(100).and(Predicate.onField("id").greaterThan(200)))
+                .sink(new PrintSink());
         int filterWithMultiplePredicateQueryId = ner.executeQuery(filterWithMultiplePredicateQuery.generateCppCode(), "BottomUp");
         Assert.assertNotNull(filterWithMultiplePredicateQueryId);
     }
@@ -53,13 +55,13 @@ public class QuerySubmissionTest {
      */
     @Test
     public void executeMapOperatorRepliedWithAQueyId() throws Exception {
-        LogicalStream defaultLogical = ner.getLogicalStream("default_logical");
+        String defaultLogical = "default_logical";
 
         // Map operator that assign a field with addition from another field
         Query queryWithMapOperation = new Query();
         queryWithMapOperation.from(defaultLogical)
                 .map(Map.onField("value").assign(Operation.add("id","value")))
-                .print();
+                .sink(new PrintSink());;
         int queryWithMapOperationId = ner.executeQuery(queryWithMapOperation.generateCppCode(), "BottomUp");
         Assert.assertNotNull(queryWithMapOperationId);
 
@@ -67,7 +69,7 @@ public class QuerySubmissionTest {
         Query queryWithMapOperationOnNewField = new Query();
         queryWithMapOperationOnNewField.from(defaultLogical)
                 .map(Map.onField("newfield").assign(Operation.add("id","value")))
-                .print();
+                .sink(new PrintSink());
         int queryWithMapOperationOnNewFieldId = ner.executeQuery(queryWithMapOperationOnNewField.generateCppCode(), "BottomUp");
         Assert.assertNotNull(queryWithMapOperationOnNewFieldId);
     }
@@ -77,13 +79,13 @@ public class QuerySubmissionTest {
      */
     @Test
     public void executeWindowOperatorRepliedWithAQueyId() throws Exception {
-        LogicalStream exdra = ner.getLogicalStream("exdra");
+        String exdra = "exdra";
 
         // Test submitting tumbling Window
         Query tumblingWindowQuery = new Query();
         tumblingWindowQuery.from(exdra)
                 .window(TumblingWindow.of(new EventTime("metadata_generated"), TimeMeasure.milliseconds(10)), Aggregation.sum("features_properties_capacity"))
-                .print();
+                .sink(new PrintSink());
         int tumblingWindowQueryId = ner.executeQuery(tumblingWindowQuery.generateCppCode(), "BottomUp");
         Assert.assertNotNull(tumblingWindowQueryId);
 
@@ -91,16 +93,15 @@ public class QuerySubmissionTest {
         Query slidingWindowQuery = new Query();
         slidingWindowQuery.from(exdra)
                 .window(SlidingWindow.of(new EventTime("metadata_generated"), TimeMeasure.milliseconds(10), TimeMeasure.seconds(30)), Aggregation.sum("features_properties_capacity"))
-                .print();
+                .sink(new PrintSink());
         int slidingWindowQueryId = ner.executeQuery(slidingWindowQuery.generateCppCode(), "BottomUp");
         Assert.assertNotNull(slidingWindowQueryId);
     }
 
     @Test
     public void executeUnionWithOperatorRepliedWithAQueyId() throws Exception {
-        // get the exdra logical query
-        LogicalStream exdra1 = ner.getLogicalStream("exdra");
-        LogicalStream exdra2 = ner.getLogicalStream("exdra");
+        String exdra1 = "exdra";
+        String exdra2 = "exdra";
 
         // create the q1 Query
         Query q1 = new Query();
@@ -111,7 +112,7 @@ public class QuerySubmissionTest {
         q2.from(exdra2);
 
         // create the unionWith query
-        q1.unionWith(q2).print();
+        q1.unionWith(q2).sink(new PrintSink());
 
         // assert that the query can be submitted
         int unionWithQueryId = ner.executeQuery(q1.generateCppCode(), "BottomUp");
@@ -122,13 +123,13 @@ public class QuerySubmissionTest {
      */
     @Test
     public void executeWindowByKeyOperatorRepliedWithAQueyId() throws Exception {
-        LogicalStream exdra = ner.getLogicalStream("exdra");
+        String exdra = "exdra";
 
         // Test submitting tumbling Window
         Query tumblingWindowQuery = new Query();
         tumblingWindowQuery.from(exdra)
                 .windowByKey("id", TumblingWindow.of(new EventTime("metadata_generated"), TimeMeasure.milliseconds(10)), Aggregation.sum("features_properties_capacity"))
-                .print();
+                .sink(new PrintSink());
         int tumblingWindowQueryId = ner.executeQuery(tumblingWindowQuery.generateCppCode(), "BottomUp");
         Assert.assertNotNull(tumblingWindowQueryId);
 
@@ -136,16 +137,15 @@ public class QuerySubmissionTest {
         Query slidingWindowQuery = new Query();
         slidingWindowQuery.from(exdra)
                 .windowByKey("id", SlidingWindow.of(new EventTime("metadata_generated"), TimeMeasure.milliseconds(10), TimeMeasure.seconds(30)), Aggregation.sum("features_properties_capacity"))
-                .print();
+                .sink(new PrintSink());
         int slidingWindowQueryId = ner.executeQuery(slidingWindowQuery.generateCppCode(), "BottomUp");
         Assert.assertNotNull(slidingWindowQueryId);
     }
 
     @Test
     public void executeJoinWithOperatorRepliedWithAQueyId() throws Exception {
-        // get the exdra logical query
-        LogicalStream exdra1 = ner.getLogicalStream("exdra");
-        LogicalStream exdra2 = ner.getLogicalStream("exdra");
+        String exdra1 = "exdra";
+        String exdra2 = "exdra";
 
         // create the q1 Query
         Query q1 = new Query();
@@ -157,10 +157,55 @@ public class QuerySubmissionTest {
 
         // create the joinWith query
         q1.joinWith(q2, "features_properties_capacity", "features_properties_capacity",
-                TumblingWindow.of(new EventTime("metadata_generated"), TimeMeasure.milliseconds(10))).print();
+                TumblingWindow.of(new EventTime("metadata_generated"), TimeMeasure.milliseconds(10))).sink(new PrintSink());
 
         // assert that the query can be submitted
         int joinQueryId = ner.executeQuery(q1.generateCppCode(), "BottomUp");
         Assert.assertNotNull(joinQueryId);
+    }
+
+    @Disabled("Disabled because of Issue #97")
+    @Test
+    public void testSubmittingQueriesWithSinkOperators() throws Exception {
+        // create a Query with PrintSink()
+        Query q1 = new Query();
+        q1.from("exdra").sink(new PrintSink());
+
+        // assert that the query with PrintSink can be submitted
+        int q1Id = ner.executeQuery(q1.generateCppCode(), "BottomUp");
+        Assert.assertNotNull(q1Id);
+
+        // create a Query with ZMQSink
+        Query q2 = new Query();
+        q2.from("exdra").sink(new ZMQSink("localhost", 1234));
+
+        // assert that the query with ZMQSink can be submitted
+        int q2Id = ner.executeQuery(q2.generateCppCode(), "BottomUp");
+        Assert.assertNotNull(q2Id);
+
+        // create a Query with FileSink
+        Query q4 = new Query();
+        q4.from("exdra").sink(new FileSink("/tmp/out.txt", "CSV", "OVERRIDE"));
+
+        // assert that the query with FileSink can be submitted
+        int q4Id = ner.executeQuery(q4.generateCppCode(), "BottomUp");
+        Assert.assertNotNull(q4Id);
+
+        // create a Query with NullOutputSink
+        Query q5 = new Query();
+        q5.from("exdra").sink(new NullOutputSink());
+
+        // assert that the query with FileSink can be submitted
+        int q5Id = ner.executeQuery(q5.generateCppCode(), "BottomUp");
+        Assert.assertNotNull(q5Id);
+
+        // create a Query with MQTTSink
+        Query q6 = new Query();
+        q6.from("exdra").sink(new MQTTSink("127.0.0.1:8081", "nes-mqtt-test-client", "v1/devices/me/telemetry","rfRqLGZRChg8eS30PEeR", "5", "MQTTSinkDescriptor::milliseconds", "500", "MQTTSinkDescriptor::atLeastOnce", "true"));
+
+        // assert that the query with FileSink can be submitted
+        int q6Id = ner.executeQuery(q6.generateCppCode(), "BottomUp");
+        Assert.assertNotNull(q6Id);
+
     }
 }

@@ -26,6 +26,6 @@ public class WindowByKeyOperator extends Operator {
 
     @Override
     public String getCppCode() {
-        return ".windowByKey(Attribute(\""+fieldName+"\"), "+ windowDefinition.toString()+", "+aggregation.toString()+")";
+        return ".window("+ windowDefinition.toString()+").byKey(Attribute(\""+fieldName+"\")).apply("+aggregation.toString()+")";
     }
 }

@@ -4,10 +4,10 @@ import stream.nebula.operators.windowdefinition.WindowDefinition;
 import stream.nebula.queryinterface.Query;
 
 public class JoinWithOperator extends Operator {
-    private Query other;
-    private String leftFieldName;
-    private String rightFieldName;
-    private WindowDefinition windowDefinition;
+    private final Query other;
+    private final String leftFieldName;
+    private final String rightFieldName;
+    private final WindowDefinition windowDefinition;
 
     public JoinWithOperator(Query other, String leftFieldName, String rightFieldName, WindowDefinition windowDefinition) {
         this.other = other;
@@ -19,6 +19,6 @@ public class JoinWithOperator extends Operator {
     @Override
     public String getCppCode() {
         return ".joinWith("+other.generateCppCode().replace(";","") +
-                ", Attribute(\""+leftFieldName+"\"), Attribute(\""+rightFieldName+"\"), " + windowDefinition.toString()+")";
+                ").where(Attribute(\""+leftFieldName+"\")).equalsTo(Attribute(\""+rightFieldName+"\")).window(" + windowDefinition.toString()+")";
     }
 }

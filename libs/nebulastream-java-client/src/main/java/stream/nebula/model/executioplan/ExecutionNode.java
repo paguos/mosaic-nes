@@ -3,33 +3,39 @@ package stream.nebula.model.executioplan;
 import stream.nebula.utils.GraphBuilder;
 
 public class ExecutionNode {
-    private String id;
-    private String nodeType;
+    private Integer id;
+    private Integer topologyNodeId;
+    private String topologyNodeIpAddress;
     private String operators;
-    private float remainingCapacity;
 
-    public ExecutionNode(String id, String nodeType, String operators, float remainingCapacity) {
+    public ExecutionNode(Integer id, Integer topologyNodeId, String topologyNodeIpAddress, String operators) {
         this.id = id;
-        this.nodeType = nodeType;
+        this.topologyNodeId = topologyNodeId;
+        this.topologyNodeIpAddress = topologyNodeIpAddress;
         this.operators = operators;
-        this.remainingCapacity = remainingCapacity;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getNodeType() {
-        return nodeType;
+    public void setTopologyNodeId(Integer topologyNodeId) {
+        this.topologyNodeId = topologyNodeId;
     }
 
-    public void setNodeType(String nodeType) {
-        this.nodeType = nodeType;
+    public Integer getTopologyNodeId() {
+        return topologyNodeId;
     }
+
+    public String getTopologyNodeIpAddress() {
+        return topologyNodeIpAddress;
+    }
+
+    public void setTopologyNodeIpAddress(String topologyNodeIpAddress) { this.topologyNodeIpAddress = topologyNodeIpAddress; }
 
     public String getOperators() {
         return operators;
@@ -39,16 +45,9 @@ public class ExecutionNode {
         this.operators = operators;
     }
 
-    public float getRemainingCapacity() {
-        return remainingCapacity;
-    }
-
-    public void setRemainingCapacity(float remainingCapacity) {
-        this.remainingCapacity = remainingCapacity;
-    }
 
     public String toString(){
-        return GraphBuilder.cleanNodeId(this.id)+"_"+this.operators.replace("=>","_")
-                .replace("(","").replace(")","").replace("-","");
+        return GraphBuilder.cleanNodeId("NodeId"+Integer.toString(this.id))+"_"+this.operators.replace("=>","_")
+                .replace("(","").replace(")","").replace("-","").replace(",", "");
     }
 }

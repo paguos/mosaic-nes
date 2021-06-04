@@ -7,7 +7,6 @@ import stream.nebula.operators.windowdefinition.SlidingWindow;
 import stream.nebula.operators.windowdefinition.TumblingWindow;
 import stream.nebula.queryinterface.Query;
 import stream.nebula.runtime.NebulaStreamRuntime;
-import stream.nebula.model.logicalstream.LogicalStream;
 
 import java.util.List;
 
@@ -40,25 +39,23 @@ public class WindowExample {
         ner.getConfig().setHost("localhost")
                 .setPort("8081");
 
-        // Get a list of available logical stream and choose one
-        List<LogicalStream> availableLogicalStream = ner.getAvailableLogicalStreams();
-        LogicalStream defaultLogical = availableLogicalStream.get(0);
+        // Get available logical streams
+        List<String> availableLogicalStreams = ner.getAvailableLogicalStreams();
+        availableLogicalStreams.forEach(logicalStreamName -> System.out.println(logicalStreamName + "\n"));
 
         Query query;
 
         // Example of using event time tumbling window of 10 seconds and then apply sum aggregation to each window
         query = new Query();
-        query.from(defaultLogical)
-                .window(TumblingWindow.of(new EventTime("timestamp"), TimeMeasure.seconds(10)), Aggregation.sum(1));
+        query.from("defaultLogical")
+                .window(TumblingWindow.of(new EventTime("timestamp"), TimeMeasure.seconds(10)), Aggregation.sum("value"));
         System.out.println(query.generateCppCode());
 
         // Example of using event time sliding window of 1 minutes with 30 seconds slide and then apply sum aggregation to
         // each window
         query = new Query();
-        query.from(defaultLogical)
-                .window(SlidingWindow.of(new EventTime("timestamp"), TimeMeasure.minutes(1), TimeMeasure.seconds(30)), Aggregation.sum(1));
+        query.from("defaultLogical")
+                .window(SlidingWindow.of(new EventTime("timestamp"), TimeMeasure.minutes(1), TimeMeasure.seconds(30)), Aggregation.sum("value"));
         System.out.println(query.generateCppCode());
-
-
     }
 }

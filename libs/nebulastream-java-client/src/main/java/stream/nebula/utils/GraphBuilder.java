@@ -20,25 +20,25 @@ public class GraphBuilder {
         JSONArray nodes = getTopologyResponseJsonObject.getJSONArray("nodes");
         for (int i = 0; i < nodes.length(); i++) {
             JSONObject currentNode = nodes.getJSONObject(i);
-            TopologyEntry currentEntry = new TopologyEntry(currentNode.getString("id"),
-                    currentNode.getString("title"), currentNode.getString("nodeType"),
-                    currentNode.getFloat("capacity"), currentNode.getFloat("remainingCapacity"));
+            TopologyEntry currentEntry = new TopologyEntry(currentNode.getInt("id"),
+                    currentNode.getString("ip_address"), currentNode.getFloat("available_resources"));
             topology.addVertex(currentEntry);
         }
 
         JSONArray edges = getTopologyResponseJsonObject.getJSONArray("edges");
         for (int i = 0; i < edges.length(); i++) {
             JSONObject currentEdges = edges.getJSONObject(i);
-            TopologyLink currentLink = new TopologyLink(currentEdges.getFloat("linkCapacity"),
-                    currentEdges.getFloat("linkLatency"));
+            Integer source = currentEdges.getInt("source");
+            Integer target = currentEdges.getInt("target");
+            TopologyLink currentLink = new TopologyLink(source, target);
             // Find the source and target from the graph by id
-            TopologyEntry source = topology.vertexSet().stream()
-                    .filter(topologyEntry -> topologyEntry.getId().equals(currentEdges.getString("source")))
+            TopologyEntry sourceNode = topology.vertexSet().stream()
+                    .filter(topologyEntry -> topologyEntry.getId().equals(source))
                     .findFirst().orElse(null);
-            TopologyEntry target = topology.vertexSet().stream()
-                    .filter(topologyEntry -> topologyEntry.getId().equals(currentEdges.getString("target")))
+            TopologyEntry targetNode = topology.vertexSet().stream()
+                    .filter(topologyEntry -> topologyEntry.getId().equals(target))
                     .findFirst().orElse(null);
-            topology.addEdge(source, target, currentLink);
+            topology.addEdge(sourceNode, targetNode, currentLink);
         }
         return topology;
     }
@@ -51,7 +51,7 @@ public class GraphBuilder {
         for (int i = 0; i < nodes.length(); i++) {
             JSONObject currentNode = nodes.getJSONObject(i);
             LogicalQuery currentLogicalQuery = new LogicalQuery(currentNode.getString("id"),
-                    currentNode.getString("title"), currentNode.getString("nodeType"));
+                    currentNode.getString("name"), currentNode.getString("nodeType"));
             queryPlanGraph.addVertex(currentLogicalQuery);
         }
 
@@ -61,10 +61,10 @@ public class GraphBuilder {
             JSONObject currentEdges = edges.getJSONObject(i);
 
             LogicalQuery source = queryPlanGraph.vertexSet().stream()
-                    .filter(logicalQuery -> logicalQuery.getId().equals(currentEdges.getString("source")))
+                    .filter(logicalQuery -> logicalQuery.getName().equals(currentEdges.getString("source")))
                     .findFirst().orElse(null);
             LogicalQuery target = queryPlanGraph.vertexSet().stream()
-                    .filter(logicalQuery -> logicalQuery.getId().equals(currentEdges.getString("target")))
+                    .filter(logicalQuery -> logicalQuery.getName().equals(currentEdges.getString("target")))
                     .findFirst().orElse(null);
             queryPlanGraph.addEdge(source, target);
         }
@@ -72,31 +72,63 @@ public class GraphBuilder {
     }
 
 
-    public static Graph<ExecutionNode, ExecutionLink> buildExecutionPlanGraphFromJson(JSONObject executionPlanJsonObject) {
+    public static Graph<ExecutionNode, ExecutionLink> buildExecutionPlanGraphFromJson(JSONObject executionPlanJsonObject, Graph<TopologyEntry, TopologyLink> topology) {
 
         Graph<ExecutionNode, ExecutionLink> executionPlanGraph = new DirectedAcyclicGraph<>(ExecutionLink.class);
         // Parsing the nodes and add to the graph
-        JSONArray nodes = executionPlanJsonObject.getJSONObject("executionGraph").getJSONArray("nodes");
+        JSONArray nodes = executionPlanJsonObject.getJSONArray("executionNodes");
         for (int i = 0; i < nodes.length(); i++) {
             JSONObject currentNode = nodes.getJSONObject(i);
-            ExecutionNode currentExecutionNode = new ExecutionNode(currentNode.getString("id"),
-                    currentNode.getString("nodeType"), currentNode.getString("operators"),
-                    currentNode.getFloat("remainingCapacity"));
+            JSONObject currentQuery = currentNode.getJSONArray("ScheduledQueries").getJSONObject(0);
+
+            String operators = "";
+
+            JSONArray queryOperators = currentQuery.getJSONArray("querySubPlans");
+            for (int j = 0; j < queryOperators.length(); j++) {
+                String responseOperator = queryOperators.getJSONObject(j).getString("operator");
+
+                String[] operator = responseOperator.split("\\n");
+                for (int k = 0; k < operator.length; k++) {
+                    if (k == 0) {
+                        operators = operators.concat(operator[k].replaceAll("\\s+",""));
+                    } else {
+                        operators = operators.concat("_" + operator[k].replaceAll("\\s+",""));
+                    }
+                }
+            }
+
+            ExecutionNode currentExecutionNode = new ExecutionNode(currentNode.getInt("executionNodeId"),
+                    currentNode.getInt("topologyNodeId"),
+                    currentNode.getString("topologyNodeIpAddress"),
+                    operators);
             executionPlanGraph.addVertex(currentExecutionNode);
         }
-        JSONArray edges = executionPlanJsonObject.getJSONObject("executionGraph").getJSONArray("edges");
-        for (int i = 0; i < edges.length(); i++) {
-            JSONObject currentEdges = edges.getJSONObject(i);
 
+        for (int i = 0; i < nodes.length(); i++) {
+            JSONObject currentNodeI = nodes.getJSONObject(i);
             ExecutionNode source = executionPlanGraph.vertexSet().stream()
-                    .filter(executionNode -> executionNode.getId().equals(currentEdges.getString("source")))
+                    .filter(executionNode -> executionNode.getId().equals(currentNodeI.getInt("executionNodeId")))
                     .findFirst().orElse(null);
-            ExecutionNode target = executionPlanGraph.vertexSet().stream()
-                    .filter(executionNode -> executionNode.getId().equals(currentEdges.getString("target")))
-                    .findFirst().orElse(null);
-            ExecutionLink currentLink = new ExecutionLink(currentEdges.getFloat("linkCapacity"),
-                    currentEdges.getFloat("linkLatency"));
-            executionPlanGraph.addEdge(source, target,currentLink);
+            for (int j = 0; j < nodes.length(); j++) {
+                JSONObject currentNodeJ = nodes.getJSONObject(j);
+
+                ExecutionNode target = executionPlanGraph.vertexSet().stream()
+                        .filter(executionNode -> executionNode.getId().equals(currentNodeJ.getInt("executionNodeId")))
+                        .findFirst().orElse(null);
+
+                // Find the source and target from the graph by id
+                TopologyEntry sourceNode = topology.vertexSet().stream()
+                        .filter(topologyEntry -> topologyEntry.getId().equals(currentNodeI.getInt("topologyNodeId")))
+                        .findFirst().orElse(null);
+                TopologyEntry targetNode = topology.vertexSet().stream()
+                        .filter(topologyEntry -> topologyEntry.getId().equals(currentNodeJ.getInt("topologyNodeId")))
+                        .findFirst().orElse(null);
+
+                if(topology.containsEdge(sourceNode, targetNode)) {
+                    ExecutionLink currentLink = new ExecutionLink(source.getId(), target.getId());
+                    executionPlanGraph.addEdge(source, target,currentLink);
+                }
+            }
         }
         return executionPlanGraph;
     }

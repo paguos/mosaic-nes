@@ -1,9 +1,6 @@
 package stream.nebula.operators;
-
-import stream.nebula.model.logicalstream.Field;
-
 public class EventTime implements TimeCharacteristic{
-    private String field;
+    private final String field;
 
     public EventTime(String field) {
         this.field = field;

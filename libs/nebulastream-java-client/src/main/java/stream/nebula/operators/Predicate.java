@@ -4,19 +4,11 @@ public class Predicate {
     private String field;
     private String value;
     private String operator;
-    private int fieldIndex;
     private Class valueType;
 
     private Predicate nextPredicate;
     private String nextPredicateConnector;
 
-    private Predicate(int fieldIndex){
-        this.fieldIndex = fieldIndex;
-    }
-
-    public static Predicate onField(int fieldIndex) {
-        return new Predicate(fieldIndex);
-    }
     public static Predicate onField(String fieldName) {
         return new Predicate(fieldName);
     }
@@ -27,14 +19,6 @@ public class Predicate {
 
     public void setField(String field) {
         this.field = field;
-    }
-
-    public void setFieldIndex(int fieldIndex) {
-        this.fieldIndex = fieldIndex;
-    }
-
-    public int getFieldIndex() {
-        return fieldIndex;
     }
 
     public Predicate greaterThan(Number intValue) {
@@ -64,7 +48,7 @@ public class Predicate {
         return nextPredicateConnector;
     }
 
-    public Predicate lessthanThan(Number intValue) {
+    public Predicate lessThan(Number intValue) {
         this.value = String.valueOf(intValue);
         this.valueType = intValue.getClass();
         this.operator = "<";
@@ -78,7 +62,7 @@ public class Predicate {
         return this;
     }
 
-    public Predicate lessthanThanOrEqual(Number intValue) {
+    public Predicate lessThanOrEqual(Number intValue) {
         this.value = String.valueOf(intValue);
         this.valueType = intValue.getClass();
         this.operator = "<=";

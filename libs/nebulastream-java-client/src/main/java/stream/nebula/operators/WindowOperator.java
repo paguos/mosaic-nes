@@ -13,6 +13,6 @@ public class WindowOperator extends Operator {
 
     @Override
     public String getCppCode() {
-        return ".window("+ windowDefinition.toString()+", "+aggregation.toString()+")";
+        return ".window("+ windowDefinition.toString()+").apply("+aggregation.toString()+")";
     }
 }
