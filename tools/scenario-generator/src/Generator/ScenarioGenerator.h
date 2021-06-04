@@ -26,6 +26,7 @@ private:
 
     void generateRoutes(ScenarioConvert scenarioConvert);
     void generateScenario(ScenarioConvert scenarioConvert);
+    void updateScenarioConfig();
 public:
     ScenarioGenerator(GeneratorConfig config, Scenario routes);
     void run();

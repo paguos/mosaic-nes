@@ -6,7 +6,12 @@
 
 #include <fstream>
 #include <loguru.hpp>
+#include <utility>
 #include "SQLiteCpp/SQLiteCpp.h"
+
+Scenario::Scenario() = default;
+
+Scenario::Scenario(NesFederate nesFederate) : nesFederate(std::move(nesFederate)) {}
 
 void Scenario::LoadCars(const json& carsJson) {
     for (auto carJson : carsJson) {
@@ -74,11 +79,12 @@ void Scenario::LoadVehicles(json vehicles) {
 }
 
 Scenario Scenario::LoadFile(const string& filePath) {
-    Scenario scenario{};
-
     std::ifstream inputFileStream(filePath);
     json config;
     inputFileStream >> config;
+
+    NesFederate nes = NesFederate::LoadFromJson(config["federates"]["nes"]);
+    Scenario scenario(nes);
 
     const json cars = config["cars"];
     scenario.LoadCars(cars);

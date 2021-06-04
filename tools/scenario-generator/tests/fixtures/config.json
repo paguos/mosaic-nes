@@ -21,6 +21,32 @@
       }
     }
   ],
+  "federates": {
+    "nes": {
+      "enabled": true,
+      "coordinator": {
+        "image": "nes-coordinator:test"
+      },
+      "worker": {
+        "image": "nes-worker:test"
+      },
+      "nodes": [
+        {
+          "name": "test_worker_1",
+          "nodes": []
+        },
+        {
+          "name": "test_worker_2",
+          "nodes": [
+            {
+              "name": "test_source",
+              "nodes": []
+            }
+          ]
+        }
+      ]
+    }
+  },
   "routes": [
     {
       "source": {

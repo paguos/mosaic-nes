@@ -13,6 +13,18 @@
             "tau": 1
         },
         {
+            "accel": 1.5,
+            "applications": [],
+            "color": "blue",
+            "decel": 4.5,
+            "length": 5.0,
+            "maxSpeed": 10.0,
+            "minGap": 2.5,
+            "name": "NesSinkCar",
+            "sigma": 0.5,
+            "tau": 1
+        },
+        {
             "applications": [
                 "com.github.paguos.mosaic.app.NesSourceApp"
             ],
@@ -209,6 +221,22 @@
             "types": [
                 {
                     "name": "Car"
+                }
+            ]
+        },
+        {
+            "departSpeed": 0,
+            "departSpeedMode": "MAXIMUM",
+            "deterministic": true,
+            "laneSelectionMode": "BEST",
+            "maxNumberVehicles": 1,
+            "pos": 0,
+            "route": "1",
+            "spawningMode": "CONSTANT",
+            "startingTime": 5,
+            "types": [
+                {
+                    "name": "NesSinkCar"
                 }
             ]
         }

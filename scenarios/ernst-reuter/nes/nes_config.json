@@ -1,18 +1,18 @@
 {
-  "coordinator" : {
-    "image" : "nebulastream/nes-executable-image:0.0.408"
-  },
-  "worker": {
-    "image" : "nebulastream/nes-executable-image:0.0.408"
-  },
-  "nodes": [
-    {
-      "name": "sources_worker",
-      "nodes" : []
+    "coordinator": {
+        "image": "nebulastream/nes-executable-image:0.0.408"
     },
-    {
-      "name": "sink_worker",
-      "nodes" : []
+    "nodes": [
+        {
+            "name": "sources_worker",
+            "nodes": []
+        },
+        {
+            "name": "sink_worker",
+            "nodes": []
+        }
+    ],
+    "worker": {
+        "image": "nebulastream/nes-executable-image:0.0.408"
     }
-  ]
 }

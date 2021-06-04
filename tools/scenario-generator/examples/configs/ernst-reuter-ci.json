@@ -29,6 +29,27 @@
       }
     }
   ],
+  "federates": {
+    "nes": {
+      "enabled": false,
+      "coordinator": {
+        "image": "nebulastream/nes-executable-image:0.0.408"
+      },
+      "worker": {
+        "image": "nebulastream/nes-executable-image:0.0.408"
+      },
+      "nodes": [
+        {
+          "name": "sources_worker",
+          "nodes": []
+        },
+        {
+          "name": "sink_worker",
+          "nodes": []
+        }
+      ]
+    }
+  },
   "rsus": [
     {
       "name": "NES-Source-RSU",
@@ -65,7 +86,7 @@
   ],
   "vehicles": [
     {
-      "car" : "Car",
+      "car": "Car",
       "routes": "*",
       "metadata": {
         "startingTime": 5,
@@ -80,7 +101,7 @@
       }
     },
     {
-      "car" : "NesSinkCar",
+      "car": "NesSinkCar",
       "routes": "1",
       "metadata": {
         "startingTime": 5,

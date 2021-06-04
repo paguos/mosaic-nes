@@ -50,7 +50,6 @@ protected:
     }
 
     Scenario s;
-
 };
 
 TEST_F(ScenarioFromFile, Cars) {
@@ -80,6 +79,22 @@ TEST_F(ScenarioFromFile, Cars) {
     }
 
     EXPECT_EQ(expectedMetadata(2), c2.metadata);
+}
+
+TEST_F(ScenarioFromFile, NesFederate) {
+    NesNodeConfig coordinatorConfig("nes-coordinator:test");
+    NesNodeConfig workerConfig("nes-worker:test");
+
+    NesFederate expectedFederate(coordinatorConfig, workerConfig, true);
+
+    NesNode w1("test_worker_1");
+    NesNode w2("test_worker_2");
+    w2.nodes.emplace_back("test_source");
+
+    expectedFederate.nodes.push_back(w1);
+    expectedFederate.nodes.push_back(w2);
+
+    EXPECT_EQ(expectedFederate, s.nesFederate);
 }
 
 TEST_F(ScenarioFromFile, RoadSideUnits) {
