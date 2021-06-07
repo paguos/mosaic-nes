@@ -99,7 +99,7 @@ public class NesCmdFactory {
                 .withNetworkMode(NetworkController.DEFAULT_NETWORK_NAME)
                 .withExposedPorts(dataPort, rpcPort)
                 .withPortBindings(portBindings)
-                .withCmd(cmd);
+                .withEntrypoint(cmd);
     }
 
     public static CreateNetworkCmd createNetworkCmd (String networkName) {
