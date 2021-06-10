@@ -13,6 +13,6 @@
         }
     ],
     "worker": {
-        "image": "nebulastream/nes-executable-image:0.0.408"
+        "image": "nes-source:test"
     }
 }

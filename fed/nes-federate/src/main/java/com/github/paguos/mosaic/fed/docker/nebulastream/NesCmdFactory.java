@@ -9,7 +9,7 @@ import com.github.paguos.mosaic.fed.config.CNes;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
 import com.github.paguos.mosaic.fed.docker.DockerController;
 import com.github.paguos.mosaic.fed.docker.NetworkController;
-import com.github.paguos.mosaic.fed.model.*;
+import com.github.paguos.mosaic.fed.model.node.*;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
 import java.util.ArrayList;

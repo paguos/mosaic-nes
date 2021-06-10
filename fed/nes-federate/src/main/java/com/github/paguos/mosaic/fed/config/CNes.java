@@ -9,6 +9,16 @@ import java.util.List;
 public final class CNes {
 
     /**
+     * Host address of the NES api
+     */
+    public String clientHost = "localhost";
+
+    /**
+     * Port of the NES api
+     */
+    public String clientPort = "8081";
+
+    /**
      * General properties of the NES Coordinator
      */
     public CNesCoordinator coordinator;

@@ -60,6 +60,7 @@
 
     <properties>
         <mosaic.version>21.0</mosaic.version>
+        <version.nes-client>0.0.37</version.nes-client>
         <version.logback>1.2.3</version.logback>
     </properties>
 

@@ -35,10 +35,16 @@ public class ErnstReuterIT {
         LogAssert.exists(simulationRule, "Application.log");
         LogAssert.exists(simulationRule, "Mapping.log");
         LogAssert.exists(simulationRule, "Communication.log");
+        LogAssert.exists(simulationRule, "apps/rsu_0/NesSourceApp.log");
     }
 
     @Test
     public void allVehiclesLoaded() throws Exception {
         LogAssert.contains(simulationRule, "Traffic.log", ".*SumoAmbassador - Process sumo :  Inserted: 966.*");
+    }
+
+    @Test
+    public void logicalStreamCreated() throws Exception {
+        LogAssert.contains(simulationRule, "apps/rsu_0/NesSourceApp.log", ".*Found Logical Stream 'QnV': true.*");
     }
 }

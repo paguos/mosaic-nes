@@ -28,6 +28,11 @@
             <version>0.0.1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>stream.nebula</groupId>
+            <artifactId>nebulastream-java-client</artifactId>
+            <version>${version.nes-client}</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -4,7 +4,7 @@ import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
-import com.github.paguos.mosaic.fed.model.*;
+import com.github.paguos.mosaic.fed.model.node.*;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import org.junit.Before;
 import org.junit.Test;
