@@ -9,7 +9,7 @@ import com.github.paguos.mosaic.fed.config.CNes;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
 import com.github.paguos.mosaic.fed.docker.DockerController;
 import com.github.paguos.mosaic.fed.docker.NetworkController;
-import com.github.paguos.mosaic.fed.model.*;
+import com.github.paguos.mosaic.fed.model.node.*;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public class NesCmdFactory {
                 .withNetworkMode(NetworkController.DEFAULT_NETWORK_NAME)
                 .withExposedPorts(dataPort, rpcPort)
                 .withPortBindings(portBindings)
-                .withCmd(cmd);
+                .withEntrypoint(cmd);
     }
 
     public static CreateNetworkCmd createNetworkCmd (String networkName) {

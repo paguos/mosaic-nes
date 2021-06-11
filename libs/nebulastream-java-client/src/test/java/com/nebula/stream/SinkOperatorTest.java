@@ -1,102 +1,88 @@
 package com.nebula.stream;
 
-import org.junit.BeforeClass;
-import stream.nebula.exceptions.UnknownDataTypeException;
-import stream.nebula.model.logicalstream.Field;
-import stream.nebula.model.logicalstream.LogicalStream;
 import org.junit.Assert;
 import org.junit.Test;
+import stream.nebula.exceptions.EmptyFieldException;
+import stream.nebula.operators.sink.*;
 import stream.nebula.queryinterface.Query;
-import stream.nebula.queryinterface.KafkaConfiguration;
-
-import java.util.ArrayList;
 
 public class SinkOperatorTest {
-    private static LogicalStream defaultLogical;
-
-    @BeforeClass
-    public static void init() throws UnknownDataTypeException {
-        ArrayList<Field> fieldArrayList = new ArrayList<>();
-        fieldArrayList.add(new Field("id","UINT32"));
-        fieldArrayList.add(new Field("value","UINT32"));
-        defaultLogical = new LogicalStream("default_logical", fieldArrayList);
-    }
-
     @Test
-    public void printSinkTest() {
+    public void testAddPrintSink() throws EmptyFieldException {
         Query query;
 
         query = new Query();
-        query.from(defaultLogical)
-                .print();
+        query.from("defaultLogical")
+                .sink(new PrintSink());
 
-        Assert.assertEquals("Query::from(\""+defaultLogical.getName()+"\")" +
+        Assert.assertEquals("Query::from(\"defaultLogical\")" +
                         ".sink(PrintSinkDescriptor::create());"
                 , query.generateCppCode());
     }
 
-    // Currently this test is disabled until there is a clear way of defining CSVSink
-    @Test (expected = UnsupportedOperationException.class)
-    public void writeToCSVTest(){
+    @Test
+    public void testAddZMQSink() throws EmptyFieldException {
         Query query;
 
-        String csvFilePath = "output.csv";
-
         query = new Query();
-        query.from(defaultLogical)
-                .writeToCsv(csvFilePath);
+        query.from("defaultLogical")
+                .sink(new ZMQSink("localhost", 1234));
 
-        Assert.assertEquals("Query::from(\""+defaultLogical.getName()+"\")" +
-                        ".writeToCSV(\""+csvFilePath+"\");"
+        Assert.assertEquals("Query::from(\"defaultLogical\")" +
+                        ".sink(ZmqSinkDescriptor::create(\"localhost\",1234));"
                 , query.generateCppCode());
     }
 
-    // Currently this test is disabled until there is a clear way of defining ZMQSink
-    @Test (expected = UnsupportedOperationException.class)
-    public void writeToZmqGenerateCorrectCppCode() {
+    @Test
+    public void testAddKafkaSink() throws EmptyFieldException {
         Query query;
-        String streamName = "default_logical";
 
         query = new Query();
-        query.from(defaultLogical)
-                .writeToZmq(streamName, "localhost", 5555);
+        query.from("defaultLogical")
+                .sink(new KafkaSink("test","localhost:9092", 60));
 
-        Assert.assertEquals("Query::from("+defaultLogical.getName()+")" +
-                        ".writeToZmq("+defaultLogical.getName()+",\"localhost\",5555);"
+        Assert.assertEquals("Query::from(\"defaultLogical\")" +
+                        ".sink(KafkaSinkDescriptor::create(\"test\",\"localhost:9092\",60));"
                 , query.generateCppCode());
     }
 
-    // Currently this test is disabled until there is a clear way of defining KafkaSink
-    @Test (expected = UnsupportedOperationException.class)
-    public void writeToKafkaGenerateCorrectCppCode() {
+    @Test
+    public void testAddNullOutputSink() throws EmptyFieldException {
         Query query;
 
-        // Testing using broker-topic-timeout configuration method
         query = new Query();
-        query.from(defaultLogical)
-                .writeToKafka("broker1", "topic1", 1000);
+        query.from("defaultLogical")
+                .sink(new NullOutputSink());
 
-        Assert.assertEquals("Query::from("+defaultLogical.getName()+")" +
-                        ".writeToKafka(\"broker1\",\"topic1\",1000);"
-                , query.generateCppCode());
-
-        // Testing using topic-kafkaConfiguration configuration method
-        KafkaConfiguration configuration = new KafkaConfiguration()
-                .set("request.timeout.ms",30000)
-                .set("group.id","nes")
-                .set("enable.auto.commit",false);
-
-        query = new Query();
-        query.from(defaultLogical)
-                .writeToKafka("topic1", configuration);
-
-        Assert.assertEquals("InputQuery::from("+defaultLogical.getName()+")" +
-                        ".writeToKafka(\"topic1\",{{\"enable.auto.commit\",false}," +
-                        "{\"request.timeout.ms\",30000}," + "{\"group.id\",\"nes\"},});"
+        Assert.assertEquals("Query::from(\"defaultLogical\")" +
+                        ".sink(NullOutputSinkDescriptor::create());"
                 , query.generateCppCode());
     }
 
+    @Test
+    public void testAddFileSink() throws EmptyFieldException {
+        Query query;
 
+        query = new Query();
+        query.from("defaultLogical")
+                .sink(new FileSink("/tmp/out.txt", "CSV", "OVERRIDE"));
 
+        Assert.assertEquals("Query::from(\"defaultLogical\")" +
+                        ".sink(FileSinkDescriptor::create(\"/tmp/out.txt\",\"CSV\",\"OVERRIDE\"));"
+                , query.generateCppCode());
+    }
+
+    @Test
+    public void testAddFMQTTSink() throws EmptyFieldException {
+        Query query;
+
+        query = new Query();
+        query.from("defaultLogical")
+                .sink(new MQTTSink("127.0.0.1:8081", "nes-mqtt-test-client", "v1/devices/me/telemetry","rfRqLGZRChg8eS30PEeR", "5", "MQTTSinkDescriptor::milliseconds", "500", "MQTTSinkDescriptor::atLeastOnce", "true"));
+
+        Assert.assertEquals("Query::from(\"defaultLogical\")" +
+                        ".sink(MQTTSinkDescriptor::create(\"127.0.0.1:8081\",\"nes-mqtt-test-client\",\"v1/devices/me/telemetry\",\"rfRqLGZRChg8eS30PEeR\",5,MQTTSinkDescriptor::milliseconds,500,MQTTSinkDescriptor::atLeastOnce,true));"
+                , query.generateCppCode());
+    }
 
 }

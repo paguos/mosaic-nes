@@ -1,5 +1,6 @@
 package com.github.paguos.mosaic.fed.model;
 
+import com.github.paguos.mosaic.fed.model.node.*;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -2,7 +2,10 @@ package com.github.paguos.mosaic.fed.config.util;
 
 import com.github.paguos.mosaic.fed.config.CNes;
 import com.github.paguos.mosaic.fed.config.model.CNesNode;
-import com.github.paguos.mosaic.fed.model.*;
+import com.github.paguos.mosaic.fed.model.node.NesBuilder;
+import com.github.paguos.mosaic.fed.model.node.NesCoordinator;
+import com.github.paguos.mosaic.fed.model.node.NesNode;
+import com.github.paguos.mosaic.fed.model.node.NesWorker;
 
 import java.util.ArrayList;
 import java.util.List;

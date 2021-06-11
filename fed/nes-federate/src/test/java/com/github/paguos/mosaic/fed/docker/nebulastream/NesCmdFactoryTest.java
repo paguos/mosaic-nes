@@ -4,7 +4,7 @@ import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
-import com.github.paguos.mosaic.fed.model.*;
+import com.github.paguos.mosaic.fed.model.node.*;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,7 +81,7 @@ public class NesCmdFactoryTest {
                 "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --logicalStreamName=%s --physicalStreamName=%s",
                 "test-coordinator", 1000, 3001, "0.0.0.0", 4000, "DefaultSource", "default_logical", "default_physical"
         );
-        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
+        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
         testNodePorts(testCmd);
     }
 
@@ -103,7 +103,7 @@ public class NesCmdFactoryTest {
                 "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --sourceConfig=%s --logicalStreamName=%s --physicalStreamName=%s",
                 "test-coordinator", 1000, 3001, "0.0.0.0", 4000, "CSVSource", "test_config", "test_logical", "test_physical"
         );
-        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
+        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
         testNodePorts(testCmd);
     }
 
@@ -121,7 +121,7 @@ public class NesCmdFactoryTest {
                 "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d",
                 "test-coordinator", 1000, 3001, "0.0.0.0", 4000
         );
-        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
+        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
         testNodePorts(testCmd);
     }
 
@@ -141,7 +141,7 @@ public class NesCmdFactoryTest {
                 "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --parentId=%d",
                 "test-coordinator", 1000, 3001, "0.0.0.0", 4000, 2
         );
-        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
+        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
         testNodePorts(testCmd);
     }
     private void testNodePorts(CreateContainerCmd testCmd) {

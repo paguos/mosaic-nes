@@ -2,7 +2,6 @@ package stream.nebula.examples;
 
 import org.jgrapht.Graph;
 import org.jgrapht.nio.dot.DOTExporter;
-import stream.nebula.model.physicalstream.PhysicalStream;
 import stream.nebula.model.topology.TopologyEntry;
 import stream.nebula.model.topology.TopologyLink;
 import stream.nebula.runtime.NebulaStreamRuntime;

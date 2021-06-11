@@ -3,62 +3,41 @@ package stream.nebula.model.topology;
 import stream.nebula.utils.GraphBuilder;
 
 public class TopologyEntry {
-    private String id;
-    private String title;
-    private String nodeType;
-    private float nodeCapacity;
-    private float remainingCapacity;
+    private Integer id;
+    private String ip_address;
+    private float available_resources;
 
-    public TopologyEntry(String id, String title, String nodeType, float nodeCapacity, float remainingCapacity) {
+    public TopologyEntry(Integer id, String ip_address, float available_resources) {
         this.id = id;
-        this.title = title;
-        this.nodeType = nodeType;
-        this.nodeCapacity = nodeCapacity;
-        this.remainingCapacity = remainingCapacity;
+        this.ip_address= ip_address;
+        this.available_resources = available_resources;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getIp_address() {
+        return ip_address;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setIp_address(String ip_address) {
+        this.ip_address = ip_address;
     }
 
-    public String getNodeType() {
-        return nodeType;
+    public float getAvailable_resources() {
+        return available_resources;
     }
 
-    public void setNodeType(String nodeType) {
-        this.nodeType = nodeType;
+    public void setAvailable_resources(float available_resources) {
+        this.available_resources = available_resources;
     }
-
-    public float getNodeCapacity() {
-        return nodeCapacity;
-    }
-
-    public void setNodeCapacity(float nodeCapacity) {
-        this.nodeCapacity = nodeCapacity;
-    }
-
-    public float getRemainingCapacity() {
-        return remainingCapacity;
-    }
-
-    public void setRemainingCapacity(float remainingCapacity) {
-        this.remainingCapacity = remainingCapacity;
-    }
-
     // dash and parentheses are not valid for representing ID
     public String toString(){
-        return GraphBuilder.cleanNodeId(this.id);
+        return GraphBuilder.cleanNodeId(Integer.toString(this.id));
     }
 }

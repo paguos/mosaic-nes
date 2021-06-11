@@ -38,20 +38,24 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation group: 'org.jgrapht', name: 'jgrapht-core', version: '1.4.0'
     implementation group: 'org.jgrapht', name: 'jgrapht-io', version: '1.4.0'
+    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
 }
 
 dockerRun {
     name 'nes-executable'
-    image 'nebulastream/nes-executable-image'
+    image 'nebulastream/nes-executable-image:latest'
     ports '8081:8081'
     arguments '-d'
 }
 
 test {
-    useJUnit()
+    useJUnitPlatform()
     filter {
         //query submission test
         includeTestsMatching "com.nebula.stream.QuerySubmissionTest"
+        includeTestsMatching "com.nebula.stream.WindowOperatorTest"
+        includeTestsMatching "com.nebula.stream.WindowByKeyOperatorTest"
     }
 }
 

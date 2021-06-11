@@ -60,6 +60,7 @@
 
     <properties>
         <mosaic.version>21.0</mosaic.version>
+        <version.nes-client>0.0.37</version.nes-client>
         <version.logback>1.2.3</version.logback>
     </properties>
 
@@ -72,7 +73,7 @@
         <dependency>
             <groupId>stream.nebula</groupId>
             <artifactId>nebulastream-java-client</artifactId>
-            <version>0.0.33</version>
+            <version>0.0.37</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.mosaic</groupId>

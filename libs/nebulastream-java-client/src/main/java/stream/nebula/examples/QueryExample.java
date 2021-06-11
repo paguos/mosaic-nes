@@ -2,12 +2,10 @@ package stream.nebula.examples;
 
 import stream.nebula.operators.Map;
 import stream.nebula.operators.Operation;
-import stream.nebula.runtime.NebulaStreamRuntime;
-import stream.nebula.model.logicalstream.LogicalStream;
 import stream.nebula.operators.Predicate;
+import stream.nebula.operators.sink.PrintSink;
 import stream.nebula.queryinterface.Query;
-
-import java.util.List;
+import stream.nebula.runtime.NebulaStreamRuntime;
 
 /**
  * This example demonstrates basics usage of InputQuery of NES Java Client. It covers basic network configuration,
@@ -34,17 +32,11 @@ public class QueryExample {
         ner.getConfig().setHost("localhost")
                 .setPort("8081");
 
-        // Get a logical stream
-        LogicalStream ysbLogicalStream = ner.getLogicalStream("ysb");
-
-        // Create instance of InputQuery
-        // We select the field on  the filter method using the field's index, alternatively we can also use the
-        // fieldName: onField("value")
-        // Then, we create a new field ("d5") and fill it with the result of d3*d4
-        Query query = new Query().from(ysbLogicalStream)
-                .filter(Predicate.onField("user_id").greaterThanOrEqual(1).and(Predicate.onField("user_id").lessthanThan(10000)))
+        // Create an instance of Query that assign the d5 field with the value of d3*d4
+        Query query = new Query().from("ysb")
+                .filter(Predicate.onField("user_id").greaterThanOrEqual(1).and(Predicate.onField("user_id").lessThan(10000)))
                 .map(Map.onField("d5").assign(Operation.multiply("d3","d4")))
-                .print();
+                .sink(new PrintSink());
 
         // Print out the generated C++ code
         System.out.println(query.generateCppCode());

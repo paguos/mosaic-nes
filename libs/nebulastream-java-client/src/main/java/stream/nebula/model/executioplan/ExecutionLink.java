@@ -1,27 +1,27 @@
 package stream.nebula.model.executioplan;
 
 public class ExecutionLink {
-    private float linkCapacity;
-    private float linkLatency;
+    private Integer source;
+    private Integer target;
 
-    public ExecutionLink(float linkCapacity, float linkLatency) {
-        this.linkCapacity = linkCapacity;
-        this.linkLatency = linkLatency;
+    public ExecutionLink(Integer source, Integer target) {
+        this.source = source;
+        this.target = target;
     }
 
-    public float getLinkCapacity() {
-        return linkCapacity;
+    public Integer getSource() {
+        return source;
     }
 
-    public void setLinkCapacity(float linkCapacity) {
-        this.linkCapacity = linkCapacity;
+    public void setSource(Integer source) {
+        this.source = source;
     }
 
-    public float getLinkLatency() {
-        return linkLatency;
+    public Integer gettarget() {
+        return target;
     }
 
-    public void setLinkLatency(float linkLatency) {
-        this.linkLatency = linkLatency;
+    public void settarget(Integer target) {
+        this.target = target;
     }
 }

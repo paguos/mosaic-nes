@@ -3,12 +3,8 @@ package stream.nebula.examples;
 import stream.nebula.exceptions.RESTExecption;
 import stream.nebula.exceptions.UnknownDataTypeException;
 import stream.nebula.runtime.NebulaStreamRuntime;
-import stream.nebula.model.logicalstream.LogicalStream;
-import stream.nebula.queryinterface.Query;
-import stream.nebula.queryinterface.KafkaConfiguration;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * This example demonstrate how to use sink in NES Java Client. Currently it support zmq, kafka, and file sink with
@@ -35,43 +31,10 @@ public class SinkExample {
         ner.getConfig().setHost("localhost")
                 .setPort("8081");
 
-        // Get a list of available logical stream and choose one
-        List<LogicalStream> availableLogicalStream = ner.getAvailableLogicalStreams();
-        LogicalStream defaultLogical = availableLogicalStream.get(0);
+        // TODO: Example of using print sink (#88)
 
-        Query query;
+        // TODO: Example of using CSV sink (#88)
 
-        // Example of using writeToZmq
-        query = new Query();
-        query.from(defaultLogical)
-                .writeToZmq(defaultLogical.getName(), "localhost", 5555);
-
-        System.out.println(query.generateCppCode());
-        System.out.println("============================================================");
-
-        // Example of writeToKafka with kafkaProducerTimeout
-        query = new Query();
-        query.from(defaultLogical)
-                .writeToKafka("broker1", "topic1", 1000);
-        System.out.println(query.generateCppCode());
-        System.out.println("============================================================");
-
-        // Example of using topic-kafkaConfiguration configuration method
-        KafkaConfiguration configuration = new KafkaConfiguration()
-                .set("request.timeout.ms",30000)
-                .set("group.id","nes")
-                .set("enable.auto.commit",false);
-
-        query = new Query();
-        query.from(defaultLogical)
-                .writeToKafka("topic1", configuration);
-        System.out.println(query.generateCppCode());
-        System.out.println("============================================================");
-
-        // Example of using writeToFile
-        query = new Query();
-        query.from(defaultLogical)
-                .writeToFile("blob.txt");
-        System.out.println(query.generateCppCode());
+        // TODO: Example of using Binary sink (#88)
     }
 }

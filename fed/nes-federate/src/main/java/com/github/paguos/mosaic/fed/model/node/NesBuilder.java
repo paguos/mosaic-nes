@@ -1,4 +1,4 @@
-package com.github.paguos.mosaic.fed.model;
+package com.github.paguos.mosaic.fed.model.node;
 
 import java.util.ArrayList;
 import java.util.List;

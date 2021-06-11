@@ -23,7 +23,7 @@ jobs:
         run: mvn clean install
       - name: MOSAIC Integration Tests
         run: |
-          docker pull nebulastream/nes-executable-image:0.0.408
+          docker build docker/nes-source -t nes-source:test
           mvn test -fae -P integration-tests
   tool-scenario-generator:
     runs-on: ubuntu-latest

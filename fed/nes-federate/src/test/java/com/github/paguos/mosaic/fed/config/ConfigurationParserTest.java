@@ -2,9 +2,9 @@ package com.github.paguos.mosaic.fed.config;
 
 import com.github.paguos.mosaic.fed.config.util.ConfigurationParser;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
-import com.github.paguos.mosaic.fed.model.NesCoordinator;
-import com.github.paguos.mosaic.fed.model.NesNode;
-import com.github.paguos.mosaic.fed.model.NesWorker;
+import com.github.paguos.mosaic.fed.model.node.NesCoordinator;
+import com.github.paguos.mosaic.fed.model.node.NesNode;
+import com.github.paguos.mosaic.fed.model.node.NesWorker;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import org.junit.Test;
 

@@ -7,10 +7,11 @@ import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
 import com.github.paguos.mosaic.fed.docker.ContainerController;
 import com.github.paguos.mosaic.fed.docker.NetworkController;
 import com.github.paguos.mosaic.fed.docker.nebulastream.NesCmdFactory;
-import com.github.paguos.mosaic.fed.model.NesCoordinator;
-import com.github.paguos.mosaic.fed.model.NesNode;
-import com.github.paguos.mosaic.fed.model.NesSource;
-import com.github.paguos.mosaic.fed.model.NesWorker;
+import com.github.paguos.mosaic.fed.model.node.NesCoordinator;
+import com.github.paguos.mosaic.fed.model.node.NesNode;
+import com.github.paguos.mosaic.fed.model.node.NesWorker;
+import com.github.paguos.mosaic.fed.model.stream.NesLogicalStream;
+import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
 import java.util.List;
@@ -20,12 +21,15 @@ public class NesController {
     private static NesController controller;
 
     private final NesCmdFactory nesCmdFactory;
+    private final NesClient nesClient;
     private final NesCoordinator coordinator;
 
 
     private NesController(CNes config) {
         this.coordinator = ConfigurationParser.parseConfig(config);
         this.nesCmdFactory = new NesCmdFactory(this.coordinator);
+
+        this.nesClient = new NesClient(config.clientHost, config.clientPort);
     }
 
     public static NesController getController() throws InternalFederateException {
@@ -40,6 +44,9 @@ public class NesController {
         NetworkController.createNetwork(NetworkController.DEFAULT_NETWORK_NAME);
         CreateContainerCmd coordinatorCmd = nesCmdFactory.createNesCoordinatorCmd();
         ContainerController.run(coordinatorCmd);
+
+        nesClient.addLogicalStream(getLogicalStream("QnV"));
+
         startNodes(coordinator.getChildren());
     }
 
@@ -63,6 +70,14 @@ public class NesController {
                 startNodes(worker.getChildren());
             }
         }
+    }
+
+    private NesLogicalStream getLogicalStream(String name){
+        String schema = "Schema::create()->addField(\"sensor_id\", ";
+        schema += "DataTypeFactory::createFixedChar(8))->addField(createField(\"timestamp\", ";
+        schema += "UINT64))->addField(createField(\"velocity\", FLOAT32))->addField(createField(\"quantity\", UINT64))";
+
+        return new NesLogicalStream(name, schema);
     }
 
 }

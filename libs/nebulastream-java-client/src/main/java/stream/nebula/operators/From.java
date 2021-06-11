@@ -1,16 +1,14 @@
 package stream.nebula.operators;
 
-import stream.nebula.model.logicalstream.LogicalStream;
-
 public class From extends Operator {
-    private final LogicalStream logicalStream;
+    private final String logicalStreamName;
 
-    public From(LogicalStream logicalStream) {
-        this.logicalStream = logicalStream;
+    public From(String logicalStreamName) {
+        this.logicalStreamName = logicalStreamName;
     }
 
     @Override
     public String getCppCode() {
-        return "Query::from(\""+this.logicalStream.getName()+"\")";
+        return "Query::from(\""+this.logicalStreamName+"\")";
     }
 }

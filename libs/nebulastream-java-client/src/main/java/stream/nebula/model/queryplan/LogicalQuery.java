@@ -4,12 +4,12 @@ import stream.nebula.utils.GraphBuilder;
 
 public class LogicalQuery {
     private String id;
-    private String title;
+    private String name;
     private String type;
 
     public LogicalQuery(String id, String title, String type) {
         this.id = id;
-        this.title = title;
+        this.name = title;
         this.type = type;
     }
 
@@ -21,12 +21,12 @@ public class LogicalQuery {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getType() {
@@ -39,6 +39,6 @@ public class LogicalQuery {
 
     // dash and parentheses are not valid for representing ID
     public String toString(){
-        return GraphBuilder.cleanNodeId(this.id);
+        return GraphBuilder.cleanNodeId(this.name);
     }
 }
