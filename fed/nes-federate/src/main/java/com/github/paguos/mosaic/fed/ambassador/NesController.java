@@ -45,6 +45,12 @@ public class NesController {
         CreateContainerCmd coordinatorCmd = nesCmdFactory.createNesCoordinatorCmd();
         ContainerController.run(coordinatorCmd);
 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new InternalFederateException(e);
+        }
+
         nesClient.addLogicalStream(getLogicalStream("QnV"));
 
         startNodes(coordinator.getChildren());
