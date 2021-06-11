@@ -30,6 +30,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.github.paguos</groupId>
+            <artifactId>vehicle-sink</artifactId>
+            <version>0.0.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.mosaic</groupId>
             <artifactId>mosaic-starter</artifactId>
             <version>${mosaic.version}</version>

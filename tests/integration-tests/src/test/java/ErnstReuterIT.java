@@ -51,6 +51,7 @@ public class ErnstReuterIT {
         LogAssert.exists(simulationRule, "Mapping.log");
         LogAssert.exists(simulationRule, "Communication.log");
         LogAssert.exists(simulationRule, "apps/rsu_0/NesSourceApp.log");
+        LogAssert.exists(simulationRule, "apps/veh_10/NesSinkApp.log");
     }
 
     @Test
@@ -61,5 +62,15 @@ public class ErnstReuterIT {
     @Test
     public void logicalStreamCreated() throws Exception {
         LogAssert.contains(simulationRule, "apps/rsu_0/NesSourceApp.log", ".*Found Logical Stream 'QnV': true.*");
+    }
+
+    @Test
+    public void nesNodesCreated() throws Exception {
+        LogAssert.contains(simulationRule, "apps/rsu_0/NesSourceApp.log", ".*The Nes Topology has '4' nodes.*");
+    }
+
+    @Test
+    public void sinkReceivedMessages() throws Exception {
+        LogAssert.contains(simulationRule, "apps/veh_10/NesSinkApp.log", ".*Message received:.*");
     }
 }

@@ -26,7 +26,7 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
                     .dataPort(NesNode.getNextDataPort())
                     .rpcPort(NesNode.getNextRPCPort())
                     .sourceType(NesSourceType.CSVSource)
-                    .sourceConfig("/nes/data/QnV.csv")
+                    .sourceConfig("/nes/data/QnV_short.csv")
                     .logicalStreamName("QnV")
                     .physicalStreamName("mosaic")
                     .parentId(2)
@@ -37,8 +37,18 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
         }
 
         try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            getLog().error("Error while sleeping!");
+        }
+
+        try {
             List<String> logicalStreams = nesClient.getAvailableLogicalStreams();
             getLog().info(String.format("Found Logical Stream 'QnV': %b", logicalStreams.contains("QnV")));
+
+            int nodeCount = nesClient.getTopologyNodeCount();
+            getLog().info(String.format("The Nes Topology has '%d' nodes.", nodeCount));
+
         } catch (InternalFederateException e) {
             getLog().error("Error interacting with NES!");
         }
@@ -51,7 +61,7 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
     }
 
     @Override
-    public void processEvent(Event event) throws Exception {
+    public void processEvent(Event event) {
         
     }
 }
