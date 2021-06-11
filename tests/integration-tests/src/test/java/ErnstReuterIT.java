@@ -8,8 +8,23 @@ import org.eclipse.mosaic.test.junit.MosaicSimulationRule;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.testcontainers.containers.GenericContainer;
 
 public class ErnstReuterIT {
+
+    /**
+     * Placeholder test container with the only purpose
+     * of running the test inside a container and been able to
+     * reach the NES coordinator with the address localhost
+     */
+    @ClassRule
+    public static GenericContainer<?> alpine =
+            new GenericContainer<>("alpine")
+                    .withExposedPorts(80)
+                    .withCommand(
+                            "/bin/sh", "-c",
+                            "while true; do echo \"mosaic-nes-test\" | nc -l -p 80; done"
+                    );
 
     @ClassRule
     public static MosaicSimulationRule simulationRule = new MosaicSimulationRule().logLevelOverride("DEBUG");
