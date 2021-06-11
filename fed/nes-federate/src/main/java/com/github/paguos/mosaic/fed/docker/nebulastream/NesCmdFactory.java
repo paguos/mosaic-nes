@@ -62,7 +62,7 @@ public class NesCmdFactory {
         DockerClient client = DockerController.getClient();
         CNes config = ConfigurationReader.getConfig();
 
-        ExposedPort dataPort = ExposedPort.tcp(NesWorker.DEFAULT_DATA_PORT);
+        ExposedPort dataPort = ExposedPort.tcp(node.getDataPort());
         ExposedPort rpcPort = ExposedPort.tcp(node.getRpcPort());
 
         Ports portBindings = new Ports();
@@ -71,9 +71,9 @@ public class NesCmdFactory {
 
         List<String> cmd = new ArrayList<>();
         cmd.add("/opt/local/nebula-stream/nesWorker");
-        cmd.add(String.format("--coordinatorIp=%s", coordinator.getName()));
+        cmd.add(String.format("--coordinatorIp=%s", "127.0.0.1"));
         cmd.add(String.format("--coordinatorPort=%d", coordinator.getCoordinatorPort()));
-        cmd.add(String.format("--dataPort=%d", NesWorker.DEFAULT_DATA_PORT));
+        cmd.add(String.format("--dataPort=%d", node.getDataPort()));
         cmd.add("--localWorkerIp=0.0.0.0");
         cmd.add(String.format("--rpcPort=%d", node.getRpcPort()));
 

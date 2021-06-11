@@ -41,14 +41,14 @@ public class ConfigurationParserTest {
         NesWorker root = (NesWorker) childNodes.get(0);
         assertEquals("worker_00", root.getName());
         assertEquals(-1, root.getParentId());
-        assertEquals(3001, root.getDataPort());
-        assertEquals(3000, root.getRpcPort());
+        assertEquals(6000, root.getDataPort());
+        assertEquals(6001, root.getRpcPort());
         assertEquals(1, root.getChildren().size());
 
         NesWorker child = (NesWorker) root.getChildren().get(0);
         assertEquals("worker_01", child.getName());
-        assertEquals(3011, child.getDataPort());
-        assertEquals(3010, child.getRpcPort());
+        assertEquals(6010, child.getDataPort());
+        assertEquals(6011, child.getRpcPort());
         assertEquals(0, child.getChildren().size());
 
     }
