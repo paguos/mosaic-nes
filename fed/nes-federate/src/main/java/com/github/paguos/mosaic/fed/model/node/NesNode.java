@@ -7,8 +7,8 @@ public abstract class NesNode extends NesComponent {
     public static final int DEFAULT_RPC_PORT = 3000;
 
     private static int nextId = 2;
-    private static int nextDataPort = NesWorker.DEFAULT_DATA_PORT;
-    private static int nextRPCPort = NesWorker.DEFAULT_RPC_PORT;
+    private static int nextDataPort = 6000;
+    private static int nextRPCPort = 6001;
 
     private int parentId;
     private final int dataPort;

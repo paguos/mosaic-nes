@@ -14,7 +14,9 @@
         },
         {
             "accel": 1.5,
-            "applications": [],
+            "applications":  [
+                "com.github.paguos.mosaic.app.NesSinkApp"
+            ],
             "color": "blue",
             "decel": 4.5,
             "length": 5.0,

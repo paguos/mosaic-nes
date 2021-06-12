@@ -9,7 +9,7 @@ import java.util.List;
 
 public class NetworkController {
 
-    public static final String DEFAULT_NETWORK_NAME = "mosaic-nes";
+    public static final String DEFAULT_NETWORK_NAME = "host";
 
     /**
      * List of running networks

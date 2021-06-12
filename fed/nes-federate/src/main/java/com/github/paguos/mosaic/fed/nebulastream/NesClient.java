@@ -4,6 +4,7 @@ import com.github.paguos.mosaic.fed.model.stream.NesLogicalStream;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import stream.nebula.exceptions.RESTExecption;
 import stream.nebula.exceptions.UnknownDataTypeException;
+import stream.nebula.queryinterface.Query;
 import stream.nebula.runtime.NebulaStreamRuntime;
 
 import java.io.IOException;
@@ -26,10 +27,34 @@ public class NesClient {
         }
     }
 
+    public boolean deleteQuery(int queryId) throws InternalFederateException {
+        try {
+            return nebulaStreamRuntime.deleteQuery(queryId);
+        } catch (IOException | RESTExecption e) {
+            throw new InternalFederateException(e.getMessage());
+        }
+    }
+
+    public int executeQuery(Query query) throws InternalFederateException {
+        try {
+            return nebulaStreamRuntime.executeQuery(query.generateCppCode(), "BottomUp");
+        } catch (IOException | RESTExecption e) {
+            throw new InternalFederateException(e.getMessage());
+        }
+    }
+
     public List<String> getAvailableLogicalStreams() throws InternalFederateException {
         try {
             return nebulaStreamRuntime.getAvailableLogicalStreams();
         } catch (UnknownDataTypeException | IOException | RESTExecption e) {
+            throw new InternalFederateException(e.getMessage());
+        }
+    }
+
+    public int getTopologyNodeCount() throws InternalFederateException {
+        try {
+            return nebulaStreamRuntime.getNesTopology().vertexSet().size();
+        } catch (IOException | RESTExecption e) {
             throw new InternalFederateException(e.getMessage());
         }
     }
