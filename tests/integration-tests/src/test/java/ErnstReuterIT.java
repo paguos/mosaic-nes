@@ -56,7 +56,7 @@ public class ErnstReuterIT {
 
     @Test
     public void allVehiclesLoaded() throws Exception {
-        LogAssert.contains(simulationRule, "Traffic.log", ".*SumoAmbassador - Process sumo :  Inserted: 966.*");
+        LogAssert.contains(simulationRule, "Traffic.log", ".*SumoAmbassador - Process sumo :  Inserted: 101.*");
     }
 
     @Test
@@ -67,6 +67,11 @@ public class ErnstReuterIT {
     @Test
     public void nesNodesCreated() throws Exception {
         LogAssert.contains(simulationRule, "apps/rsu_0/NesSourceApp.log", ".*The Nes Topology has '4' nodes.*");
+    }
+
+    @Test
+    public void sourceReceivedV2xMessages() throws Exception {
+        LogAssert.contains(simulationRule, "apps/rsu_0/NesSourceApp.log", ".*Received V2X Message from veh_.*");
     }
 
     @Test
