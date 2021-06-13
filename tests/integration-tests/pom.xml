@@ -25,9 +25,8 @@
         </dependency>
         <dependency>
             <groupId>com.github.paguos</groupId>
-            <artifactId>rsu-nes-source</artifactId>
+            <artifactId>rsu-source</artifactId>
             <version>0.0.1</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.paguos</groupId>
