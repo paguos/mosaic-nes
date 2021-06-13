@@ -8,7 +8,7 @@
         "omnetpp": false,
         "output": true,
         "phabmacs": false,
-        "sns": false,
+        "sns": true,
         "sumo": true
     },
     "simulation": {
