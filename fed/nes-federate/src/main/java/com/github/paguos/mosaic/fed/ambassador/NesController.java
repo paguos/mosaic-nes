@@ -7,10 +7,13 @@ import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
 import com.github.paguos.mosaic.fed.docker.ContainerController;
 import com.github.paguos.mosaic.fed.docker.NetworkController;
 import com.github.paguos.mosaic.fed.docker.nebulastream.NesCmdFactory;
+import com.github.paguos.mosaic.fed.model.common.AttributeField;
+import com.github.paguos.mosaic.fed.model.common.DataTypeFactory;
 import com.github.paguos.mosaic.fed.model.node.NesCoordinator;
 import com.github.paguos.mosaic.fed.model.node.NesNode;
 import com.github.paguos.mosaic.fed.model.node.NesWorker;
-import com.github.paguos.mosaic.fed.model.stream.NesLogicalStream;
+import com.github.paguos.mosaic.fed.model.stream.LogicalStream;
+import com.github.paguos.mosaic.fed.model.stream.Schema;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
@@ -78,12 +81,14 @@ public class NesController {
         }
     }
 
-    private NesLogicalStream getLogicalStream(String name){
-        String schema = "Schema::create()->addField(\"sensor_id\", ";
-        schema += "DataTypeFactory::createFixedChar(8))->addField(createField(\"timestamp\", ";
-        schema += "UINT64))->addField(createField(\"velocity\", FLOAT32))->addField(createField(\"quantity\", UINT64))";
+    private LogicalStream getLogicalStream(String name){
+        Schema schema = new Schema();
+        schema.addField(new AttributeField("sensor_id", DataTypeFactory.createFixedChar(8)));
+        schema.addField(new AttributeField("timestamp", DataTypeFactory.createInteger()));
+        schema.addField(new AttributeField("velocity", DataTypeFactory.createFloat()));
+        schema.addField(new AttributeField("quantity", DataTypeFactory.createInteger()));
 
-        return new NesLogicalStream(name, schema);
+        return new LogicalStream(name, schema);
     }
 
 }

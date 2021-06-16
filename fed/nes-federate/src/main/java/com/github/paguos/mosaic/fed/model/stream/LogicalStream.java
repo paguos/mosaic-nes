@@ -1,11 +1,11 @@
 package com.github.paguos.mosaic.fed.model.stream;
 
-public class NesLogicalStream {
+public class LogicalStream {
 
     private final String name;
-    private final String schema;
+    private final Schema schema;
 
-    public NesLogicalStream(String name, String schema) {
+    public LogicalStream(String name, Schema schema) {
         this.name = name;
         this.schema = schema;
     }
@@ -14,7 +14,7 @@ public class NesLogicalStream {
         return name;
     }
 
-    public String getSchema() {
+    public Schema getSchema() {
         return schema;
     }
 }
