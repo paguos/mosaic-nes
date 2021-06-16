@@ -42,9 +42,9 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
                     .dataPort(NesNode.getNextDataPort())
                     .rpcPort(NesNode.getNextRPCPort())
                     .sourceType(SourceType.CSVSource)
-                    .sourceConfig("/nes/data/QnV_short.csv")
-                    .logicalStreamName("QnV")
-                    .physicalStreamName("mosaic")
+                    .sourceConfig("/nes/data/SpeedReport.csv")
+                    .logicalStreamName("mosaic_nes")
+                    .physicalStreamName(getOs().getId())
                     .parentId(2)
                     .build();
             controller.addNode(source);
@@ -69,7 +69,6 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
         } catch (InternalFederateException e) {
             getLog().error("Error interacting with NES!");
         }
-
     }
 
     @Override
@@ -79,7 +78,6 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
 
     @Override
     public void onShutdown() {
-
     }
 
     @Override
