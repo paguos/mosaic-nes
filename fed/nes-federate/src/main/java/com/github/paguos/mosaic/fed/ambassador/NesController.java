@@ -7,13 +7,13 @@ import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
 import com.github.paguos.mosaic.fed.docker.ContainerController;
 import com.github.paguos.mosaic.fed.docker.NetworkController;
 import com.github.paguos.mosaic.fed.docker.nebulastream.NesCmdFactory;
-import com.github.paguos.mosaic.fed.model.common.AttributeField;
-import com.github.paguos.mosaic.fed.model.common.DataTypeFactory;
-import com.github.paguos.mosaic.fed.model.node.NesCoordinator;
-import com.github.paguos.mosaic.fed.model.node.NesNode;
-import com.github.paguos.mosaic.fed.model.node.NesWorker;
-import com.github.paguos.mosaic.fed.model.stream.LogicalStream;
-import com.github.paguos.mosaic.fed.model.stream.Schema;
+import com.github.paguos.mosaic.fed.nebulastream.common.AttributeField;
+import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
+import com.github.paguos.mosaic.fed.nebulastream.node.Coordinator;
+import com.github.paguos.mosaic.fed.nebulastream.node.NesNode;
+import com.github.paguos.mosaic.fed.nebulastream.node.Worker;
+import com.github.paguos.mosaic.fed.nebulastream.stream.LogicalStream;
+import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
@@ -25,7 +25,7 @@ public class NesController {
 
     private final NesCmdFactory nesCmdFactory;
     private final NesClient nesClient;
-    private final NesCoordinator coordinator;
+    private final Coordinator coordinator;
 
 
     private NesController(CNes config) {
@@ -74,8 +74,8 @@ public class NesController {
             CreateContainerCmd createWorkerCmd = nesCmdFactory.createNesNodeCmd(node);
             ContainerController.run(createWorkerCmd);
 
-            if (node instanceof NesWorker) {
-                NesWorker worker = (NesWorker) node;
+            if (node instanceof Worker) {
+                Worker worker = (Worker) node;
                 startNodes(worker.getChildren());
             }
         }

@@ -1,4 +1,4 @@
-package com.github.paguos.mosaic.fed.model.stream;
+package com.github.paguos.mosaic.fed.nebulastream.stream;
 
 public class LogicalStream {
 

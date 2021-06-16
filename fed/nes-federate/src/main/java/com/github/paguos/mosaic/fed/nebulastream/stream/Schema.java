@@ -1,7 +1,6 @@
-package com.github.paguos.mosaic.fed.model.stream;
+package com.github.paguos.mosaic.fed.nebulastream.stream;
 
-import com.github.paguos.mosaic.fed.model.common.AttributeField;
-import com.github.paguos.mosaic.fed.model.common.DataType;
+import com.github.paguos.mosaic.fed.nebulastream.common.AttributeField;
 
 import java.util.ArrayList;
 import java.util.List;

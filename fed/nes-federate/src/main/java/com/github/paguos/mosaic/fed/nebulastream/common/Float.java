@@ -1,4 +1,4 @@
-package com.github.paguos.mosaic.fed.model.common;
+package com.github.paguos.mosaic.fed.nebulastream.common;
 
 public class Float extends DataType{
 

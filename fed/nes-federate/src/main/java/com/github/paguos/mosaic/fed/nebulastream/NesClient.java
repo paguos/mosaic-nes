@@ -1,6 +1,6 @@
 package com.github.paguos.mosaic.fed.nebulastream;
 
-import com.github.paguos.mosaic.fed.model.stream.LogicalStream;
+import com.github.paguos.mosaic.fed.nebulastream.stream.LogicalStream;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import stream.nebula.exceptions.RESTExecption;
 import stream.nebula.exceptions.UnknownDataTypeException;

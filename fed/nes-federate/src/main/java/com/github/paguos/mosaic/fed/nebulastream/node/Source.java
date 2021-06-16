@@ -1,13 +1,13 @@
-package com.github.paguos.mosaic.fed.model.node;
+package com.github.paguos.mosaic.fed.nebulastream.node;
 
-public class NesSource extends NesNode {
+public class Source extends NesNode {
 
     private final String logicalStreamName;
     private final String physicalStreamName;
     private final String sourceConfig;
-    private final NesSourceType sourceType;
+    private final SourceType sourceType;
 
-    public NesSource(NesBuilder.NesSourceBuilder builder) {
+    public Source(NesBuilder.NesSourceBuilder builder) {
         super(builder.name, builder.parentId, builder.dataPort, builder.rpcPort);
         this.logicalStreamName = builder.logicalStreamName;
         this.physicalStreamName = builder.physicalStreamName;
@@ -27,7 +27,7 @@ public class NesSource extends NesNode {
         return sourceConfig;
     }
 
-    public NesSourceType getSourceType() {
+    public SourceType getSourceType() {
         return sourceType;
     }
 }

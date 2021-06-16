@@ -4,7 +4,7 @@ import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
-import com.github.paguos.mosaic.fed.model.node.*;
+import com.github.paguos.mosaic.fed.nebulastream.node.*;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class NesCmdFactoryTest {
     @Before
     public void setup() throws InternalFederateException {
         ConfigurationReader.importNesConfiguration(NES_CONF_PATH);
-        NesCoordinator coordinator = NesBuilder.createCoordinator("test-coordinator")
+        Coordinator coordinator = NesBuilder.createCoordinator("test-coordinator")
                 .coordinatorPort(1000)
                 .restPort(2000)
                 .build();
@@ -69,7 +69,7 @@ public class NesCmdFactoryTest {
 
     @Test
     public void createDefaultSourceCmd() throws InternalFederateException {
-        NesSource source = NesBuilder.createSource("test-source" )
+        Source source = NesBuilder.createSource("test-source" )
                 .dataPort(3000)
                 .rpcPort(4000)
                 .build();
@@ -87,10 +87,10 @@ public class NesCmdFactoryTest {
 
     @Test
     public void createCSVSourceCmd() throws InternalFederateException {
-        NesSource source = NesBuilder.createSource("test-source" )
+        Source source = NesBuilder.createSource("test-source" )
                 .dataPort(3000)
                 .rpcPort(4000)
-                .sourceType(NesSourceType.CSVSource)
+                .sourceType(SourceType.CSVSource)
                 .sourceConfig("test_config")
                 .logicalStreamName("test_logical")
                 .physicalStreamName("test_physical")
@@ -109,7 +109,7 @@ public class NesCmdFactoryTest {
 
     @Test
     public void createWorkerCmd() throws InternalFederateException {
-        NesWorker worker = NesBuilder.createWorker("test-worker" )
+        Worker worker = NesBuilder.createWorker("test-worker" )
                 .dataPort(3000)
                 .rpcPort(4000)
                 .build();
@@ -127,7 +127,7 @@ public class NesCmdFactoryTest {
 
     @Test
     public void createWorkerWithParent () throws InternalFederateException {
-        NesWorker worker = NesBuilder.createWorker("test-worker-with-parent")
+        Worker worker = NesBuilder.createWorker("test-worker-with-parent")
                 .dataPort(3000)
                 .rpcPort(4000)
                 .parentId(2)

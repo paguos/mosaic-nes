@@ -1,4 +1,4 @@
-package com.github.paguos.mosaic.fed.model.node;
+package com.github.paguos.mosaic.fed.nebulastream.node;
 
 public abstract class NesComponent {
 

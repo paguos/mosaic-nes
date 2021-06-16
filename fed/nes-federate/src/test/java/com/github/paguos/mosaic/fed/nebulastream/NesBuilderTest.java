@@ -1,6 +1,6 @@
-package com.github.paguos.mosaic.fed.model;
+package com.github.paguos.mosaic.fed.nebulastream;
 
-import com.github.paguos.mosaic.fed.model.node.*;
+import com.github.paguos.mosaic.fed.nebulastream.node.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNull;
 
 public class NesBuilderTest {
 
-    private NesWorker defaultWorker;
+    private Worker defaultWorker;
     private List<NesNode> nodes;
 
     @Before
@@ -24,33 +24,33 @@ public class NesBuilderTest {
 
     @Test
     public void createDefaultCoordinator() {
-        NesCoordinator nesCoordinator = NesBuilder.createCoordinator("test-coordinator").build();
+        Coordinator coordinator = NesBuilder.createCoordinator("test-coordinator").build();
 
-        assertEquals("test-coordinator", nesCoordinator.getName());
-        assertEquals(1, nesCoordinator.getId());
-        assertEquals(4000, nesCoordinator.getCoordinatorPort());
-        assertEquals(8081, nesCoordinator.getRestPort());
-        assertEquals(0, nesCoordinator.getChildren().size());
+        assertEquals("test-coordinator", coordinator.getName());
+        assertEquals(1, coordinator.getId());
+        assertEquals(4000, coordinator.getCoordinatorPort());
+        assertEquals(8081, coordinator.getRestPort());
+        assertEquals(0, coordinator.getChildren().size());
     }
 
     @Test
     public void createCustomCoordinator() {
-        NesCoordinator nesCoordinator = NesBuilder.createCoordinator("custom-coordinator")
+        Coordinator coordinator = NesBuilder.createCoordinator("custom-coordinator")
                 .coordinatorPort(1000)
                 .restPort(2000)
                 .children(nodes)
                 .build();
 
-        assertEquals("custom-coordinator", nesCoordinator.getName());
-        assertEquals(1, nesCoordinator.getId());
-        assertEquals(1000, nesCoordinator.getCoordinatorPort());
-        assertEquals(2000, nesCoordinator.getRestPort());
-        assertEquals(1, nesCoordinator.getChildren().size());
+        assertEquals("custom-coordinator", coordinator.getName());
+        assertEquals(1, coordinator.getId());
+        assertEquals(1000, coordinator.getCoordinatorPort());
+        assertEquals(2000, coordinator.getRestPort());
+        assertEquals(1, coordinator.getChildren().size());
     }
 
     @Test
     public void createDefaultSource() {
-        NesSource source = NesBuilder.createSource("test-source").build();
+        Source source = NesBuilder.createSource("test-source").build();
 
         assertEquals("test-source", source.getName());
         assertEquals(-1, source.getParentId());
@@ -59,16 +59,16 @@ public class NesBuilderTest {
         assertEquals("default_logical", source.getLogicalStreamName());
         assertEquals("default_physical", source.getPhysicalStreamName());
         assertNull(source.getSourceConfig());
-        assertEquals(NesSourceType.DefaultSource, source.getSourceType());
+        assertEquals(SourceType.DefaultSource, source.getSourceType());
     }
 
     @Test
     public void createCustomSource() {
-        NesSource source = NesBuilder.createSource("custom-source")
+        Source source = NesBuilder.createSource("custom-source")
                 .parentId(2)
                 .dataPort(1001)
                 .rpcPort(2001)
-                .sourceType(NesSourceType.CSVSource)
+                .sourceType(SourceType.CSVSource)
                 .logicalStreamName("test_logical")
                 .physicalStreamName("test_physical")
                 .sourceConfig("test_config")
@@ -81,7 +81,7 @@ public class NesBuilderTest {
         assertEquals("test_logical", source.getLogicalStreamName());
         assertEquals("test_physical", source.getPhysicalStreamName());
         assertEquals("test_config", source.getSourceConfig());
-        assertEquals(NesSourceType.CSVSource, source.getSourceType());
+        assertEquals(SourceType.CSVSource, source.getSourceType());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class NesBuilderTest {
 
     @Test
     public void createCustomWorker() {
-        NesWorker customWorker = NesBuilder.createWorker( "custom-test")
+        Worker customWorker = NesBuilder.createWorker( "custom-test")
                 .parentId(10)
                 .rpcPort(9999)
                 .dataPort(9998)

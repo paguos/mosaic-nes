@@ -2,9 +2,9 @@ package com.github.paguos.mosaic.fed.config;
 
 import com.github.paguos.mosaic.fed.config.util.ConfigurationParser;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
-import com.github.paguos.mosaic.fed.model.node.NesCoordinator;
-import com.github.paguos.mosaic.fed.model.node.NesNode;
-import com.github.paguos.mosaic.fed.model.node.NesWorker;
+import com.github.paguos.mosaic.fed.nebulastream.node.Coordinator;
+import com.github.paguos.mosaic.fed.nebulastream.node.NesNode;
+import com.github.paguos.mosaic.fed.nebulastream.node.Worker;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import org.junit.Test;
 
@@ -28,7 +28,7 @@ public class ConfigurationParserTest {
     @Test
     public void parseTopologyFromConfig() throws InternalFederateException {
         CNes nesConfig = getNesConfig();
-        NesCoordinator coordinator = ConfigurationParser.parseConfig(nesConfig);
+        Coordinator coordinator = ConfigurationParser.parseConfig(nesConfig);
 
         assertEquals("nes-coordinator", coordinator.getName());
         assertEquals(4000, coordinator.getCoordinatorPort());
@@ -38,14 +38,14 @@ public class ConfigurationParserTest {
         List<NesNode> childNodes = coordinator.getChildren();
         assertEquals(1, childNodes.size());
 
-        NesWorker root = (NesWorker) childNodes.get(0);
+        Worker root = (Worker) childNodes.get(0);
         assertEquals("worker_00", root.getName());
         assertEquals(-1, root.getParentId());
         assertEquals(6000, root.getDataPort());
         assertEquals(6001, root.getRpcPort());
         assertEquals(1, root.getChildren().size());
 
-        NesWorker child = (NesWorker) root.getChildren().get(0);
+        Worker child = (Worker) root.getChildren().get(0);
         assertEquals("worker_01", child.getName());
         assertEquals(6010, child.getDataPort());
         assertEquals(6011, child.getRpcPort());

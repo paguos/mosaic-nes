@@ -1,8 +1,8 @@
-package com.github.paguos.mosaic.fed.model;
+package com.github.paguos.mosaic.fed.nebulastream;
 
-import com.github.paguos.mosaic.fed.model.common.AttributeField;
-import com.github.paguos.mosaic.fed.model.common.DataTypeFactory;
-import com.github.paguos.mosaic.fed.model.stream.Schema;
+import com.github.paguos.mosaic.fed.nebulastream.common.AttributeField;
+import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
+import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
