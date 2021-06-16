@@ -1,8 +1,8 @@
-package com.github.paguos.mosaic.fed.model.node;
+package com.github.paguos.mosaic.fed.nebulastream.node;
 
 import java.util.List;
 
-public class NesCoordinator extends NesComponent {
+public class Coordinator extends NesComponent {
 
     public static final int DEFAULT_COORDINATOR_PORT = 4000;
     public static final int DEFAULT_REST_PORT = 8081;
@@ -13,7 +13,7 @@ public class NesCoordinator extends NesComponent {
 
     private final List<NesNode> children;
 
-    public NesCoordinator(NesBuilder.NesCoordinatorBuilder builder) {
+    public Coordinator(NesBuilder.NesCoordinatorBuilder builder) {
         super(NES_COORDINATOR_ID, builder.name);
         this.coordinatorPort = builder.coordinatorPort;
         this.restPort = builder.restPort;

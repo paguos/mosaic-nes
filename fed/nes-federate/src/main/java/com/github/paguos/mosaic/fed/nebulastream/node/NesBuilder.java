@@ -1,4 +1,4 @@
-package com.github.paguos.mosaic.fed.model.node;
+package com.github.paguos.mosaic.fed.nebulastream.node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +53,8 @@ public class NesBuilder {
 
         private NesCoordinatorBuilder(String name) {
             super(name);
-            this.coordinatorPort = NesCoordinator.DEFAULT_COORDINATOR_PORT;
-            this.restPort = NesCoordinator.DEFAULT_REST_PORT;
+            this.coordinatorPort = Coordinator.DEFAULT_COORDINATOR_PORT;
+            this.restPort = Coordinator.DEFAULT_REST_PORT;
             this.children = new ArrayList<>();
         }
 
@@ -73,8 +73,8 @@ public class NesBuilder {
             return this;
         }
 
-        public NesCoordinator build () {
-            return new NesCoordinator(this);
+        public Coordinator build () {
+            return new Coordinator(this);
         }
     }
 
@@ -88,8 +88,8 @@ public class NesBuilder {
         private NesNodeBuilder(String name) {
             super(name);
             this.parentId = -1;
-            this.dataPort = NesWorker.DEFAULT_DATA_PORT;
-            this.rpcPort = NesWorker.DEFAULT_RPC_PORT;
+            this.dataPort = Worker.DEFAULT_DATA_PORT;
+            this.rpcPort = Worker.DEFAULT_RPC_PORT;
         }
     }
 
@@ -99,14 +99,14 @@ public class NesBuilder {
         protected String physicalStreamName;
 
         protected String sourceConfig;
-        protected NesSourceType sourceType;
+        protected SourceType sourceType;
 
         private NesSourceBuilder(String name) {
             super(name);
             this.logicalStreamName = "default_logical";
             this.physicalStreamName = "default_physical";
             this.sourceConfig = null;
-            this.sourceType = NesSourceType.DefaultSource;
+            this.sourceType = SourceType.DefaultSource;
         }
 
         public NesSourceBuilder logicalStreamName(String logicalStreamName) {
@@ -124,7 +124,7 @@ public class NesBuilder {
             return this;
         }
 
-        public NesSourceBuilder sourceType(NesSourceType sourceType) {
+        public NesSourceBuilder sourceType(SourceType sourceType) {
             this.sourceType = sourceType;
             return this;
         }
@@ -146,8 +146,8 @@ public class NesBuilder {
             return this;
         }
 
-        public NesSource build() {
-            return new NesSource(this);
+        public Source build() {
+            return new Source(this);
         }
 
     }
@@ -181,8 +181,8 @@ public class NesBuilder {
             return this;
         }
 
-        public NesWorker build() {
-            return new NesWorker(this);
+        public Worker build() {
+            return new Worker(this);
         }
     }
 }

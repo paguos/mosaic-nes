@@ -4,3 +4,6 @@ WORKDIR /nes/data
 
 COPY QnV_short.csv QnV_short.csv
 RUN chmod +x QnV_short.csv
+
+COPY SpeedReport.csv SpeedReport.csv
+RUN chmod +x SpeedReport.csv

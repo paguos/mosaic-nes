@@ -9,7 +9,7 @@ import com.github.paguos.mosaic.fed.config.CNes;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
 import com.github.paguos.mosaic.fed.docker.DockerController;
 import com.github.paguos.mosaic.fed.docker.NetworkController;
-import com.github.paguos.mosaic.fed.model.node.*;
+import com.github.paguos.mosaic.fed.nebulastream.node.*;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
 import java.util.ArrayList;
@@ -17,9 +17,9 @@ import java.util.List;
 
 public class NesCmdFactory {
 
-    private NesCoordinator coordinator;
+    private Coordinator coordinator;
 
-    public NesCmdFactory(NesCoordinator coordinator) {
+    public NesCmdFactory(Coordinator coordinator) {
         this.coordinator = coordinator;
     }
 
@@ -32,8 +32,8 @@ public class NesCmdFactory {
         DockerClient client = DockerController.getClient();
         CNes config = ConfigurationReader.getConfig();
 
-        ExposedPort coordinatorPort = ExposedPort.tcp(NesCoordinator.DEFAULT_COORDINATOR_PORT);
-        ExposedPort restPort = ExposedPort.tcp(NesCoordinator.DEFAULT_REST_PORT);
+        ExposedPort coordinatorPort = ExposedPort.tcp(Coordinator.DEFAULT_COORDINATOR_PORT);
+        ExposedPort restPort = ExposedPort.tcp(Coordinator.DEFAULT_REST_PORT);
 
         Ports portBindings = new Ports();
         portBindings.bind(coordinatorPort, Ports.Binding.bindPort(coordinator.getCoordinatorPort()));
@@ -77,11 +77,11 @@ public class NesCmdFactory {
         cmd.add("--localWorkerIp=0.0.0.0");
         cmd.add(String.format("--rpcPort=%d", node.getRpcPort()));
 
-        if (node instanceof NesSource) {
-            NesSource source = (NesSource) node;
+        if (node instanceof Source) {
+            Source source = (Source) node;
 
             cmd.add(String.format("--sourceType=%s", source.getSourceType()));
-            if (! source.getSourceType().equals(NesSourceType.DefaultSource)) {
+            if (! source.getSourceType().equals(SourceType.DefaultSource)) {
                 cmd.add(String.format("--sourceConfig=%s", source.getSourceConfig()));
             }
 

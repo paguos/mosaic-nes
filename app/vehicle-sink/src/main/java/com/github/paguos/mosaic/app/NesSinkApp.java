@@ -46,7 +46,7 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
         if (currenQueryId == -1) {
             try {
                 getLog().info("Submitting query ...");
-                Query query = new Query().from("QnV")
+                Query query = new Query().from("mosaic_nes")
                         .sink(new ZMQSink("localhost", 5555));
                 getLog().debug(String.format("Query: %s", query.generateCppCode()));
                 currenQueryId = nesClient.executeQuery(query);

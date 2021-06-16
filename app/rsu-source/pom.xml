@@ -21,10 +21,12 @@
         <dependency>
             <groupId>com.github.paguos</groupId>
             <artifactId>nes-federate</artifactId>
+            <version>0.0.1</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.github.paguos</groupId>
-            <artifactId>nes-federate</artifactId>
+            <artifactId>vehicle-sensor</artifactId>
             <version>0.0.1</version>
             <scope>compile</scope>
         </dependency>

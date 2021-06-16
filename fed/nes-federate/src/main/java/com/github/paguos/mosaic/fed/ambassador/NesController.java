@@ -7,10 +7,14 @@ import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
 import com.github.paguos.mosaic.fed.docker.ContainerController;
 import com.github.paguos.mosaic.fed.docker.NetworkController;
 import com.github.paguos.mosaic.fed.docker.nebulastream.NesCmdFactory;
-import com.github.paguos.mosaic.fed.model.node.NesCoordinator;
-import com.github.paguos.mosaic.fed.model.node.NesNode;
-import com.github.paguos.mosaic.fed.model.node.NesWorker;
-import com.github.paguos.mosaic.fed.model.stream.NesLogicalStream;
+import com.github.paguos.mosaic.fed.nebulastream.common.AttributeField;
+import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
+import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
+import com.github.paguos.mosaic.fed.nebulastream.node.Coordinator;
+import com.github.paguos.mosaic.fed.nebulastream.node.NesNode;
+import com.github.paguos.mosaic.fed.nebulastream.node.Worker;
+import com.github.paguos.mosaic.fed.nebulastream.stream.LogicalStream;
+import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
@@ -22,7 +26,7 @@ public class NesController {
 
     private final NesCmdFactory nesCmdFactory;
     private final NesClient nesClient;
-    private final NesCoordinator coordinator;
+    private final Coordinator coordinator;
 
 
     private NesController(CNes config) {
@@ -51,7 +55,22 @@ public class NesController {
             throw new InternalFederateException(e);
         }
 
-        nesClient.addLogicalStream(getLogicalStream("QnV"));
+        Schema qnvSchema = new Schema();
+        qnvSchema.addField("sensor_id", DataTypeFactory.createFixedChar(8));
+        qnvSchema.addField("timestamp", BasicType.UINT64);
+        qnvSchema.addField("velocity", BasicType.FLOAT32);
+        qnvSchema.addField("quantity", BasicType.UINT64);
+
+        nesClient.addLogicalStream(new LogicalStream("QnV", qnvSchema));
+
+        Schema mosaicSchema = new Schema();
+        mosaicSchema.addField("vehicle_id", DataTypeFactory.createFixedChar(8));
+        mosaicSchema.addField("timestamp", BasicType.UINT64);
+        mosaicSchema.addField("latitude", BasicType.FLOAT64);
+        mosaicSchema.addField("longitude", BasicType.FLOAT64);
+        mosaicSchema.addField("speed", BasicType.FLOAT32);
+
+        nesClient.addLogicalStream(new LogicalStream("mosaic_nes", mosaicSchema));
 
         startNodes(coordinator.getChildren());
     }
@@ -71,19 +90,11 @@ public class NesController {
             CreateContainerCmd createWorkerCmd = nesCmdFactory.createNesNodeCmd(node);
             ContainerController.run(createWorkerCmd);
 
-            if (node instanceof NesWorker) {
-                NesWorker worker = (NesWorker) node;
+            if (node instanceof Worker) {
+                Worker worker = (Worker) node;
                 startNodes(worker.getChildren());
             }
         }
-    }
-
-    private NesLogicalStream getLogicalStream(String name){
-        String schema = "Schema::create()->addField(\"sensor_id\", ";
-        schema += "DataTypeFactory::createFixedChar(8))->addField(createField(\"timestamp\", ";
-        schema += "UINT64))->addField(createField(\"velocity\", FLOAT32))->addField(createField(\"quantity\", UINT64))";
-
-        return new NesLogicalStream(name, schema);
     }
 
 }

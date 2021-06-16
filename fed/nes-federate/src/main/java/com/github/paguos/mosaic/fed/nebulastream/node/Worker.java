@@ -1,12 +1,12 @@
-package com.github.paguos.mosaic.fed.model.node;
+package com.github.paguos.mosaic.fed.nebulastream.node;
 
 import java.util.List;
 
-public class NesWorker extends NesNode {
+public class Worker extends NesNode {
 
     private final List<NesNode> children;
 
-    protected NesWorker(NesBuilder.NesWorkerBuilder builder) {
+    protected Worker(NesBuilder.NesWorkerBuilder builder) {
         super(builder.name, builder.parentId, builder.dataPort, builder.rpcPort);
         this.children = builder.children;
     }

@@ -1,10 +1,10 @@
 package com.github.paguos.mosaic.app;
 
 import com.github.paguos.mosaic.fed.ambassador.NesController;
-import com.github.paguos.mosaic.fed.model.node.NesBuilder;
-import com.github.paguos.mosaic.fed.model.node.NesNode;
-import com.github.paguos.mosaic.fed.model.node.NesSource;
-import com.github.paguos.mosaic.fed.model.node.NesSourceType;
+import com.github.paguos.mosaic.fed.nebulastream.node.NesBuilder;
+import com.github.paguos.mosaic.fed.nebulastream.node.NesNode;
+import com.github.paguos.mosaic.fed.nebulastream.node.Source;
+import com.github.paguos.mosaic.fed.nebulastream.node.SourceType;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.AdHocModuleConfiguration;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.CamBuilder;
@@ -38,13 +38,13 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
 
         try {
             NesController controller = NesController.getController();
-            NesSource source = NesBuilder.createSource("rsu")
+            Source source = NesBuilder.createSource("rsu")
                     .dataPort(NesNode.getNextDataPort())
                     .rpcPort(NesNode.getNextRPCPort())
-                    .sourceType(NesSourceType.CSVSource)
-                    .sourceConfig("/nes/data/QnV_short.csv")
-                    .logicalStreamName("QnV")
-                    .physicalStreamName("mosaic")
+                    .sourceType(SourceType.CSVSource)
+                    .sourceConfig("/nes/data/SpeedReport.csv")
+                    .logicalStreamName("mosaic_nes")
+                    .physicalStreamName(getOs().getId())
                     .parentId(2)
                     .build();
             controller.addNode(source);
@@ -61,6 +61,7 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
         try {
             List<String> logicalStreams = nesClient.getAvailableLogicalStreams();
             getLog().info(String.format("Found Logical Stream 'QnV': %b", logicalStreams.contains("QnV")));
+            getLog().info(String.format("Found Logical Stream 'mosaic_nes': %b", logicalStreams.contains("mosaic_nes")));
 
             int nodeCount = nesClient.getTopologyNodeCount();
             getLog().info(String.format("The Nes Topology has '%d' nodes.", nodeCount));
@@ -68,7 +69,6 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
         } catch (InternalFederateException e) {
             getLog().error("Error interacting with NES!");
         }
-
     }
 
     @Override
@@ -78,7 +78,6 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
 
     @Override
     public void onShutdown() {
-
     }
 
     @Override

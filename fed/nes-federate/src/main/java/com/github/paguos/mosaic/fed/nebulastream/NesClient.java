@@ -1,6 +1,6 @@
 package com.github.paguos.mosaic.fed.nebulastream;
 
-import com.github.paguos.mosaic.fed.model.stream.NesLogicalStream;
+import com.github.paguos.mosaic.fed.nebulastream.stream.LogicalStream;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import stream.nebula.exceptions.RESTExecption;
 import stream.nebula.exceptions.UnknownDataTypeException;
@@ -19,9 +19,9 @@ public class NesClient {
         this.nebulaStreamRuntime.getConfig().setHost(host).setPort(port);
     }
 
-    public void addLogicalStream(NesLogicalStream logicalStream) throws InternalFederateException {
+    public void addLogicalStream(LogicalStream logicalStream) throws InternalFederateException {
         try {
-            nebulaStreamRuntime.addLogicalStream(logicalStream.getName(), logicalStream.getSchema());
+            nebulaStreamRuntime.addLogicalStream(logicalStream.getName(), logicalStream.getSchema().toCpp());
         } catch (IOException | RESTExecption e) {
             throw new InternalFederateException(e.getMessage());
         }
