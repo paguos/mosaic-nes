@@ -8,6 +8,7 @@ import com.github.paguos.mosaic.fed.docker.ContainerController;
 import com.github.paguos.mosaic.fed.docker.NetworkController;
 import com.github.paguos.mosaic.fed.docker.nebulastream.NesCmdFactory;
 import com.github.paguos.mosaic.fed.nebulastream.common.AttributeField;
+import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
 import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
 import com.github.paguos.mosaic.fed.nebulastream.node.Coordinator;
 import com.github.paguos.mosaic.fed.nebulastream.node.NesNode;
@@ -54,7 +55,22 @@ public class NesController {
             throw new InternalFederateException(e);
         }
 
-        nesClient.addLogicalStream(getLogicalStream("QnV"));
+        Schema qnvSchema = new Schema();
+        qnvSchema.addField("sensor_id", DataTypeFactory.createFixedChar(8));
+        qnvSchema.addField("timestamp", BasicType.UINT64);
+        qnvSchema.addField("velocity", BasicType.FLOAT32);
+        qnvSchema.addField("quantity", BasicType.UINT64);
+
+        nesClient.addLogicalStream(new LogicalStream("QnV", qnvSchema));
+
+        Schema mosaicSchema = new Schema();
+        mosaicSchema.addField("vehicle_id", DataTypeFactory.createFixedChar(8));
+        mosaicSchema.addField("timestamp", BasicType.UINT64);
+        mosaicSchema.addField("latitude", BasicType.FLOAT64);
+        mosaicSchema.addField("longitude", BasicType.FLOAT64);
+        mosaicSchema.addField("speed", BasicType.FLOAT32);
+
+        nesClient.addLogicalStream(new LogicalStream("mosaic_nes", mosaicSchema));
 
         startNodes(coordinator.getChildren());
     }
@@ -79,16 +95,6 @@ public class NesController {
                 startNodes(worker.getChildren());
             }
         }
-    }
-
-    private LogicalStream getLogicalStream(String name){
-        Schema schema = new Schema();
-        schema.addField(new AttributeField("sensor_id", DataTypeFactory.createFixedChar(8)));
-        schema.addField(new AttributeField("timestamp", DataTypeFactory.createInteger()));
-        schema.addField(new AttributeField("velocity", DataTypeFactory.createFloat()));
-        schema.addField(new AttributeField("quantity", DataTypeFactory.createInteger()));
-
-        return new LogicalStream(name, schema);
     }
 
 }

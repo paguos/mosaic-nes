@@ -61,6 +61,7 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
         try {
             List<String> logicalStreams = nesClient.getAvailableLogicalStreams();
             getLog().info(String.format("Found Logical Stream 'QnV': %b", logicalStreams.contains("QnV")));
+            getLog().info(String.format("Found Logical Stream 'mosaic_nes': %b", logicalStreams.contains("mosaic_nes")));
 
             int nodeCount = nesClient.getTopologyNodeCount();
             getLog().info(String.format("The Nes Topology has '%d' nodes.", nodeCount));

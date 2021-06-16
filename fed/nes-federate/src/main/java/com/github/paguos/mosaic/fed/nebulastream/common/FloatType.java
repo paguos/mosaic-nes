@@ -1,6 +1,12 @@
 package com.github.paguos.mosaic.fed.nebulastream.common;
 
-public class Float extends DataType{
+public class FloatType extends DataType{
+
+    private final BasicType type;
+
+    public FloatType(BasicType type) {
+        this.type = type;
+    }
 
     @Override
     public boolean isFloat() {
@@ -9,6 +15,6 @@ public class Float extends DataType{
 
     @Override
     public String toCpp() {
-        return "FLOAT32";
+        return this.type.name();
     }
 }

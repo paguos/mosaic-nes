@@ -1,6 +1,7 @@
 package com.github.paguos.mosaic.fed.nebulastream;
 
 import com.github.paguos.mosaic.fed.nebulastream.common.AttributeField;
+import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
 import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
 import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
 import org.junit.Test;
@@ -12,10 +13,10 @@ public class NesSchemaTest {
     @Test
     public void createQnVSchema() {
         Schema schema = new Schema();
-        schema.addField(new AttributeField("sensor_id", DataTypeFactory.createFixedChar(8)));
-        schema.addField(new AttributeField("timestamp", DataTypeFactory.createInteger()));
-        schema.addField(new AttributeField("velocity", DataTypeFactory.createFloat()));
-        schema.addField(new AttributeField("quantity", DataTypeFactory.createInteger()));
+        schema.addField("sensor_id", DataTypeFactory.createFixedChar(8));
+        schema.addField("timestamp", BasicType.UINT64);
+        schema.addField("velocity", BasicType.FLOAT32);
+        schema.addField("quantity", BasicType.UINT64);
 
         String expectedSchema = getQnvSchema();
         assertEquals(expectedSchema, schema.toCpp());

@@ -2,6 +2,10 @@ package com.github.paguos.mosaic.fed.nebulastream.common;
 
 public abstract class DataType {
 
+    public boolean isBoolean() {
+        return false;
+    }
+
     public boolean isFixedChar() {
         return false;
     }

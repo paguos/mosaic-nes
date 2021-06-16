@@ -1,14 +1,15 @@
 package com.github.paguos.mosaic.fed.nebulastream.common;
 
-public class Integer extends DataType {
+public class BooleanType extends DataType {
 
     @Override
-    public boolean isInteger() {
+    public boolean isBoolean() {
         return true;
     }
 
     @Override
     public String toCpp() {
-        return "UINT64";
+        return null;
     }
+
 }

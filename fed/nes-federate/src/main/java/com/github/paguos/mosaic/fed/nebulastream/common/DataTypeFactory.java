@@ -6,12 +6,27 @@ public class DataTypeFactory {
         return new FixedChar(size);
     }
 
-    public static Float createFloat() {
-        return new Float();
-    }
-
-    public static Integer createInteger() {
-        return new Integer();
+    public static DataType createType(BasicType basicType) {
+        switch (basicType) {
+            case BOOLEAN:
+                return new BooleanType();
+            case CHAR:
+                return createFixedChar(1);
+            case INT8:
+            case INT16:
+            case INT32:
+            case INT64:
+            case UINT8:
+            case UINT16:
+            case UINT32:
+            case UINT64:
+                return new IntegerType(basicType);
+            case FLOAT32:
+            case FLOAT64:
+                return new FloatType(basicType);
+            default:
+                return null;
+        }
     }
 
 }

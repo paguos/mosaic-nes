@@ -62,6 +62,7 @@ public class ErnstReuterIT {
     @Test
     public void logicalStreamCreated() throws Exception {
         LogAssert.contains(simulationRule, "apps/rsu_0/NesSourceApp.log", ".*Found Logical Stream 'QnV': true.*");
+        LogAssert.contains(simulationRule, "apps/rsu_0/NesSourceApp.log", ".*Found Logical Stream 'mosaic_nes': true.*");
     }
 
     @Test
