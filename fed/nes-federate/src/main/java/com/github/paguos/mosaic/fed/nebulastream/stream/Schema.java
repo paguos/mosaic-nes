@@ -10,10 +10,16 @@ import java.util.List;
 
 public class Schema {
 
+    private final String name;
     private final List<AttributeField> fields;
 
-    public Schema() {
+    public Schema(String name) {
+        this.name = name;
         this.fields = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void addField (String name, BasicType type) {

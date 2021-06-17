@@ -12,7 +12,7 @@ public class NesSchemaTest {
 
     @Test
     public void createQnVSchema() {
-        Schema schema = new Schema();
+        Schema schema = new Schema("QnV");
         schema.addField("sensor_id", DataTypeFactory.createFixedChar(8));
         schema.addField("timestamp", BasicType.UINT64);
         schema.addField("velocity", BasicType.FLOAT32);
