@@ -1,6 +1,5 @@
 package com.github.paguos.mosaic.fed.nebulastream;
 
-import com.github.paguos.mosaic.fed.nebulastream.common.AttributeField;
 import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
 import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
 import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
@@ -17,6 +16,8 @@ public class NesSchemaTest {
         schema.addField("timestamp", BasicType.UINT64);
         schema.addField("velocity", BasicType.FLOAT32);
         schema.addField("quantity", BasicType.UINT64);
+
+        assertEquals(28, schema.getByteSize());
 
         String expectedSchema = getQnvSchema();
         assertEquals(expectedSchema, schema.toCpp());

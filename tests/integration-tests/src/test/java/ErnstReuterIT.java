@@ -82,6 +82,10 @@ public class ErnstReuterIT {
 
     @Test
     public void sinkReceivedMessages() throws Exception {
-        LogAssert.contains(simulationRule, "apps/veh_10/NesSinkApp.log", ".*Message received:.*");
+        LogAssert.contains(
+                simulationRule,
+                "apps/veh_10/NesSinkApp.log",
+                ".*Message received: veh_[0-9]*,[0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*"
+        );
     }
 }

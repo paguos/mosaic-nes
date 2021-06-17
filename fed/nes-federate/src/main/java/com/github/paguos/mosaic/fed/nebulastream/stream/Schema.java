@@ -30,6 +30,19 @@ public class Schema {
         fields.add(new AttributeField(name, type));
     }
 
+    public int getByteSize(){
+        int length = 0;
+        for (AttributeField f: fields) {
+            length+= f.getDataType().getByteSize();
+        }
+
+        return length;
+    }
+
+    public List<AttributeField> getFields() {
+        return fields;
+    }
+
     public String toCpp() {
         StringBuilder builder = new StringBuilder();
         builder.append("Schema::create()");

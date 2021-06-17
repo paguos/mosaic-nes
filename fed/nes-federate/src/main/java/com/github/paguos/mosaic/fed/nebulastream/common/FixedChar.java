@@ -14,6 +14,16 @@ public class FixedChar extends DataType{
     }
 
     @Override
+    public int getByteSize() {
+        return size;
+    }
+
+    @Override
+    public String parseString(byte[] bytes) {
+        return new String(bytes).trim();
+    }
+
+    @Override
     public String toCpp() {
         return String.format("DataTypeFactory::createFixedChar(%d)", this.size);
     }

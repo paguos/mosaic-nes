@@ -1,14 +1,8 @@
 package com.github.paguos.mosaic.app;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Appender;
-import ch.qos.logback.core.FileAppender;
 import com.github.paguos.mosaic.app.message.SpeedReport;
-import org.slf4j.LoggerFactory;
+import com.github.paguos.mosaic.fed.utils.IOUtils;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -20,7 +14,7 @@ public class SpeedReportWriter {
 
     public SpeedReportWriter(String rsuId) throws IOException {
         String fileName = String.format("%s-%s.%s", REPORT_NAME, rsuId, REPORT_EXTENSION);
-        this.fileWriter = new FileWriter(getLogDirectory() + "/" + fileName);
+        this.fileWriter = new FileWriter(IOUtils.getLogDirectory() + "/" + fileName);
     }
 
     public void write(SpeedReport speedReport) throws IOException {
@@ -36,22 +30,5 @@ public class SpeedReportWriter {
         fileWriter.write(reportEntry);
     }
 
-    /**
-     * Get the log directory of the application
-     * @return the directory of the logs
-     */
-    private static File getLogDirectory() {
-        LoggerContext  context = (LoggerContext) LoggerFactory.getILoggerFactory();
-        for (Logger logger: context.getLoggerList()) {
-            Appender<ILoggingEvent> appender = logger.getAppender("ApplicationLog");
-
-            if (appender instanceof FileAppender) {
-                FileAppender<?> fileAppender = ((FileAppender<?>) appender);
-                return new File(fileAppender.getFile()).getParentFile();
-            }
-        }
-
-        return null;
-    }
 
 }
