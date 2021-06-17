@@ -1,5 +1,6 @@
 package com.github.paguos.mosaic.app;
 
+import com.github.paguos.mosaic.app.message.SpeedReportMsg;
 import com.github.paguos.mosaic.fed.ambassador.NesController;
 import com.github.paguos.mosaic.fed.nebulastream.node.NesBuilder;
 import com.github.paguos.mosaic.fed.nebulastream.node.NesNode;
@@ -15,14 +16,17 @@ import org.eclipse.mosaic.fed.application.app.api.CommunicationApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.RoadSideUnitOperatingSystem;
 import org.eclipse.mosaic.interactions.communication.V2xMessageTransmission;
 import org.eclipse.mosaic.lib.enums.AdHocChannel;
+import org.eclipse.mosaic.lib.objects.v2x.V2xMessage;
 import org.eclipse.mosaic.lib.util.scheduling.Event;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
+import java.io.IOException;
 import java.util.List;
 
 public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSystem> implements CommunicationApplication {
 
     private final NesClient nesClient = new NesClient("localhost", "8081");
+    private SpeedReportWriter reportWriter;
 
     @Override
     public void onStartup() {
@@ -69,11 +73,31 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
         } catch (InternalFederateException e) {
             getLog().error("Error interacting with NES!");
         }
+
+        try {
+            reportWriter = new SpeedReportWriter(getOs().getId());
+        } catch (IOException e) {
+            getLog().error("Error creating file writer!");
+            getLog().error(e.getMessage());
+        }
     }
 
     @Override
     public void onMessageReceived(ReceivedV2xMessage receivedV2xMessage) {
         getLog().infoSimTime(this, "Received V2X Message from {}", receivedV2xMessage.getMessage().getRouting().getSource().getSourceName());
+        V2xMessage msg = receivedV2xMessage.getMessage();
+        if (msg instanceof SpeedReportMsg) {
+            processSpeedReportMsg((SpeedReportMsg) msg);
+        }
+    }
+
+    private void processSpeedReportMsg (SpeedReportMsg msg) {
+        try {
+            reportWriter.write(msg.getReport());
+        } catch (IOException e) {
+            getLog().error("Error while writing report!");
+            getLog().error(e.getMessage());
+        }
     }
 
     @Override
@@ -84,8 +108,6 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
     public void processEvent(Event event) {
         
     }
-
-
 
     @Override
     public void onAcknowledgementReceived(ReceivedAcknowledgement receivedAcknowledgement) {

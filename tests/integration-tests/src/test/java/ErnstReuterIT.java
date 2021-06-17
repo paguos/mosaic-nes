@@ -50,7 +50,12 @@ public class ErnstReuterIT {
         LogAssert.exists(simulationRule, "Application.log");
         LogAssert.exists(simulationRule, "Mapping.log");
         LogAssert.exists(simulationRule, "Communication.log");
+
+        // Source
         LogAssert.exists(simulationRule, "apps/rsu_0/NesSourceApp.log");
+        LogAssert.exists(simulationRule, "SpeedReport-rsu_0.csv");
+
+        // Sink
         LogAssert.exists(simulationRule, "apps/veh_10/NesSinkApp.log");
     }
 
