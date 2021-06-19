@@ -3,6 +3,7 @@ package com.github.paguos.mosaic.fed.nebulastream.common;
 import com.github.paguos.mosaic.fed.utils.IOUtils;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 public class FloatType extends DataType{
 
@@ -51,5 +52,18 @@ public class FloatType extends DataType{
     @Override
     public String toCpp() {
         return this.type.name();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FloatType floatType = (FloatType) o;
+        return type == floatType.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type);
     }
 }

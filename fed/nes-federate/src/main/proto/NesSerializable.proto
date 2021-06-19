@@ -1,0 +1,71 @@
+syntax = "proto3";
+import "google/protobuf/any.proto";
+
+package com.github.paguos.mosaic.fed.msg;
+option java_multiple_files = true;
+
+message SerializableDataType{
+  // Enum do identify the data type
+  enum Type{
+    UNDEFINED = 0;
+    INTEGER = 1;
+    FLOAT = 2;
+    CHAR = 3;
+    ARRAY = 4;
+    BOOLEAN = 5;
+    FIXEDCHAR = 6;
+  }
+
+  /**
+  Details for array data types
+   */
+  message ArrayDetails{
+    SerializableDataType componentType = 1;
+    uint64 dimensions = 2;
+  }
+
+  /**
+  Details for integer data types
+   */
+  message IntegerDetails{
+    uint64 bits = 1;
+    int64 upperBound = 2;
+    int64 lowerBound = 3;
+  }
+
+  /**
+ Details for Float data types
+  */
+  message FloatDetails{
+    uint64 bits = 1;
+    double upperBound = 2;
+    double lowerBound = 3;
+  }
+
+  /**
+  Details for char data types
+   */
+  message CharDetails{
+    uint64 dimensions = 2;
+  }
+
+  Type type = 1;
+  // field for custom type properties
+  google.protobuf.Any details = 2;
+
+}
+
+/*
+The serializable wrapper definition for fields
+ */
+message SerializableField{
+  string name = 1;
+  SerializableDataType type = 2;
+}
+
+/**
+The serializable wrapper for a schema object
+ */
+message SerializableSchema{
+  repeated SerializableField fields = 1;
+}

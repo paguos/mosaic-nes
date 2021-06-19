@@ -1,5 +1,7 @@
 package com.github.paguos.mosaic.fed.nebulastream.common;
 
+import java.util.Objects;
+
 public class FixedChar extends DataType{
 
     private final int size;
@@ -33,5 +35,18 @@ public class FixedChar extends DataType{
         return "FixedChar{" +
                 "size=" + size +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FixedChar fixedChar = (FixedChar) o;
+        return size == fixedChar.size;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(size);
     }
 }

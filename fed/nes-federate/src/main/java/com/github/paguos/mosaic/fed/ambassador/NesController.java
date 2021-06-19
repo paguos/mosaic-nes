@@ -63,11 +63,11 @@ public class NesController {
         nesClient.addLogicalStream(new LogicalStream(qnvSchema));
 
         Schema mosaicSchema = new Schema("mosaic_nes");
-        mosaicSchema.addField("vehicle_id", DataTypeFactory.createFixedChar(8));
-        mosaicSchema.addField("timestamp", BasicType.UINT64);
+        mosaicSchema.addField("vehicle_id", DataTypeFactory.createFixedChar(7));
+        mosaicSchema.addField("timestamp", BasicType.INT64);
         mosaicSchema.addField("latitude", BasicType.FLOAT64);
         mosaicSchema.addField("longitude", BasicType.FLOAT64);
-        mosaicSchema.addField("speed", BasicType.FLOAT32);
+        mosaicSchema.addField("speed", BasicType.FLOAT64);
 
         nesClient.addLogicalStream(new LogicalStream(mosaicSchema));
 
