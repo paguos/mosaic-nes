@@ -1,6 +1,7 @@
 package com.github.paguos.mosaic.fed.ambassador;
 
 import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.paguos.mosaic.fed.catalog.SchemaCatalog;
 import com.github.paguos.mosaic.fed.config.CNes;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationParser;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
@@ -54,21 +55,10 @@ public class NesController {
             throw new InternalFederateException(e);
         }
 
-        Schema qnvSchema = new Schema("QnV");
-        qnvSchema.addField("sensor_id", DataTypeFactory.createFixedChar(8));
-        qnvSchema.addField("timestamp", BasicType.UINT64);
-        qnvSchema.addField("velocity", BasicType.FLOAT32);
-        qnvSchema.addField("quantity", BasicType.UINT64);
-
+        Schema qnvSchema = SchemaCatalog.getQnVSchema();
         nesClient.addLogicalStream(new LogicalStream(qnvSchema));
 
-        Schema mosaicSchema = new Schema("mosaic_nes");
-        mosaicSchema.addField("vehicle_id", DataTypeFactory.createFixedChar(7));
-        mosaicSchema.addField("timestamp", BasicType.INT64);
-        mosaicSchema.addField("latitude", BasicType.FLOAT64);
-        mosaicSchema.addField("longitude", BasicType.FLOAT64);
-        mosaicSchema.addField("speed", BasicType.FLOAT64);
-
+        Schema mosaicSchema = SchemaCatalog.getMosaicNesSchema();
         nesClient.addLogicalStream(new LogicalStream(mosaicSchema));
 
         startNodes(coordinator.getChildren());

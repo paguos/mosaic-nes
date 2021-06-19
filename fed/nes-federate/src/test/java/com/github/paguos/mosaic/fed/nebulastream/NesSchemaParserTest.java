@@ -1,5 +1,6 @@
 package com.github.paguos.mosaic.fed.nebulastream;
 
+import com.github.paguos.mosaic.fed.catalog.SchemaCatalog;
 import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
 import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
 import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
@@ -127,12 +128,7 @@ public class NesSchemaParserTest {
 
     @Test
     public void testParseMosaicSchema(){
-        Schema mosaicSchema = new Schema("mosaic_nes");
-        mosaicSchema.addField("vehicle_id", DataTypeFactory.createFixedChar(7));
-        mosaicSchema.addField("timestamp", BasicType.INT64);
-        mosaicSchema.addField("latitude", BasicType.FLOAT64);
-        mosaicSchema.addField("longitude", BasicType.FLOAT64);
-        mosaicSchema.addField("speed", BasicType.FLOAT64);
+        Schema mosaicSchema = SchemaCatalog.getMosaicNesSchema();
 
         byte[] tupleBytes = new byte[mosaicSchema.getByteSize()];
 

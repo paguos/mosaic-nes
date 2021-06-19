@@ -1,5 +1,6 @@
 package com.github.paguos.mosaic.fed.nebulastream;
 
+import com.github.paguos.mosaic.fed.catalog.SchemaCatalog;
 import com.github.paguos.mosaic.fed.msg.SerializableSchema;
 import com.github.paguos.mosaic.fed.nebulastream.common.AttributeField;
 import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
@@ -15,12 +16,7 @@ public class NesSchemaTest {
 
     @Test
     public void createQnVSchema() {
-        Schema schema = new Schema("QnV");
-        schema.addField("sensor_id", DataTypeFactory.createFixedChar(8));
-        schema.addField("timestamp", BasicType.UINT64);
-        schema.addField("velocity", BasicType.FLOAT32);
-        schema.addField("quantity", BasicType.UINT64);
-
+        Schema schema = SchemaCatalog.getQnVSchema();
         assertEquals(28, schema.getByteSize());
 
         String expectedSchema = getQnvSchema();
