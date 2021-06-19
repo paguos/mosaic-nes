@@ -88,6 +88,9 @@ public class NesCmdFactory {
             cmd.add(String.format("--logicalStreamName=%s", source.getLogicalStreamName()));
             cmd.add(String.format("--physicalStreamName=%s", source.getPhysicalStreamName()));
 
+            if (source.getNumberOfTuplesToProducePerBuffer() > 0) {
+                cmd.add(String.format("--numberOfTuplesToProducePerBuffer=%d", source.getNumberOfTuplesToProducePerBuffer()));
+            }
         }
 
         if (node.getParentId() != -1) {

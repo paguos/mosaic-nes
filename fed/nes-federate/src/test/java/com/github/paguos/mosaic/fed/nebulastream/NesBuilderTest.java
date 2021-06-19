@@ -58,6 +58,7 @@ public class NesBuilderTest {
         assertEquals(3000, source.getRpcPort());
         assertEquals("default_logical", source.getLogicalStreamName());
         assertEquals("default_physical", source.getPhysicalStreamName());
+        assertEquals(0, source.getNumberOfTuplesToProducePerBuffer());
         assertNull(source.getSourceConfig());
         assertEquals(SourceType.DefaultSource, source.getSourceType());
     }
@@ -72,6 +73,7 @@ public class NesBuilderTest {
                 .logicalStreamName("test_logical")
                 .physicalStreamName("test_physical")
                 .sourceConfig("test_config")
+                .numberOfTuplesToProducePerBuffer(2)
                 .build();
 
         assertEquals("custom-source", source.getName());
@@ -81,6 +83,7 @@ public class NesBuilderTest {
         assertEquals("test_logical", source.getLogicalStreamName());
         assertEquals("test_physical", source.getPhysicalStreamName());
         assertEquals("test_config", source.getSourceConfig());
+        assertEquals(2, source.getNumberOfTuplesToProducePerBuffer());
         assertEquals(SourceType.CSVSource, source.getSourceType());
     }
 
