@@ -29,11 +29,6 @@
             <artifactId>nebulastream-java-client</artifactId>
             <version>${version.nes-client}</version>
         </dependency>
-        <dependency>
-            <groupId>org.zeromq</groupId>
-            <artifactId>jeromq</artifactId>
-            <version>0.5.2</version>
-        </dependency>
     </dependencies>
 
 </project>
