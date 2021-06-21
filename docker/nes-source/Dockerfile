@@ -1,4 +1,4 @@
-FROM nebulastream/nes-executable-image:0.0.408
+FROM nebulastream/nes-executable-image:0.0.452
 
 WORKDIR /nes/data
 
