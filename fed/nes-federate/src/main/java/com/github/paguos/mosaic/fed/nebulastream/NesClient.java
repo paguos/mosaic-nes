@@ -21,7 +21,7 @@ public class NesClient {
 
     public void addLogicalStream(LogicalStream logicalStream) throws InternalFederateException {
         try {
-            nebulaStreamRuntime.addLogicalStream(logicalStream.getName(), logicalStream.getSchema().toCpp());
+            nebulaStreamRuntime.addLogicalStream(logicalStream.getSchema().getName(), logicalStream.getSchema().toCpp());
         } catch (IOException | RESTExecption e) {
             throw new InternalFederateException(e.getMessage());
         }

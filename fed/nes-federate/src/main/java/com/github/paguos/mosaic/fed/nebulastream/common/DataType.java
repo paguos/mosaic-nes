@@ -18,6 +18,10 @@ public abstract class DataType {
         return false;
     }
 
+    public abstract int getByteSize();
+
+    public abstract String parseString(byte[] bytes);
+
     public abstract  String toCpp();
 
 }

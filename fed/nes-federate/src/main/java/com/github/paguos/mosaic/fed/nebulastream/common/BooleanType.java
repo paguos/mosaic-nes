@@ -8,6 +8,20 @@ public class BooleanType extends DataType {
     }
 
     @Override
+    public int getByteSize() {
+        return 1;
+    }
+
+    @Override
+    public String parseString(byte[] bytes) {
+        if (bytes[0] == 1) {
+            return "true";
+        } else {
+            return "false";
+        }
+    }
+
+    @Override
     public String toCpp() {
         return null;
     }

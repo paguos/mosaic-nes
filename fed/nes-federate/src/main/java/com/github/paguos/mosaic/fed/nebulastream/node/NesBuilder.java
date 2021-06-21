@@ -96,6 +96,7 @@ public class NesBuilder {
     public static class NesSourceBuilder extends NesNodeBuilder {
 
         protected String logicalStreamName;
+        protected int numberOfTuplesToProducePerBuffer;
         protected String physicalStreamName;
 
         protected String sourceConfig;
@@ -105,12 +106,18 @@ public class NesBuilder {
             super(name);
             this.logicalStreamName = "default_logical";
             this.physicalStreamName = "default_physical";
+            this.numberOfTuplesToProducePerBuffer = 0;
             this.sourceConfig = null;
             this.sourceType = SourceType.DefaultSource;
         }
 
         public NesSourceBuilder logicalStreamName(String logicalStreamName) {
             this.logicalStreamName = logicalStreamName;
+            return this;
+        }
+
+        public NesSourceBuilder numberOfTuplesToProducePerBuffer(int numberOfTuplesToProducePerBuffer) {
+            this.numberOfTuplesToProducePerBuffer = numberOfTuplesToProducePerBuffer;
             return this;
         }
 

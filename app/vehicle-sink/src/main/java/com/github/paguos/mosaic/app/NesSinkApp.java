@@ -2,6 +2,7 @@ package com.github.paguos.mosaic.app;
 
 import com.github.paguos.mosaic.app.config.CNesSinkApp;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
+import com.github.paguos.mosaic.fed.nebulastream.stream.ZmqSink;
 import org.eclipse.mosaic.fed.application.app.ConfigurableApplication;
 import org.eclipse.mosaic.fed.application.app.api.VehicleApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.VehicleOperatingSystem;

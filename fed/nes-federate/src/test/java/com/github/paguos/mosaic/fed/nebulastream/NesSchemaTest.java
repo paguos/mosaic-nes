@@ -1,9 +1,13 @@
 package com.github.paguos.mosaic.fed.nebulastream;
 
+import com.github.paguos.mosaic.fed.catalog.SchemaCatalog;
+import com.github.paguos.mosaic.fed.msg.SerializableSchema;
 import com.github.paguos.mosaic.fed.nebulastream.common.AttributeField;
 import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
 import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
+import com.github.paguos.mosaic.fed.nebulastream.fixtures.SchemaFixtures;
 import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
+import com.google.protobuf.InvalidProtocolBufferException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -12,11 +16,8 @@ public class NesSchemaTest {
 
     @Test
     public void createQnVSchema() {
-        Schema schema = new Schema();
-        schema.addField("sensor_id", DataTypeFactory.createFixedChar(8));
-        schema.addField("timestamp", BasicType.UINT64);
-        schema.addField("velocity", BasicType.FLOAT32);
-        schema.addField("quantity", BasicType.UINT64);
+        Schema schema = SchemaCatalog.getQnVSchema();
+        assertEquals(28, schema.getByteSize());
 
         String expectedSchema = getQnvSchema();
         assertEquals(expectedSchema, schema.toCpp());
@@ -27,5 +28,31 @@ public class NesSchemaTest {
         expectedSchema += "DataTypeFactory::createFixedChar(8))->addField(createField(\"timestamp\", ";
         expectedSchema += "UINT64))->addField(createField(\"velocity\", FLOAT32))->addField(createField(\"quantity\", UINT64))";
         return expectedSchema;
+    }
+
+    @Test
+    public void parseFromSerializable() throws InvalidProtocolBufferException {
+        byte[] schemaBytes = SchemaFixtures.getSchemaBytes();
+        SerializableSchema serializableSchema = SerializableSchema.parseFrom(schemaBytes);
+
+        Schema schema = Schema.parseFrom(serializableSchema);
+
+        assertEquals("mosaic_nes", schema.getName());
+        assertEquals(5, schema.getFields().size());
+
+        AttributeField expectedVehicleIdField = new AttributeField("vehicle_id", DataTypeFactory.createFixedChar(7));
+        assertEquals(expectedVehicleIdField, schema.getFields().get(0));
+
+        AttributeField expectedTimestampField = new AttributeField("timestamp", DataTypeFactory.createType(BasicType.INT64));
+        assertEquals(expectedTimestampField, schema.getFields().get(1));
+
+        AttributeField expectedLatitudeField = new AttributeField("latitude", DataTypeFactory.createType(BasicType.FLOAT64));
+        assertEquals(expectedLatitudeField, schema.getFields().get(2));
+
+        AttributeField expectedLongitudeField = new AttributeField("longitude", DataTypeFactory.createType(BasicType.FLOAT64));
+        assertEquals(expectedLongitudeField, schema.getFields().get(3));
+
+        AttributeField expectedSpeedField = new AttributeField("speed", DataTypeFactory.createType(BasicType.FLOAT64));
+        assertEquals(expectedSpeedField, schema.getFields().get(4));
     }
 }

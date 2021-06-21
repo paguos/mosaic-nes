@@ -94,14 +94,15 @@ public class NesCmdFactoryTest {
                 .sourceConfig("test_config")
                 .logicalStreamName("test_logical")
                 .physicalStreamName("test_physical")
+                .numberOfTuplesToProducePerBuffer(2)
                 .build();
         CreateContainerCmd testCmd = nesCmdFactory.createNesNodeCmd(source);
 
         assertEquals("test-source", testCmd.getName());
         assertEquals("test-worker:latest", testCmd.getImage());
         String expectedCmd = String.format(
-                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --sourceConfig=%s --logicalStreamName=%s --physicalStreamName=%s",
-                "127.0.0.1", 1000, 3000, "0.0.0.0", 4000, "CSVSource", "test_config", "test_logical", "test_physical"
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --sourceConfig=%s --logicalStreamName=%s --physicalStreamName=%s --numberOfTuplesToProducePerBuffer=%d",
+                "127.0.0.1", 1000, 3000, "0.0.0.0", 4000, "CSVSource", "test_config", "test_logical", "test_physical", 2
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
         testNodePorts(testCmd);

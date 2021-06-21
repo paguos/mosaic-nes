@@ -34,9 +34,19 @@
             <version>${version.nes-client}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${version.protobuf}</version>
+        </dependency>
+        <dependency>
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-core</artifactId>
             <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zeromq</groupId>
+            <artifactId>jeromq</artifactId>
+            <version>0.5.2</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -51,4 +61,37 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.6.2</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <configuration>
+                    <protoSourceRoot>src/main/proto</protoSourceRoot>
+                    <protocArtifact>com.google.protobuf:protoc:${version.protobuf}:exe:${os.detected.classifier}</protocArtifact>
+                    <clearOutputDirectory>false</clearOutputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile-proto-java</id>
+                        <configuration>
+                            <outputDirectory>src/main/java</outputDirectory>
+                        </configuration>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
