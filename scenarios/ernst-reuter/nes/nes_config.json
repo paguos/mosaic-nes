@@ -1,6 +1,6 @@
 {
     "coordinator": {
-        "image": "nebulastream/nes-executable-image:0.0.408"
+        "image": "nebulastream/nes-executable-image:0.0.452"
     },
     "nodes": [
         {
