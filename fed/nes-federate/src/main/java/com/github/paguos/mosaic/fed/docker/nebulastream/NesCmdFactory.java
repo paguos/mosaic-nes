@@ -69,6 +69,12 @@ public class NesCmdFactory {
         portBindings.bind(dataPort, Ports.Binding.bindPort(node.getDataPort()));
         portBindings.bind(rpcPort, Ports.Binding.bindPort(node.getRpcPort()));
 
+        if (node instanceof ZeroMQSource) {
+            ZeroMQSource zeroMQSource = (ZeroMQSource) node;
+            ExposedPort zmqPort = ExposedPort.tcp(zeroMQSource.getZeroMQPort());
+            portBindings.bind(zmqPort, Ports.Binding.bindPort(zeroMQSource.getZeroMQPort()));
+        }
+
         List<String> cmd = new ArrayList<>();
         cmd.add("/opt/local/nebula-stream/nesWorker");
         cmd.add(String.format("--coordinatorIp=%s", "127.0.0.1"));

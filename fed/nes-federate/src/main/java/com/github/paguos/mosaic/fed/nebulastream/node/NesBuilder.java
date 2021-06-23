@@ -40,6 +40,10 @@ public class NesBuilder {
         return new NesWorkerBuilder(name);
     }
 
+    public static ZeroMQSourceBuilder createZeroMQSource (String name) {
+        return new ZeroMQSourceBuilder(name);
+    }
+
     private NesBuilder(String name) {
         this.name = name;
     }
@@ -190,6 +194,65 @@ public class NesBuilder {
 
         public Worker build() {
             return new Worker(this);
+        }
+    }
+
+    public static class ZeroMQSourceBuilder extends NesSourceBuilder {
+
+        protected String zeroMQHost;
+        protected int zeroMQPort;
+
+        private ZeroMQSourceBuilder(String name) {
+            super(name);
+            this.zeroMQHost = "127.0.0.1";
+            this.zeroMQPort = 5555;
+            this.sourceType = SourceType.ZMQSource;
+        }
+
+        public ZeroMQSourceBuilder zmqHost(String zmqHost) {
+            this.zeroMQHost = zmqHost;
+            return this;
+        }
+
+        public ZeroMQSourceBuilder zmqPort(int port) {
+            this.zeroMQPort = port;
+            return this;
+        }
+
+        /** From Parent **/
+
+        public ZeroMQSourceBuilder logicalStreamName(String logicalStreamName) {
+            this.logicalStreamName = logicalStreamName;
+            return this;
+        }
+
+        public ZeroMQSourceBuilder numberOfTuplesToProducePerBuffer(int numberOfTuplesToProducePerBuffer) {
+            this.numberOfTuplesToProducePerBuffer = numberOfTuplesToProducePerBuffer;
+            return this;
+        }
+
+        public ZeroMQSourceBuilder physicalStreamName(String physicalStreamName) {
+            this.physicalStreamName = physicalStreamName;
+            return this;
+        }
+
+        public ZeroMQSourceBuilder parentId(int parentId) {
+            this.parentId = parentId;
+            return this;
+        }
+
+        public ZeroMQSourceBuilder dataPort(int dataPort) {
+            this.dataPort = dataPort;
+            return this;
+        }
+
+        public ZeroMQSourceBuilder rpcPort(int rpcPort) {
+            this.rpcPort = rpcPort;
+            return this;
+        }
+
+        public ZeroMQSource build() {
+            return new ZeroMQSource(this);
         }
     }
 }

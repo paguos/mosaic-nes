@@ -111,4 +111,28 @@ public class NesBuilderTest {
         assertEquals(9999, customWorker.getRpcPort());
         assertEquals(1, customWorker.getChildren().size());
     }
+
+    @Test
+    public void createZeroMQSource() {
+        ZeroMQSource zeroMQSource = NesBuilder.createZeroMQSource("custom-source")
+                .dataPort(1001)
+                .rpcPort(2001)
+                .parentId(2)
+                .logicalStreamName("test_logical")
+                .physicalStreamName("test_physical")
+                .numberOfTuplesToProducePerBuffer(2)
+                .zmqHost("test-host")
+                .zmqPort(12345)
+                .build();
+
+        assertEquals("custom-source", zeroMQSource.getName());
+        assertEquals(2, zeroMQSource.getParentId());
+        assertEquals(1001, zeroMQSource.getDataPort());
+        assertEquals(2001, zeroMQSource.getRpcPort());
+        assertEquals("test_logical", zeroMQSource.getLogicalStreamName());
+        assertEquals("test_physical", zeroMQSource.getPhysicalStreamName());
+        assertEquals("test-host:12345", zeroMQSource.getSourceConfig());
+        assertEquals(2, zeroMQSource.getNumberOfTuplesToProducePerBuffer());
+        assertEquals(SourceType.ZMQSource, zeroMQSource.getSourceType());
+    }
 }

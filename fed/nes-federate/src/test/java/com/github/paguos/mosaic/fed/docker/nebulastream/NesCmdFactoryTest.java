@@ -82,7 +82,7 @@ public class NesCmdFactoryTest {
                 "127.0.0.1", 1000, 3000, "0.0.0.0", 4000, "DefaultSource", "default_logical", "default_physical"
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
-        testNodePorts(testCmd);
+        testNodePorts(testCmd, false);
     }
 
     @Test
@@ -105,7 +105,30 @@ public class NesCmdFactoryTest {
                 "127.0.0.1", 1000, 3000, "0.0.0.0", 4000, "CSVSource", "test_config", "test_logical", "test_physical", 2
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
-        testNodePorts(testCmd);
+        testNodePorts(testCmd, false);
+    }
+
+    @Test
+    public void createZeroMQSourceCmd() throws InternalFederateException {
+        ZeroMQSource source = NesBuilder.createZeroMQSource("test-source" )
+                .dataPort(3000)
+                .rpcPort(4000)
+                .logicalStreamName("test_logical")
+                .physicalStreamName("test_physical")
+                .numberOfTuplesToProducePerBuffer(2)
+                .zmqHost("127.0.0.1")
+                .zmqPort(12345)
+                .build();
+        CreateContainerCmd testCmd = nesCmdFactory.createNesNodeCmd(source);
+
+        assertEquals("test-source", testCmd.getName());
+        assertEquals("test-worker:latest", testCmd.getImage());
+        String expectedCmd = String.format(
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --sourceConfig=%s --logicalStreamName=%s --physicalStreamName=%s --numberOfTuplesToProducePerBuffer=%d",
+                "127.0.0.1", 1000, 3000, "0.0.0.0", 4000, "ZMQSource", "127.0.0.1:12345", "test_logical", "test_physical", 2
+        );
+        assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
+        testNodePorts(testCmd, true);
     }
 
     @Test
@@ -123,7 +146,7 @@ public class NesCmdFactoryTest {
                 "127.0.0.1", 1000, 3000, "0.0.0.0", 4000
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
-        testNodePorts(testCmd);
+        testNodePorts(testCmd, false);
     }
 
     @Test
@@ -143,9 +166,9 @@ public class NesCmdFactoryTest {
                 "127.0.0.1", 1000, 3000, "0.0.0.0", 4000, 2
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
-        testNodePorts(testCmd);
+        testNodePorts(testCmd, false);
     }
-    private void testNodePorts(CreateContainerCmd testCmd) {
+    private void testNodePorts(CreateContainerCmd testCmd, boolean zeroMQEnabled) {
         Map<ExposedPort, Ports.Binding[]> portMap = testCmd.getPortBindings().getBindings();
 
         ExposedPort dataPort = ExposedPort.tcp(3000);
@@ -157,5 +180,13 @@ public class NesCmdFactoryTest {
         Ports.Binding[] restBindings = portMap.get(rpcPort);
         assertEquals(1, restBindings.length);
         assertEquals("4000", restBindings[0].getHostPortSpec());
+
+        if (zeroMQEnabled) {
+            ExposedPort zeroMQPort = ExposedPort.tcp(12345);
+            Ports.Binding[] zeroMQBindings = portMap.get(zeroMQPort);
+            assertEquals(1, zeroMQBindings.length);
+            assertEquals("12345", zeroMQBindings[0].getHostPortSpec());
+
+        }
     }
 }

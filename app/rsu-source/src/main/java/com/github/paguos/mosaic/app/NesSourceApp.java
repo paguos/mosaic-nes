@@ -1,12 +1,12 @@
 package com.github.paguos.mosaic.app;
 
+import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.app.message.SpeedReportMsg;
 import com.github.paguos.mosaic.fed.ambassador.NesController;
-import com.github.paguos.mosaic.fed.nebulastream.node.NesBuilder;
-import com.github.paguos.mosaic.fed.nebulastream.node.NesNode;
-import com.github.paguos.mosaic.fed.nebulastream.node.Source;
-import com.github.paguos.mosaic.fed.nebulastream.node.SourceType;
+import com.github.paguos.mosaic.fed.nebulastream.node.*;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
+import com.github.paguos.mosaic.fed.nebulastream.stream.BufferBuilder;
+import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQWriter;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.AdHocModuleConfiguration;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.CamBuilder;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedAcknowledgement;
@@ -22,10 +22,13 @@ import org.eclipse.mosaic.rti.api.InternalFederateException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSystem> implements CommunicationApplication {
 
     private final NesClient nesClient = new NesClient("localhost", "8081");
+    private final ArrayBlockingQueue<byte[]> messages = new ArrayBlockingQueue<>(2000);
+    private Thread zmqSource;
     private SpeedReportWriter reportWriter;
 
     @Override
@@ -40,13 +43,16 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
                 .create());
         getLog().infoSimTime(this, "Activated AdHoc Module");
 
+
+        int zeroMQPort = ZeroMQSource.getNextZeroMQPort();
+        String zmqAddress = String.format("tcp://127.0.0.1:%d", zeroMQPort);
+
         try {
             NesController controller = NesController.getController();
-            Source source = NesBuilder.createSource("rsu")
+            ZeroMQSource source = NesBuilder.createZeroMQSource("rsu")
                     .dataPort(NesNode.getNextDataPort())
                     .rpcPort(NesNode.getNextRPCPort())
-                    .sourceType(SourceType.CSVSource)
-                    .sourceConfig("/nes/data/SpeedReport.csv")
+                    .zmqPort(zeroMQPort)
                     .logicalStreamName("mosaic_nes")
                     .physicalStreamName(getOs().getId())
                     .parentId(2)
@@ -74,6 +80,9 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
             getLog().error("Error interacting with NES!");
         }
 
+        zmqSource = new Thread(new ZeroMQWriter(zmqAddress, messages));
+        zmqSource.start();
+
         try {
             reportWriter = new SpeedReportWriter(getOs().getId());
         } catch (IOException e) {
@@ -92,16 +101,28 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
     }
 
     private void processSpeedReportMsg (SpeedReportMsg msg) {
+
+        SpeedReport report = msg.getReport();
         try {
             reportWriter.write(msg.getReport());
         } catch (IOException e) {
             getLog().error("Error while writing report!");
             getLog().error(e.getMessage());
         }
+
+        byte[] msgBuffer = BufferBuilder.createBuffer(39)
+                .fill(report.getVehicleId(), 7)
+                .fill(report.getTimestamp())
+                .fill(report.getVehiclePosition().getLatitude())
+                .fill(report.getVehiclePosition().getLongitude())
+                .fill(report.getVehicleSpeed())
+                .build();
+        messages.add(msgBuffer);
     }
 
     @Override
     public void onShutdown() {
+        zmqSource.interrupt();
     }
 
     @Override
