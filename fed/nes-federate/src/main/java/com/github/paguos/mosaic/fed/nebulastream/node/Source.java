@@ -5,8 +5,8 @@ public class Source extends NesNode {
     private final String logicalStreamName;
     private final int numberOfTuplesToProducePerBuffer;
     private final String physicalStreamName;
-    private final String sourceConfig;
-    private final SourceType sourceType;
+    protected String sourceConfig;
+    protected SourceType sourceType;
 
 
     public Source(NesBuilder.NesSourceBuilder builder) {

@@ -2,7 +2,7 @@ package com.github.paguos.mosaic.app;
 
 import com.github.paguos.mosaic.app.config.CNesSinkApp;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
-import com.github.paguos.mosaic.fed.nebulastream.stream.ZmqSink;
+import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQReader;
 import org.eclipse.mosaic.fed.application.app.ConfigurableApplication;
 import org.eclipse.mosaic.fed.application.app.api.VehicleApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.VehicleOperatingSystem;
@@ -33,7 +33,7 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
     @Override
     public void onStartup() {
         getLog().info("Starting NES ZMQ Sink ...");
-        zmqSink = new Thread(new ZmqSink(config.zmqAddress, receivedMessages));
+        zmqSink = new Thread(new ZeroMQReader(config.zmqAddress, receivedMessages));
         zmqSink.start();
         getLog().info("NES ZMQ Sink started!");
     }

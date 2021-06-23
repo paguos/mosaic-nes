@@ -1,6 +1,8 @@
-package com.github.paguos.mosaic.fed.nebulastream.stream;
+package com.github.paguos.mosaic.fed.nebulastream.stream.zmq;
 
 import com.github.paguos.mosaic.fed.msg.SerializableSchema;
+import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
+import com.github.paguos.mosaic.fed.nebulastream.stream.SchemaParser;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -9,18 +11,17 @@ import org.zeromq.ZMQ;
 import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class ZmqSink implements Runnable {
+public class ZeroMQReader implements Runnable {
 
-    private final String zmqAddress;
+    private final String zeroMQAddress;
     private final ArrayBlockingQueue<String> receivedMessages;
     private boolean schemaReceived;
 
     private Schema schema;
     private SchemaParser schemaParser;
 
-
-    public ZmqSink(String zmqAddress, ArrayBlockingQueue<String> receivedMessages) {
-        this.zmqAddress = zmqAddress;
+    public ZeroMQReader(String zeroMQAddress, ArrayBlockingQueue<String> receivedMessages) {
+        this.zeroMQAddress = zeroMQAddress;
         this.receivedMessages = receivedMessages;
         this.schemaReceived = false;
     }
@@ -30,7 +31,7 @@ public class ZmqSink implements Runnable {
 
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(SocketType.PULL);
-            socket.bind(zmqAddress);
+            socket.bind(zeroMQAddress);
 
             while (!Thread.currentThread().isInterrupted()) {
                 String envelope = socket.recvStr();

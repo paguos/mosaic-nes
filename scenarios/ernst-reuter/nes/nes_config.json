@@ -1,6 +1,6 @@
 {
     "coordinator": {
-        "image": "nebulastream/nes-executable-image:0.0.452"
+        "image": "paguos/nes-executable:zmq_enabled"
     },
     "nodes": [
         {
@@ -13,6 +13,6 @@
         }
     ],
     "worker": {
-        "image": "nes-source:test"
+        "image": "paguos/nes-executable:zmq_enabled"
     }
 }
