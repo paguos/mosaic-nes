@@ -2,7 +2,7 @@ package com.github.paguos.mosaic.fed.nebulastream.stream.zmq;
 
 import com.github.paguos.mosaic.fed.nebulastream.msg.proto.SerializableSchema;
 import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
-import com.github.paguos.mosaic.fed.nebulastream.stream.SchemaParser;
+import com.github.paguos.mosaic.fed.nebulastream.stream.TupleParser;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -18,7 +18,7 @@ public class ZeroMQReader implements Runnable {
     private boolean schemaReceived;
 
     private Schema schema;
-    private SchemaParser schemaParser;
+    private TupleParser tupleParser;
 
     public ZeroMQReader(String zeroMQAddress, ArrayBlockingQueue<String> receivedMessages) {
         this.zeroMQAddress = zeroMQAddress;
@@ -41,14 +41,14 @@ public class ZeroMQReader implements Runnable {
                     int currentIndex = 0;
                     while (currentIndex < messages.length) {
                         byte[] tupleBytes = Arrays.copyOfRange(messages, currentIndex, currentIndex + schema.getByteSize());
-                        receivedMessages.add(schemaParser.parseTuple(tupleBytes));
+                        receivedMessages.add(tupleParser.parseToString(tupleBytes));
                         currentIndex += schema.getByteSize();
                     }
                 } else {
                     byte[] schemaBytes = Arrays.copyOfRange(messages, 0, 542);
                     SerializableSchema serializableSchema = SerializableSchema.parseFrom(schemaBytes);
                     schema = Schema.parseFrom(serializableSchema);
-                    schemaParser = new SchemaParser(schema);
+                    tupleParser = new TupleParser(schema);
                     schemaReceived = true;
                 }
 

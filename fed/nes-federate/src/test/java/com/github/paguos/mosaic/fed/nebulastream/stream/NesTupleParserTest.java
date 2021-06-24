@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class NesSchemaParserTest {
+public class NesTupleParserTest {
 
     @Test
     public void testParseByte(){
@@ -17,8 +17,8 @@ public class NesSchemaParserTest {
 
         byte[] bytes = new byte[]{120};
 
-        SchemaParser schemaParser = new SchemaParser(schema);
-        assertEquals("120", schemaParser.parseTuple(bytes));
+        TupleParser tupleParser = new TupleParser(schema);
+        assertEquals("120", tupleParser.parseToString(bytes));
     }
 
     @Test
@@ -28,8 +28,8 @@ public class NesSchemaParserTest {
 
         byte[] shortBuffer = {-126, 0};
 
-        SchemaParser schemaParser = new SchemaParser(schema);
-        assertEquals("130", schemaParser.parseTuple(shortBuffer));
+        TupleParser tupleParser = new TupleParser(schema);
+        assertEquals("130", tupleParser.parseToString(shortBuffer));
     }
 
     @Test
@@ -39,8 +39,8 @@ public class NesSchemaParserTest {
 
         byte[] integerBuffer = {-24, -128, 0, 0};
 
-        SchemaParser schemaParser = new SchemaParser(schema);
-        assertEquals("33000", schemaParser.parseTuple(integerBuffer));
+        TupleParser tupleParser = new TupleParser(schema);
+        assertEquals("33000", tupleParser.parseToString(integerBuffer));
     }
 
     @Test
@@ -50,8 +50,8 @@ public class NesSchemaParserTest {
 
         byte[] longBuffer = {0, 55, 23, -119, 0, 0, 0, 0};
 
-        SchemaParser schemaParser = new SchemaParser(schema);
-        assertEquals("2300000000", schemaParser.parseTuple(longBuffer));
+        TupleParser tupleParser = new TupleParser(schema);
+        assertEquals("2300000000", tupleParser.parseToString(longBuffer));
     }
 
     @Test
@@ -61,8 +61,8 @@ public class NesSchemaParserTest {
 
         byte [] floatBuffer = {106, 126, 0, 66};
 
-        SchemaParser schemaParser = new SchemaParser(schema);
-        assertEquals("32.12345", schemaParser.parseTuple(floatBuffer));
+        TupleParser tupleParser = new TupleParser(schema);
+        assertEquals("32.12345", tupleParser.parseToString(floatBuffer));
     }
 
     @Test
@@ -72,8 +72,8 @@ public class NesSchemaParserTest {
 
         byte[] doubleBuffer = {-111, 35, 33, -70, 53, 63, 36, 64};
 
-        SchemaParser schemaParser = new SchemaParser(schema);
-        assertEquals("10.12345678", schemaParser.parseTuple(doubleBuffer));
+        TupleParser tupleParser = new TupleParser(schema);
+        assertEquals("10.12345678", tupleParser.parseToString(doubleBuffer));
     }
 
     @Test
@@ -83,8 +83,8 @@ public class NesSchemaParserTest {
 
         String s = "veh_100";
 
-        SchemaParser schemaParser = new SchemaParser(schema);
-        assertEquals("veh_100", schemaParser.parseTuple(s.getBytes()));
+        TupleParser tupleParser = new TupleParser(schema);
+        assertEquals("veh_100", tupleParser.parseToString(s.getBytes()));
     }
 
     @Test
@@ -94,8 +94,8 @@ public class NesSchemaParserTest {
 
         String s = "veh_1";
 
-        SchemaParser schemaParser = new SchemaParser(schema);
-        assertEquals("veh_1", schemaParser.parseTuple(s.getBytes()));
+        TupleParser tupleParser = new TupleParser(schema);
+        assertEquals("veh_1", tupleParser.parseToString(s.getBytes()));
     }
 
     @Test
@@ -120,8 +120,8 @@ public class NesSchemaParserTest {
         byte[] doubleBuffer = {-20, -34, -118, -60, 4, -91, 42, 64};
         copy(doubleBuffer, tupleBytes, 19);
 
-        SchemaParser schemaParser = new SchemaParser(schema);
-        assertEquals("veh_100,10000,1300000000,13.322302", schemaParser.parseTuple(tupleBytes));
+        TupleParser tupleParser = new TupleParser(schema);
+        assertEquals("veh_100,10000,1300000000,13.322302", tupleParser.parseToString(tupleBytes));
     }
 
     @Test
@@ -145,8 +145,8 @@ public class NesSchemaParserTest {
         byte[] speed = {112, -105, -3, -70, -45, -75, 34, 64};
         copy(speed, tupleBytes, 31);
 
-        SchemaParser schemaParser = new SchemaParser(mosaicSchema);
-        assertEquals("veh_71,212000000000,52.512124,13.321144,9.355131", schemaParser.parseTuple(tupleBytes));
+        TupleParser tupleParser = new TupleParser(mosaicSchema);
+        assertEquals("veh_71,212000000000,52.512124,13.321144,9.355131", tupleParser.parseToString(tupleBytes));
     }
 
     private void copy(byte[] source, byte[] destination, int start) {
