@@ -1,6 +1,5 @@
-package com.github.paguos.mosaic.fed.nebulastream;
+package com.github.paguos.mosaic.fed.nebulastream.node;
 
-import com.github.paguos.mosaic.fed.nebulastream.node.*;
 import org.junit.Before;
 import org.junit.Test;
 

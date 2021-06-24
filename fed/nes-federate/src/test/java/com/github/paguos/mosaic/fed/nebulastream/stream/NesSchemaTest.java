@@ -1,12 +1,10 @@
-package com.github.paguos.mosaic.fed.nebulastream;
+package com.github.paguos.mosaic.fed.nebulastream.stream;
 
-import com.github.paguos.mosaic.fed.catalog.SchemaCatalog;
-import com.github.paguos.mosaic.fed.msg.SerializableSchema;
+import com.github.paguos.mosaic.fed.nebulastream.catalog.SchemaCatalog;
+import com.github.paguos.mosaic.fed.nebulastream.msg.proto.SerializableSchema;
 import com.github.paguos.mosaic.fed.nebulastream.common.AttributeField;
 import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
 import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
-import com.github.paguos.mosaic.fed.nebulastream.fixtures.SchemaFixtures;
-import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.junit.Test;
 

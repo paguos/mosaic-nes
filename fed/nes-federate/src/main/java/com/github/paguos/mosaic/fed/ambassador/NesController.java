@@ -1,15 +1,13 @@
 package com.github.paguos.mosaic.fed.ambassador;
 
 import com.github.dockerjava.api.command.CreateContainerCmd;
-import com.github.paguos.mosaic.fed.catalog.SchemaCatalog;
+import com.github.paguos.mosaic.fed.nebulastream.catalog.SchemaCatalog;
 import com.github.paguos.mosaic.fed.config.CNes;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationParser;
 import com.github.paguos.mosaic.fed.config.util.ConfigurationReader;
 import com.github.paguos.mosaic.fed.docker.ContainerController;
 import com.github.paguos.mosaic.fed.docker.NetworkController;
-import com.github.paguos.mosaic.fed.docker.nebulastream.NesCmdFactory;
-import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
-import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
+import com.github.paguos.mosaic.fed.nebulastream.docker.NesCmdFactory;
 import com.github.paguos.mosaic.fed.nebulastream.node.Coordinator;
 import com.github.paguos.mosaic.fed.nebulastream.node.NesNode;
 import com.github.paguos.mosaic.fed.nebulastream.node.Worker;

@@ -1,8 +1,8 @@
 package com.github.paguos.mosaic.fed.docker;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateNetworkCmd;
 import com.github.dockerjava.api.model.Network;
-import com.github.paguos.mosaic.fed.docker.nebulastream.NesCmdFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class NetworkController {
         List<Network> existingNetworks = dockerClient.listNetworksCmd().withNameFilter(networkName).exec();
 
         if (existingNetworks.isEmpty()) {
-            NesCmdFactory.createNetworkCmd(networkName).exec();
+            createNetworkCmd(networkName).exec();
         }
 
         networks.add(networkName);
@@ -39,6 +39,13 @@ public class NetworkController {
         for (String networkName: networks) {
             dockerClient.removeNetworkCmd(networkName);
         }
+    }
+
+    private static CreateNetworkCmd createNetworkCmd(String networkName) {
+        DockerClient client = DockerController.getClient();
+        return client.createNetworkCmd()
+                .withName(networkName)
+                .withAttachable(true);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.github.paguos.mosaic.fed.docker.nebulastream;
+package com.github.paguos.mosaic.fed.nebulastream.docker;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class NesCmdFactory {
 
-    private Coordinator coordinator;
+    private final Coordinator coordinator;
 
     public NesCmdFactory(Coordinator coordinator) {
         this.coordinator = coordinator;
@@ -109,13 +109,6 @@ public class NesCmdFactory {
                 .withExposedPorts(dataPort, rpcPort)
                 .withPortBindings(portBindings)
                 .withEntrypoint(cmd);
-    }
-
-    public static CreateNetworkCmd createNetworkCmd (String networkName) {
-        DockerClient client = DockerController.getClient();
-        return client.createNetworkCmd()
-                .withName(networkName)
-                .withAttachable(true);
     }
 
 }

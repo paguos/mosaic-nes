@@ -1,4 +1,4 @@
-package com.github.paguos.mosaic.fed.catalog;
+package com.github.paguos.mosaic.fed.nebulastream.catalog;
 
 import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
 import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;

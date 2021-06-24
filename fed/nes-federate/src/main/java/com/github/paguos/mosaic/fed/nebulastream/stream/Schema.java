@@ -1,12 +1,12 @@
 package com.github.paguos.mosaic.fed.nebulastream.stream;
 
-import com.github.paguos.mosaic.fed.msg.SerializableDataType;
-import com.github.paguos.mosaic.fed.msg.SerializableField;
-import com.github.paguos.mosaic.fed.msg.SerializableSchema;
 import com.github.paguos.mosaic.fed.nebulastream.common.AttributeField;
 import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
 import com.github.paguos.mosaic.fed.nebulastream.common.DataType;
 import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
+import com.github.paguos.mosaic.fed.nebulastream.msg.proto.SerializableDataType;
+import com.github.paguos.mosaic.fed.nebulastream.msg.proto.SerializableField;
+import com.github.paguos.mosaic.fed.nebulastream.msg.proto.SerializableSchema;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.util.ArrayList;

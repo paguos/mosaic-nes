@@ -1,10 +1,8 @@
-package com.github.paguos.mosaic.fed.nebulastream;
+package com.github.paguos.mosaic.fed.nebulastream.stream;
 
-import com.github.paguos.mosaic.fed.catalog.SchemaCatalog;
+import com.github.paguos.mosaic.fed.nebulastream.catalog.SchemaCatalog;
 import com.github.paguos.mosaic.fed.nebulastream.common.BasicType;
 import com.github.paguos.mosaic.fed.nebulastream.common.DataTypeFactory;
-import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
-import com.github.paguos.mosaic.fed.nebulastream.stream.SchemaParser;
 import org.junit.Test;
 
 

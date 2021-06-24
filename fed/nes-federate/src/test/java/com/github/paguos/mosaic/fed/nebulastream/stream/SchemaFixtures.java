@@ -1,4 +1,4 @@
-package com.github.paguos.mosaic.fed.nebulastream.fixtures;
+package com.github.paguos.mosaic.fed.nebulastream.stream;
 
 public class SchemaFixtures {
 

@@ -1,6 +1,6 @@
 package com.github.paguos.mosaic.fed.nebulastream.stream.zmq;
 
-import com.github.paguos.mosaic.fed.msg.SerializableSchema;
+import com.github.paguos.mosaic.fed.nebulastream.msg.proto.SerializableSchema;
 import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;
 import com.github.paguos.mosaic.fed.nebulastream.stream.SchemaParser;
 import com.google.protobuf.InvalidProtocolBufferException;
