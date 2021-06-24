@@ -42,6 +42,11 @@ public class IntegerType extends DataType {
         }
     }
 
+    public static long parseLong(byte[] bytes) {
+        IOUtils.reverseArray(bytes);
+        return ByteBuffer.wrap(bytes).getLong();
+    }
+
     @Override
     public String parseString(byte[] bytes) {
         IOUtils.reverseArray(bytes);

@@ -1,6 +1,6 @@
 package com.github.paguos.mosaic.fed.examples;
 
-import com.github.paguos.mosaic.fed.catalog.SchemaCatalog;
+import com.github.paguos.mosaic.fed.nebulastream.catalog.SchemaCatalog;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import com.github.paguos.mosaic.fed.nebulastream.stream.LogicalStream;
 import com.github.paguos.mosaic.fed.nebulastream.stream.Schema;

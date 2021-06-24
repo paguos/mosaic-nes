@@ -1,4 +1,4 @@
-package com.github.paguos.mosaic.fed.docker.nebulastream;
+package com.github.paguos.mosaic.fed.nebulastream.docker;
 
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.model.ExposedPort;

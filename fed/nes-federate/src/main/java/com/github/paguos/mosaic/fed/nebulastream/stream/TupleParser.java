@@ -5,15 +5,15 @@ import com.github.paguos.mosaic.fed.nebulastream.common.DataType;
 
 import java.util.Arrays;
 
-public class SchemaParser {
+public class TupleParser {
 
     private final Schema schema;
 
-    public SchemaParser(Schema schema) {
+    public TupleParser(Schema schema) {
         this.schema = schema;
     }
 
-    public String parseTuple(byte[] bytes) {
+    public String parseToString(byte[] bytes) {
         int currentIndex = 0;
         StringBuilder stringBuilder = new StringBuilder();
 

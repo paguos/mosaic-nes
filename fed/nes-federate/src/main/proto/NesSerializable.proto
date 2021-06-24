@@ -1,7 +1,8 @@
 syntax = "proto3";
 import "google/protobuf/any.proto";
 
-package com.github.paguos.mosaic.fed.msg;
+package com.github.paguos.mosaic.fed.nebulastream.msg.proto;
+
 option java_multiple_files = true;
 
 message SerializableDataType{

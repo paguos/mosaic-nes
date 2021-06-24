@@ -1,6 +1,7 @@
 package com.github.paguos.mosaic.fed.nebulastream.stream.zmq;
 
 import com.github.paguos.mosaic.fed.nebulastream.stream.BufferBuilder;
+import com.github.paguos.mosaic.fed.nebulastream.stream.Envelope;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
@@ -27,11 +28,8 @@ public class ZeroMQWriter implements Runnable {
 
             while (running) {
                 if (!messages.isEmpty()) {
-                    byte[] envelope = BufferBuilder.createBuffer(16)
-                            .fill(1)
-                            .fill(0)
-                            .build();
-                    socket.send(envelope);
+                    Envelope envelope = new Envelope(1, 0);
+                    socket.send(envelope.toByteBuffer());
                     socket.send(messages.poll());
                 }
             }

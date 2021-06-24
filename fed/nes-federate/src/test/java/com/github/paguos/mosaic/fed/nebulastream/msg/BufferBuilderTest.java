@@ -1,4 +1,4 @@
-package com.github.paguos.mosaic.fed.nebulastream;
+package com.github.paguos.mosaic.fed.nebulastream.msg;
 
 import com.github.paguos.mosaic.fed.nebulastream.stream.BufferBuilder;
 import org.junit.Test;
