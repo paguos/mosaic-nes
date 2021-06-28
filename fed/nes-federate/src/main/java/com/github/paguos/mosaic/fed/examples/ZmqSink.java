@@ -1,6 +1,6 @@
 package com.github.paguos.mosaic.fed.examples;
 
-import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQReader;
+import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQSink;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -10,7 +10,7 @@ public class ZmqSink {
 
     public static void main(String[] args) {
         ArrayBlockingQueue<String> receivedMessages = new ArrayBlockingQueue<>(200);
-        Thread zmqThread = new Thread(new ZeroMQReader(ZmqAddress, receivedMessages));
+        Thread zmqThread = new Thread(new ZeroMQSink(ZmqAddress, receivedMessages));
         zmqThread.start();
 
         while (true) {

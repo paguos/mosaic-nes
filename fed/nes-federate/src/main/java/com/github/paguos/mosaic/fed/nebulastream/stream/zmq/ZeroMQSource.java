@@ -8,13 +8,13 @@ import org.zeromq.ZMQ;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class ZeroMQWriter implements Runnable {
+public class ZeroMQSource implements Runnable {
 
     private final String zmqAddress;
     private final ArrayBlockingQueue<byte[]> messages;
     private boolean running;
 
-    public ZeroMQWriter(String zmqAddress, ArrayBlockingQueue<byte[]> messages) {
+    public ZeroMQSource(String zmqAddress, ArrayBlockingQueue<byte[]> messages) {
         this.zmqAddress = zmqAddress;
         this.messages = messages;
         this.running = true;
@@ -33,6 +33,8 @@ public class ZeroMQWriter implements Runnable {
                     socket.send(messages.poll());
                 }
             }
+
+            socket.close();
         }
     }
 

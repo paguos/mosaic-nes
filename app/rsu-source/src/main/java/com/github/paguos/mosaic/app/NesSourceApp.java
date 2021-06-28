@@ -6,7 +6,7 @@ import com.github.paguos.mosaic.fed.ambassador.NesController;
 import com.github.paguos.mosaic.fed.nebulastream.node.*;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import com.github.paguos.mosaic.fed.nebulastream.stream.BufferBuilder;
-import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQWriter;
+import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQSource;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.AdHocModuleConfiguration;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.CamBuilder;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedAcknowledgement;
@@ -28,7 +28,7 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
 
     private final NesClient nesClient = new NesClient("localhost", "8081");
     private final ArrayBlockingQueue<byte[]> messages = new ArrayBlockingQueue<>(2000);
-    private Thread zmqSource;
+    private ZeroMQSource zeroMQSource;
     private SpeedReportWriter reportWriter;
 
     @Override
@@ -44,12 +44,12 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
         getLog().infoSimTime(this, "Activated AdHoc Module");
 
 
-        int zeroMQPort = ZeroMQSource.getNextZeroMQPort();
+        int zeroMQPort = com.github.paguos.mosaic.fed.nebulastream.node.ZeroMQSource.getNextZeroMQPort();
         String zmqAddress = String.format("tcp://127.0.0.1:%d", zeroMQPort);
 
         try {
             NesController controller = NesController.getController();
-            ZeroMQSource source = NesBuilder.createZeroMQSource("rsu")
+            com.github.paguos.mosaic.fed.nebulastream.node.ZeroMQSource source = NesBuilder.createZeroMQSource("rsu")
                     .dataPort(NesNode.getNextDataPort())
                     .rpcPort(NesNode.getNextRPCPort())
                     .zmqPort(zeroMQPort)
@@ -80,8 +80,9 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
             getLog().error("Error interacting with NES!");
         }
 
-        zmqSource = new Thread(new ZeroMQWriter(zmqAddress, messages));
-        zmqSource.start();
+        zeroMQSource = new ZeroMQSource(zmqAddress, messages);
+        Thread zmqSourceThread = new Thread(zeroMQSource);
+        zmqSourceThread.start();
 
         try {
             reportWriter = new SpeedReportWriter(getOs().getId());
@@ -122,7 +123,9 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
 
     @Override
     public void onShutdown() {
-        zmqSource.interrupt();
+        getLog().info("Stopping NES ZMQ Source ...");
+        zeroMQSource.terminate();
+        getLog().info("NES ZMQ Source stopped!");
     }
 
     @Override
