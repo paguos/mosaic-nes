@@ -49,13 +49,13 @@ TEST_F(ScenarioToJson, RoadSideUnits) {
     EXPECT_EQ(2, rsus.size());
 
     json rsu1 = {};
-    rsu1["name"] = "TEST_RSU";
+    rsu1["name"] = "TEST_RSU_0";
     rsu1["applications"] = {"TEST_RSU_APP_1", "TEST_RSU_APP_2"};
     rsu1["position"]["latitude"] = 51.5067654;
     rsu1["position"]["longitude"] = 11.3310764;
 
     json rsu2 = {};
-    rsu2["name"] = "TEST_RSU";
+    rsu2["name"] = "TEST_RSU_1";
     rsu2["applications"] = {"TEST_RSU_APP_1", "TEST_RSU_APP_2"};
     rsu2["position"]["latitude"] = 52.5067654;
     rsu2["position"]["longitude"] = 12.3310764;
