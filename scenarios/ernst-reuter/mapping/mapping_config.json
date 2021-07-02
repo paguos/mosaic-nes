@@ -16,7 +16,7 @@
         },
         {
             "accel": 1.5,
-            "applications":  [
+            "applications": [
                 "com.github.paguos.mosaic.app.NesSinkApp"
             ],
             "color": "blue",
@@ -40,10 +40,30 @@
             "applications": [
                 "com.github.paguos.mosaic.app.NesSourceApp"
             ],
-            "name": "NES-Source-RSU",
+            "name": "NES-Source-RSU_0",
             "position": {
                 "latitude": 52.5128417,
                 "longitude": 13.3213595
+            }
+        },
+        {
+            "applications": [
+                "com.github.paguos.mosaic.app.NesSourceApp"
+            ],
+            "name": "NES-Source-RSU_1",
+            "position": {
+                "latitude": 52.5114853,
+                "longitude": 13.3061377
+            }
+        },
+        {
+            "applications": [
+                "com.github.paguos.mosaic.app.NesSourceApp"
+            ],
+            "name": "NES-Source-RSU_2",
+            "position": {
+                "latitude": 52.5086226,
+                "longitude": 13.3273139
             }
         }
     ],
