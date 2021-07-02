@@ -136,9 +136,10 @@ json Scenario::ExportRoadSideUnits() {
     list<json> rsuList;
 
     for (const RoadSideUnit& rsu: rsus) {
+        int id = 0;
         for (const Position& position : rsu.positions) {
             json rsuJson = {};
-            rsuJson["name"] = rsu.name;
+            rsuJson["name"] = rsu.name + "_" + std::to_string(id++);
             rsuJson["applications"] = rsu.applications;
             rsuJson["position"]["latitude"] = ::atof(position.latitude.c_str());;
             rsuJson["position"]["longitude"] = ::atof(position.longitude.c_str());

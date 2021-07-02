@@ -92,6 +92,7 @@ void ScenarioGenerator::updateScenarioConfig() {
     inputStream >> scenarioConfigJson;
 
     scenarioConfigJson["federates"]["nes"] = scenario.nesFederate.enabled;
+    scenarioConfigJson["federates"]["sns"] = true;
 
     std::ofstream outputStream(scenarioConfigPath);
     outputStream << std::setw(4) << scenarioConfigJson << std::endl;
