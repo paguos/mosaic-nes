@@ -1,5 +1,6 @@
 package com.github.paguos.mosaic.app;
 
+import com.github.paguos.mosaic.app.directory.RSUDirectory;
 import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.app.message.SpeedReportMsg;
 import com.github.paguos.mosaic.fed.ambassador.NesController;
@@ -43,13 +44,16 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
                 .create());
         getLog().infoSimTime(this, "Activated AdHoc Module");
 
+        getLog().infoSimTime(this, "Adding RSU location ..");
+        RSUDirectory.addLocation(getOs().getPosition());
+        getLog().infoSimTime(this, "RSU location added!");
 
         int zeroMQPort = com.github.paguos.mosaic.fed.nebulastream.node.ZeroMQSource.getNextZeroMQPort();
         String zmqAddress = String.format("tcp://127.0.0.1:%d", zeroMQPort);
 
         try {
             NesController controller = NesController.getController();
-            com.github.paguos.mosaic.fed.nebulastream.node.ZeroMQSource source = NesBuilder.createZeroMQSource("rsu")
+            com.github.paguos.mosaic.fed.nebulastream.node.ZeroMQSource source = NesBuilder.createZeroMQSource(getOs().getId())
                     .dataPort(NesNode.getNextDataPort())
                     .rpcPort(NesNode.getNextRPCPort())
                     .zmqPort(zeroMQPort)
