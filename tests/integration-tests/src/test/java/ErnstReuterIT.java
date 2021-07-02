@@ -37,6 +37,8 @@ public class ErnstReuterIT {
         simulationResult = simulationRule.executeSimulation(scenariosDirectory, "ernst-reuter");
     }
 
+    private int deployedRoadSideUnits = 3;
+
     @Test
     public void executionSuccessful() {
         assertNull(simulationResult.exception);
@@ -52,8 +54,10 @@ public class ErnstReuterIT {
         LogAssert.exists(simulationRule, "Communication.log");
 
         // Source
-        LogAssert.exists(simulationRule, "apps/rsu_0/NesSourceApp.log");
-        LogAssert.exists(simulationRule, "SpeedReport-rsu_0.csv");
+        for (int i = 0; i < deployedRoadSideUnits; i++) {
+            LogAssert.exists(simulationRule, String.format("apps/rsu_%d/NesSourceApp.log", i));
+            LogAssert.exists(simulationRule, String.format("SpeedReport-rsu_%d.csv", i));
+        }
 
         // Sink
         LogAssert.exists(simulationRule, "apps/veh_10/NesSinkApp.log");
@@ -72,12 +76,27 @@ public class ErnstReuterIT {
 
     @Test
     public void nesNodesCreated() throws Exception {
-        LogAssert.contains(simulationRule, "apps/rsu_0/NesSourceApp.log", ".*The Nes Topology has '4' nodes.*");
+        int deployedNesNodes = 3;
+
+        for (int i = 0; i < deployedRoadSideUnits; i++) {
+            LogAssert.contains(
+                    simulationRule,
+                    String.format("apps/rsu_%d/NesSourceApp.log", i),
+                    String.format(".*The Nes Topology has '%d' nodes.*", ++deployedNesNodes)
+            );
+        }
     }
 
     @Test
     public void sourceReceivedV2xMessages() throws Exception {
-        LogAssert.contains(simulationRule, "apps/rsu_0/NesSourceApp.log", ".*Received V2X Message from veh_.*");
+        for (int i = 0; i < deployedRoadSideUnits; i++) {
+            LogAssert.contains(
+                    simulationRule,
+                    String.format("apps/rsu_%d/NesSourceApp.log", i),
+                    ".*Received V2X Message from veh_.*"
+            );
+        }
+
     }
 
     @Test

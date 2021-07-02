@@ -2,8 +2,8 @@
   "cars": [
     {
       "name": "Car",
-      "applications": [],
-      "metadata" : {
+      "applications": ["com.github.paguos.mosaic.app.SpeedSensorApp"],
+      "metadata": {
         "accel": 1.5,
         "decel": 4.5,
         "length": 5.00,
@@ -16,7 +16,7 @@
     },
     {
       "name": "NesSinkCar",
-      "applications": [],
+      "applications": ["com.github.paguos.mosaic.app.NesSinkApp"],
       "metadata": {
         "accel": 1.5,
         "decel": 4.5,
@@ -33,10 +33,10 @@
     "nes": {
       "enabled": true,
       "coordinator": {
-        "image": "nebulastream/nes-executable-image:0.0.408"
+        "image": "paguos/nes-executable:zmq_enabled"
       },
       "worker": {
-        "image": "nebulastream/nes-executable-image:0.0.408"
+        "image": "paguos/nes-executable:zmq_enabled"
       },
       "nodes": [
         {
@@ -53,11 +53,23 @@
   "rsus": [
     {
       "name": "NES-Source-RSU",
-      "applications": ["com.github.paguos.mosaic.app.NesSourceApp"],
-      "positions": [{
-        "latitude": "52.5128417",
-        "longitude": "13.3213595"
-      }]
+      "applications": [
+        "com.github.paguos.mosaic.app.NesSourceApp"
+      ],
+      "positions": [
+        {
+          "latitude": "52.5128417",
+          "longitude": "13.3213595"
+        },
+        {
+          "latitude": "52.5114853",
+          "longitude": "13.3061377"
+        },
+        {
+          "latitude": "52.5086226",
+          "longitude": "13.3273139"
+        }
+      ]
     }
   ],
   "routes": [
@@ -164,14 +176,14 @@
   ],
   "vehicles": [
     {
-      "car" : "Car",
+      "car": "Car",
       "routes": "*",
       "metadata": {
         "startingTime": 5,
         "maxTime": 700,
         "targetFlow": 500,
         "spawningMode": "CONSTANT",
-        "maxNumberVehicles": 1000,
+        "maxNumberVehicles": 10,
         "laneSelectionMode": "BEST",
         "departSpeed": 0,
         "departSpeedMode": "MAXIMUM",
@@ -179,7 +191,7 @@
       }
     },
     {
-      "car" : "NesSinkCar",
+      "car": "NesSinkCar",
       "routes": "1",
       "metadata": {
         "startingTime": 5,

@@ -1,5 +1,6 @@
 package com.github.paguos.mosaic.app;
 
+import com.github.paguos.mosaic.app.directory.RSUDirectory;
 import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.app.message.SpeedReportMsg;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.AdHocModuleConfiguration;
@@ -17,18 +18,11 @@ import org.eclipse.mosaic.lib.geo.GeoPoint;
 import org.eclipse.mosaic.lib.objects.v2x.MessageRouting;
 import org.eclipse.mosaic.lib.objects.vehicle.VehicleData;
 import org.eclipse.mosaic.lib.util.scheduling.Event;
-import org.eclipse.mosaic.rti.TIME;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class SpeedSensorApp extends AbstractApplication<VehicleOperatingSystem> implements VehicleApplication, CommunicationApplication {
-
-    /**
-     * Interval at which messages are sent (every 2 seconds).
-     */
-    private final static long TIME_INTERVAL = 2 * TIME.SECOND;
-
 
     @Override
     public void onStartup() {
@@ -42,10 +36,7 @@ public class SpeedSensorApp extends AbstractApplication<VehicleOperatingSystem> 
     }
 
     private void sendAdHocBroadcast(VehicleData vehicleData) {
-        GeoPoint center = GeoPoint.latLon(52.5128417, 13.3213595);
-        GeoCircle adHocModule = new GeoCircle(center, 100);
-
-        if (adHocModule.contains(vehicleData.getPosition())){
+        if (isNearRoadSideUnit(vehicleData.getPosition())){
             MessageRouting routing = getOs().getAdHocModule().createMessageRouting().viaChannel(AdHocChannel.CCH).topoBroadCast();
             final SpeedReport report = new SpeedReport(
                     getOs().getSimulationTime(),
@@ -56,9 +47,16 @@ public class SpeedSensorApp extends AbstractApplication<VehicleOperatingSystem> 
             final SpeedReportMsg message = new SpeedReportMsg(routing, report);
             getOs().getAdHocModule().sendV2xMessage(message);
         }
+    }
 
-
-
+    private boolean isNearRoadSideUnit(GeoPoint vehicleLocation) {
+        for (GeoPoint location: RSUDirectory.getLocations()) {
+            GeoCircle broadcastArea = new GeoCircle(location, 100);
+            if (broadcastArea.contains(vehicleLocation)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -94,7 +92,7 @@ public class SpeedSensorApp extends AbstractApplication<VehicleOperatingSystem> 
     }
 
     @Override
-    public void processEvent(Event event) throws Exception {
+    public void processEvent(Event event) {
 
     }
 }
