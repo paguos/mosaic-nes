@@ -76,7 +76,7 @@ public class NebulaStreamRuntime {
         requestBodyMap.put("strategyName", strategyName);
         requestBodyMap.put("userQuery", queryString);
 
-        System.out.println(new JSONObject(requestBodyMap).toString());
+        // System.out.println(new JSONObject(requestBodyMap).toString());
 
         HttpPost request = new HttpPost("http://" + config.getHost() + ":" + config.getPort() + "/v1/nes/query/execute-query");
         request.setEntity(new StringEntity(new JSONObject(requestBodyMap).toString()));

@@ -27,7 +27,7 @@ public class ErnstReuterIT {
                     );
 
     @ClassRule
-    public static MosaicSimulationRule simulationRule = new MosaicSimulationRule().logLevelOverride("DEBUG");
+    public static MosaicSimulationRule simulationRule = new MosaicSimulationRule().logLevelOverride("INFO");
 
     private static MosaicSimulation.SimulationResult simulationResult;
 
@@ -53,14 +53,18 @@ public class ErnstReuterIT {
         LogAssert.exists(simulationRule, "Mapping.log");
         LogAssert.exists(simulationRule, "Communication.log");
 
+        LogAssert.exists(simulationRule, "apps/nes-coordinator/container.log");
+
         // Source
         for (int i = 0; i < deployedRoadSideUnits; i++) {
             LogAssert.exists(simulationRule, String.format("apps/rsu_%d/NesSourceApp.log", i));
             LogAssert.exists(simulationRule, String.format("SpeedReport-rsu_%d.csv", i));
         }
+        LogAssert.exists(simulationRule, "apps/sources_worker/container.log");
 
         // Sink
         LogAssert.exists(simulationRule, "apps/veh_10/NesSinkApp.log");
+        LogAssert.exists(simulationRule, "apps/sink_worker/container.log");
     }
 
     @Test
