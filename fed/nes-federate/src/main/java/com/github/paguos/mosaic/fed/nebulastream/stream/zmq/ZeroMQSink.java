@@ -43,7 +43,7 @@ public class ZeroMQSink implements Runnable {
 
             if (schemaReceived) {
                 int offset = 0;
-                while (offset < envelope.getTuplesCount() * schema.getByteSize()) {
+                while (offset < envelope.getTuplesCount() * schema.getByteSize() && offset < messages.length) {
                     byte[] tupleBytes = Arrays.copyOfRange(messages, offset, offset + schema.getByteSize());
                     receivedMessages.add(tupleParser.parseToString(tupleBytes));
                     offset += schema.getByteSize();
