@@ -8,6 +8,7 @@ import org.eclipse.mosaic.fed.application.app.api.VehicleApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.VehicleOperatingSystem;
 import org.eclipse.mosaic.lib.objects.vehicle.VehicleData;
 import org.eclipse.mosaic.lib.util.scheduling.Event;
+import org.eclipse.mosaic.rti.TIME;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import stream.nebula.exceptions.EmptyFieldException;
 import stream.nebula.operators.sink.ZMQSink;
@@ -37,6 +38,8 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
         Thread zmqSinkThread = new Thread(zeroMQSink);
         zmqSinkThread.start();
         getLog().info("NES ZMQ Sink started!");
+
+        scheduleNextEvent();
     }
 
     @Override
@@ -44,35 +47,13 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
         while (!receivedMessages.isEmpty()) {
             getLog().info(String.format("Message received: %s",  receivedMessages.poll()));
         }
-
-        if (currenQueryId == -1) {
-            try {
-                getLog().info("Submitting query ...");
-                Query query = new Query().from("mosaic_nes")
-                        .sink(new ZMQSink("localhost", 5555));
-                getLog().debug(String.format("Query: %s", query.generateCppCode()));
-                currenQueryId = nesClient.executeQuery(query);
-                getLog().info("Query submitted!");
-            } catch (EmptyFieldException e) {
-                getLog().error("Error creating query!");
-                getLog().error(e.getMessage());
-            } catch (InternalFederateException e) {
-                getLog().error("Error executing the query!");
-            }
-        }
     }
 
 
     @Override
     public void onShutdown() {
         if (currenQueryId != -1) {
-            getLog().info("Deleting query ...");
-            try {
-                nesClient.deleteQuery(currenQueryId);
-            } catch (InternalFederateException e) {
-                getLog().error("Error while deleting the query!");
-            }
-            getLog().info("Query deleted!");
+            deleteQuery();
         }
 
         getLog().info("Stopping NES ZMQ Sink ...");
@@ -82,6 +63,48 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
 
     @Override
     public void processEvent(Event event) {
+        if (currenQueryId != -1) {
+            deleteQuery();
+        }
 
+        if (currenQueryId == -1) {
+            submitQuery();
+        }
+
+        scheduleNextEvent();
+    }
+
+    private void deleteQuery () {
+        getLog().info("Deleting query ...");
+        try {
+            nesClient.deleteQuery(currenQueryId);
+        } catch (InternalFederateException e) {
+            getLog().error("Error while deleting the query!");
+        }
+        getLog().info("Query deleted!");
+
+        currenQueryId = -1;
+    }
+
+    private void submitQuery() {
+        try {
+            getLog().info("Submitting query ...");
+            Query query = new Query().from("mosaic_nes")
+                    .sink(new ZMQSink("localhost", 5555));
+            getLog().debug(String.format("Query: %s", query.generateCppCode()));
+            currenQueryId = nesClient.executeQuery(query);
+            getLog().info("Query submitted!");
+        } catch (EmptyFieldException e) {
+            getLog().error("Error creating query!");
+            getLog().error(e.getMessage());
+        } catch (InternalFederateException e) {
+            getLog().error("Error executing the query!");
+            getLog().error(e.getMessage());
+        }
+    }
+
+    private void scheduleNextEvent() {
+        long nextEventTime = getOs().getSimulationTime() + config.queryInterval * TIME.SECOND;
+        getOs().getEventManager().addEvent(new Event(nextEventTime, this));
     }
 }
