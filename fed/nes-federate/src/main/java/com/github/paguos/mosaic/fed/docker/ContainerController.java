@@ -6,6 +6,8 @@ import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
+import org.eclipse.mosaic.fed.application.ambassador.util.UnitLogger;
+import org.eclipse.mosaic.fed.application.ambassador.util.UnitLoggerImpl;
 
 
 import java.util.ArrayList;
@@ -33,12 +35,7 @@ public class ContainerController {
                 .withStdErr(true)
                 .withStdOut(true)
                 .withFollowStream(true)
-                .exec(new ResultCallbackTemplate<LogContainerResultCallback, Frame>() {
-                    @Override
-                    public void onNext(Frame frame) {
-                        System.out.print(createContainerCmd.getName() + "> " + new String(frame.getPayload()));
-                    }
-                });
+                .exec(new LoggerCallback(createContainerCmd.getName()));
     }
 
     /**
@@ -50,6 +47,20 @@ public class ContainerController {
                 runningContainers) {
             dockerClient.killContainerCmd(containerId).exec();
             dockerClient.removeContainerCmd(containerId).exec();
+        }
+    }
+
+    private static class LoggerCallback extends  ResultCallbackTemplate<LogContainerResultCallback, Frame> {
+
+        private final UnitLogger logger;
+
+        public LoggerCallback(String name) {
+            this.logger = new UnitLoggerImpl(name, "container");
+        }
+
+        @Override
+        public void onNext(Frame frame) {
+            logger.info(new String(frame.getPayload()));
         }
     }
 }
