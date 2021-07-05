@@ -21,23 +21,25 @@
         <dependency>
             <groupId>com.github.paguos</groupId>
             <artifactId>nes-federate</artifactId>
-            <version>0.0.1</version>
+            <version>${parent.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.paguos</groupId>
             <artifactId>rsu-source</artifactId>
-            <version>0.0.1</version>
+            <version>${parent.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.paguos</groupId>
             <artifactId>vehicle-sensor</artifactId>
-            <version>0.0.1</version>
+            <version>${parent.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.paguos</groupId>
             <artifactId>vehicle-sink</artifactId>
-            <version>0.0.1</version>
+            <version>${parent.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

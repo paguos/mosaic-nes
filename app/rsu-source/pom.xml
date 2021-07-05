@@ -21,13 +21,13 @@
         <dependency>
             <groupId>com.github.paguos</groupId>
             <artifactId>nes-federate</artifactId>
-            <version>0.0.1</version>
+            <version>${parent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.github.paguos</groupId>
             <artifactId>vehicle-sensor</artifactId>
-            <version>0.0.1</version>
+            <version>${parent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
