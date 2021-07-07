@@ -21,23 +21,25 @@
         <dependency>
             <groupId>com.github.paguos</groupId>
             <artifactId>nes-federate</artifactId>
-            <version>0.0.1</version>
+            <version>${parent.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.paguos</groupId>
             <artifactId>rsu-source</artifactId>
-            <version>0.0.1</version>
+            <version>${parent.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.paguos</groupId>
             <artifactId>vehicle-sensor</artifactId>
-            <version>0.0.1</version>
+            <version>${parent.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.paguos</groupId>
             <artifactId>vehicle-sink</artifactId>
-            <version>0.0.1</version>
+            <version>${parent.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -53,13 +55,6 @@
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <version>1.15.3</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
