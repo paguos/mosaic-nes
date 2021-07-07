@@ -22,7 +22,7 @@ public class SpeedReportMsg extends V2xMessage {
     @Nonnull
     @Override
     public EncodedPayload getPayLoad() {
-        return null;
+        return new EncodedPayload(39);
     }
 
     @Override
