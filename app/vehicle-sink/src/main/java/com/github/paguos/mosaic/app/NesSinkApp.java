@@ -16,12 +16,13 @@ import stream.nebula.queryinterface.Query;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOperatingSystem> implements VehicleApplication {
 
     private final CNesSinkApp config = new CNesSinkApp();
-    private final ArrayBlockingQueue<String> receivedMessages = new ArrayBlockingQueue<>(config.messageQueueSize);
+    private final Queue<String> receivedMessages = new LinkedList<>();
     private final NesClient nesClient = new NesClient(config.nesRestApiHost, config.nesRestApiPort);
 
     private int currenQueryId = -1;
@@ -42,13 +43,6 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
         scheduleNextEvent();
     }
 
-    @Override
-    public void onVehicleUpdated(@Nullable VehicleData vehicleData, @Nonnull VehicleData vehicleData1) {
-        while (!receivedMessages.isEmpty()) {
-            getLog().info(String.format("Message received: %s",  receivedMessages.poll()));
-        }
-    }
-
 
     @Override
     public void onShutdown() {
@@ -67,7 +61,8 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
             deleteQuery();
         }
 
-        if (currenQueryId == -1) {
+        synchronized (receivedMessages) {
+            consumeMessages();
             submitQuery();
         }
 
@@ -94,6 +89,11 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
             getLog().debug(String.format("Query: %s", query.generateCppCode()));
             currenQueryId = nesClient.executeQuery(query);
             getLog().info("Query submitted!");
+            getLog().info(String.format(
+                    "Query for location: %f/%f",
+                    getOs().getPosition().getLatitude(),
+                    getOs().getPosition().getLongitude()
+            ));
         } catch (EmptyFieldException e) {
             getLog().error("Error creating query!");
             getLog().error(e.getMessage());
@@ -103,8 +103,17 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
         }
     }
 
+    private void consumeMessages() {
+        while (!receivedMessages.isEmpty()) {
+            getLog().info(String.format("Message received: %s",  receivedMessages.poll()));
+        }
+    }
+
     private void scheduleNextEvent() {
         long nextEventTime = getOs().getSimulationTime() + config.queryInterval * TIME.SECOND;
         getOs().getEventManager().addEvent(new Event(nextEventTime, this));
     }
+
+    @Override
+    public void onVehicleUpdated(@Nullable VehicleData vehicleData, @Nonnull VehicleData vehicleData1) {}
 }
