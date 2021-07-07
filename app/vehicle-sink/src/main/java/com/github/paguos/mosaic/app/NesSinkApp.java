@@ -9,23 +9,21 @@ import org.eclipse.mosaic.fed.application.app.api.os.VehicleOperatingSystem;
 import org.eclipse.mosaic.lib.objects.vehicle.VehicleData;
 import org.eclipse.mosaic.lib.util.scheduling.Event;
 import org.eclipse.mosaic.rti.TIME;
-import org.eclipse.mosaic.rti.api.InternalFederateException;
-import stream.nebula.exceptions.EmptyFieldException;
-import stream.nebula.operators.sink.ZMQSink;
-import stream.nebula.queryinterface.Query;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOperatingSystem> implements VehicleApplication {
 
     private final CNesSinkApp config = new CNesSinkApp();
     private final Queue<String> receivedMessages = new LinkedList<>();
+    private final List<Thread> queryExecutors = new LinkedList<>();
     private final NesClient nesClient = new NesClient(config.nesRestApiHost, config.nesRestApiPort);
 
-    private int currenQueryId = -1;
+    private NesQueryExecutor queryExecutor;
     private ZeroMQSink zeroMQSink;
 
     public NesSinkApp() {
@@ -40,15 +38,22 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
         zmqSinkThread.start();
         getLog().info("NES ZMQ Sink started!");
 
+        queryExecutor = new NesQueryExecutor(getLog(), nesClient, receivedMessages);
         scheduleNextEvent();
     }
 
-
     @Override
     public void onShutdown() {
-        if (currenQueryId != -1) {
-            deleteQuery();
+        getLog().info("Wait for query executors ...");
+        for(Thread thread: queryExecutors) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                getLog().error("Interrupted waiting for thread to end.");
+                e.printStackTrace();
+            }
         }
+        getLog().info("Query executors finished!");
 
         getLog().info("Stopping NES ZMQ Sink ...");
         zeroMQSink.terminate();
@@ -57,56 +62,11 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
 
     @Override
     public void processEvent(Event event) {
-        if (currenQueryId != -1) {
-            deleteQuery();
-        }
-
-        synchronized (receivedMessages) {
-            consumeMessages();
-            submitQuery();
-        }
-
+        queryExecutor.setLocation(getOs().getPosition());
+        Thread queryExecutorThread = new Thread(queryExecutor);
+        queryExecutorThread.start();
+        queryExecutors.add(queryExecutorThread);
         scheduleNextEvent();
-    }
-
-    private void deleteQuery () {
-        getLog().info("Deleting query ...");
-        try {
-            nesClient.deleteQuery(currenQueryId);
-        } catch (InternalFederateException e) {
-            getLog().error("Error while deleting the query!");
-        }
-        getLog().info("Query deleted!");
-
-        currenQueryId = -1;
-    }
-
-    private void submitQuery() {
-        try {
-            getLog().info("Submitting query ...");
-            Query query = new Query().from("mosaic_nes")
-                    .sink(new ZMQSink("localhost", 5555));
-            getLog().debug(String.format("Query: %s", query.generateCppCode()));
-            currenQueryId = nesClient.executeQuery(query);
-            getLog().info("Query submitted!");
-            getLog().info(String.format(
-                    "Query for location: %f/%f",
-                    getOs().getPosition().getLatitude(),
-                    getOs().getPosition().getLongitude()
-            ));
-        } catch (EmptyFieldException e) {
-            getLog().error("Error creating query!");
-            getLog().error(e.getMessage());
-        } catch (InternalFederateException e) {
-            getLog().error("Error executing the query!");
-            getLog().error(e.getMessage());
-        }
-    }
-
-    private void consumeMessages() {
-        while (!receivedMessages.isEmpty()) {
-            getLog().info(String.format("Message received: %s",  receivedMessages.poll()));
-        }
     }
 
     private void scheduleNextEvent() {
