@@ -10,19 +10,20 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
 import java.util.Arrays;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.Queue;
 
 public class ZeroMQSink implements Runnable {
 
     private final String zeroMQAddress;
-    private final ArrayBlockingQueue<String> receivedMessages;
+    private final Queue<String> receivedMessages;
     private boolean schemaReceived;
     private volatile boolean running;
 
     private Schema schema;
+    private int schemaBytesSize;
     private TupleParser tupleParser;
 
-    public ZeroMQSink(String zeroMQAddress, ArrayBlockingQueue<String> receivedMessages) {
+    public ZeroMQSink(String zeroMQAddress, Queue<String> receivedMessages) {
         this.zeroMQAddress = zeroMQAddress;
         this.receivedMessages = receivedMessages;
         this.running = true;
@@ -42,6 +43,8 @@ public class ZeroMQSink implements Runnable {
             Envelope envelope = Envelope.parse(envelopeBytes);
 
             if (schemaReceived) {
+                if (envelope.getTuplesCount() == schemaBytesSize) { continue; }
+
                 int offset = 0;
                 while (offset < envelope.getTuplesCount() * schema.getByteSize() && offset < messages.length) {
                     byte[] tupleBytes = Arrays.copyOfRange(messages, offset, offset + schema.getByteSize());
@@ -49,7 +52,8 @@ public class ZeroMQSink implements Runnable {
                     offset += schema.getByteSize();
                 }
             } else {
-                byte[] schemaBytes = Arrays.copyOfRange(messages, 0, (int) envelope.getTuplesCount());
+                schemaBytesSize = (int) envelope.getTuplesCount();
+                byte[] schemaBytes = Arrays.copyOfRange(messages, 0, schemaBytesSize);
                 try {
                     SerializableSchema serializableSchema = SerializableSchema.parseFrom(schemaBytes);
                     schema = Schema.parseFrom(serializableSchema);
