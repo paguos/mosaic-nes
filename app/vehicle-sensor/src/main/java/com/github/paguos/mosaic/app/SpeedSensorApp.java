@@ -1,9 +1,9 @@
 package com.github.paguos.mosaic.app;
 
 import com.github.paguos.mosaic.app.directory.RSUDirectory;
+import com.github.paguos.mosaic.app.directory.RoadSideUnit;
 import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.app.message.SpeedReportMsg;
-import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.AdHocModuleConfiguration;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.CamBuilder;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedAcknowledgement;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedV2xMessage;
@@ -12,51 +12,43 @@ import org.eclipse.mosaic.fed.application.app.api.CommunicationApplication;
 import org.eclipse.mosaic.fed.application.app.api.VehicleApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.VehicleOperatingSystem;
 import org.eclipse.mosaic.interactions.communication.V2xMessageTransmission;
-import org.eclipse.mosaic.lib.enums.AdHocChannel;
-import org.eclipse.mosaic.lib.geo.GeoCircle;
-import org.eclipse.mosaic.lib.geo.GeoPoint;
+import org.eclipse.mosaic.lib.objects.addressing.IpResolver;
 import org.eclipse.mosaic.lib.objects.v2x.MessageRouting;
 import org.eclipse.mosaic.lib.objects.vehicle.VehicleData;
 import org.eclipse.mosaic.lib.util.scheduling.Event;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.net.Inet4Address;
+import java.util.List;
 
 public class SpeedSensorApp extends AbstractApplication<VehicleOperatingSystem> implements VehicleApplication, CommunicationApplication {
 
     @Override
     public void onStartup() {
         getLog().infoSimTime(this, "Initializing speed sensor application ...");
-        getOs().getAdHocModule().enable(new AdHocModuleConfiguration()
-                .addRadio()
-                .channel(AdHocChannel.CCH)
-                .power(50)
-                .create());
-        getLog().infoSimTime(this, "Activated AdHoc Module");
+        getOs().getCellModule().enable();
+        getLog().infoSimTime(this, "Cell module activated!");
     }
 
     private void sendAdHocBroadcast(VehicleData vehicleData) {
-        if (isNearRoadSideUnit(vehicleData.getPosition())){
-            MessageRouting routing = getOs().getAdHocModule().createMessageRouting().viaChannel(AdHocChannel.CCH).topoBroadCast();
+        List<RoadSideUnit> roadSideUnits = RSUDirectory.getRoadSideUnitsInRange(vehicleData.getPosition());
+
+        for (RoadSideUnit rsu: roadSideUnits) {
+            Inet4Address rsuIp = IpResolver.getSingleton().nameToIp(rsu.getId());
+            MessageRouting routing = getOs().getCellModule().createMessageRouting().topoCast(rsuIp.getAddress());
+
             final SpeedReport report = new SpeedReport(
                     getOs().getSimulationTime(),
                     getOs().getId(),
                     vehicleData.getPosition(),
                     vehicleData.getSpeed()
             );
-            final SpeedReportMsg message = new SpeedReportMsg(routing, report);
-            getOs().getAdHocModule().sendV2xMessage(message);
-        }
-    }
 
-    private boolean isNearRoadSideUnit(GeoPoint vehicleLocation) {
-        for (GeoPoint location: RSUDirectory.getLocations()) {
-            GeoCircle broadcastArea = new GeoCircle(location, 100);
-            if (broadcastArea.contains(vehicleLocation)) {
-                return true;
-            }
+            final SpeedReportMsg message = new SpeedReportMsg(routing, report);
+            getOs().getCellModule().sendV2xMessage(message);
         }
-        return false;
+
     }
 
     @Override

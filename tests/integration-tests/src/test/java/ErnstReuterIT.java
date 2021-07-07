@@ -37,7 +37,7 @@ public class ErnstReuterIT {
         simulationResult = simulationRule.executeSimulation(scenariosDirectory, "ernst-reuter");
     }
 
-    private int deployedRoadSideUnits = 3;
+    private final int deployedRoadSideUnits = 3;
 
     @Test
     public void executionSuccessful() {

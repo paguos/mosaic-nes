@@ -1,14 +1,14 @@
 {
     "federates": {
         "application": true,
-        "cell": false,
+        "cell": true,
         "environment": false,
         "nes": true,
         "ns3": false,
         "omnetpp": false,
         "output": true,
         "phabmacs": false,
-        "sns": true,
+        "sns": false,
         "sumo": true
     },
     "simulation": {

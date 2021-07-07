@@ -1,6 +1,7 @@
 package com.github.paguos.mosaic.app;
 
 import com.github.paguos.mosaic.app.directory.RSUDirectory;
+import com.github.paguos.mosaic.app.directory.RoadSideUnit;
 import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.app.message.SpeedReportMsg;
 import com.github.paguos.mosaic.fed.ambassador.NesController;
@@ -8,7 +9,6 @@ import com.github.paguos.mosaic.fed.nebulastream.node.*;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import com.github.paguos.mosaic.fed.nebulastream.stream.BufferBuilder;
 import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQSource;
-import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.AdHocModuleConfiguration;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.CamBuilder;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedAcknowledgement;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedV2xMessage;
@@ -16,7 +16,6 @@ import org.eclipse.mosaic.fed.application.app.AbstractApplication;
 import org.eclipse.mosaic.fed.application.app.api.CommunicationApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.RoadSideUnitOperatingSystem;
 import org.eclipse.mosaic.interactions.communication.V2xMessageTransmission;
-import org.eclipse.mosaic.lib.enums.AdHocChannel;
 import org.eclipse.mosaic.lib.objects.v2x.V2xMessage;
 import org.eclipse.mosaic.lib.util.scheduling.Event;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
@@ -34,19 +33,13 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
 
     @Override
     public void onStartup() {
-
-        getLog().infoSimTime(this, "Activating AdHoc Module ...");
-
-        getOs().getAdHocModule().enable(new AdHocModuleConfiguration()
-                .addRadio()
-                .channel(AdHocChannel.CCH)
-                .power(50)
-                .create());
+        getLog().infoSimTime(this, "Activating Cell Module ...");
+        getOs().getCellModule().enable();
         getLog().infoSimTime(this, "Activated AdHoc Module");
 
-        getLog().infoSimTime(this, "Adding RSU location ..");
-        RSUDirectory.addLocation(getOs().getPosition());
-        getLog().infoSimTime(this, "RSU location added!");
+        getLog().infoSimTime(this, "Registering RSU ..");
+        RSUDirectory.register(new RoadSideUnit(getOs().getId(), getOs().getPosition(), 100));
+        getLog().infoSimTime(this, "RSU registered!");
 
         int zeroMQPort = com.github.paguos.mosaic.fed.nebulastream.node.ZeroMQSource.getNextZeroMQPort();
         String zmqAddress = String.format("tcp://127.0.0.1:%d", zeroMQPort);
