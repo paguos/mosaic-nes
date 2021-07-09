@@ -1,6 +1,5 @@
 package com.github.paguos.mosaic.fed.nebulastream.stream.zmq;
 
-import com.github.paguos.mosaic.fed.nebulastream.stream.BufferBuilder;
 import com.github.paguos.mosaic.fed.nebulastream.stream.Envelope;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;

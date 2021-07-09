@@ -28,8 +28,10 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
 
     private final NesClient nesClient = new NesClient("localhost", "8081");
     private final ArrayBlockingQueue<byte[]> messages = new ArrayBlockingQueue<>(2000);
-    private ZeroMQSource zeroMQSource;
     private SpeedReportWriter reportWriter;
+    private Thread sourceThread;
+    private ZeroMQSource zeroMQSource;
+
 
     @Override
     public void onStartup() {
@@ -78,8 +80,8 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
         }
 
         zeroMQSource = new ZeroMQSource(zmqAddress, messages);
-        Thread zmqSourceThread = new Thread(zeroMQSource);
-        zmqSourceThread.start();
+        sourceThread = new Thread(zeroMQSource);
+        sourceThread.start();
 
         try {
             reportWriter = new SpeedReportWriter(getOs().getId());
@@ -122,6 +124,13 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
     public void onShutdown() {
         getLog().info("Stopping NES ZMQ Source ...");
         zeroMQSource.terminate();
+
+        try {
+            sourceThread.join(5000);
+        } catch (InterruptedException e) {
+            getLog().error("Error while waiting for thread");
+            e.printStackTrace();
+        }
         getLog().info("NES ZMQ Source stopped!");
     }
 

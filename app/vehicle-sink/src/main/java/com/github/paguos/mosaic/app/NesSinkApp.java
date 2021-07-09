@@ -24,6 +24,7 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
     private final NesClient nesClient = new NesClient(config.nesRestApiHost, config.nesRestApiPort);
 
     private NesQueryExecutor queryExecutor;
+    private Thread sinkThread;
     private ZeroMQSink zeroMQSink;
 
     public NesSinkApp() {
@@ -34,8 +35,8 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
     public void onStartup() {
         getLog().info("Starting NES ZMQ Sink ...");
         zeroMQSink = new ZeroMQSink(config.zmqAddress, receivedMessages);
-        Thread zmqSinkThread = new Thread(zeroMQSink);
-        zmqSinkThread.start();
+        sinkThread = new Thread(zeroMQSink);
+        sinkThread.start();
         getLog().info("NES ZMQ Sink started!");
 
         queryExecutor = new NesQueryExecutor(getLog(), nesClient, receivedMessages);
@@ -44,6 +45,10 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
 
     @Override
     public void onShutdown() {
+        getLog().info("Stopping NES ZMQ Sink ...");
+        zeroMQSink.terminate();
+        getLog().info("NES ZMQ Sink stopped!");
+
         getLog().info("Wait for query executors ...");
         for(Thread thread: queryExecutors) {
             try {
@@ -55,9 +60,14 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
         }
         getLog().info("Query executors finished!");
 
-        getLog().info("Stopping NES ZMQ Sink ...");
-        zeroMQSink.terminate();
-        getLog().info("NES ZMQ Sink stopped!");
+        getLog().info("Waiting for sink ...");
+        try {
+            sinkThread.join();
+        } catch (InterruptedException e) {
+            getLog().error("Interrupted waiting for thread to end.");
+            e.printStackTrace();
+        }
+        getLog().info("Sink is done!");
     }
 
     @Override
