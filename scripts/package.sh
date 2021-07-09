@@ -7,6 +7,7 @@ chmod +x mosaic/mosaic.sh
 echo "Downloading mosaic ... done!"
 
 echo "Prepare scenario ..."
+cp -r scenarios/barcelona mosaic/scenarios
 cp -r scenarios/ernst-reuter mosaic/scenarios
 cp app/rsu-source/target/rsu-source-0.0.1-jar-with-dependencies.jar mosaic/scenarios/ernst-reuter/application
 cp app/vehicle-sensor/target/vehicle-sensor-0.0.1-jar-with-dependencies.jar mosaic/scenarios/ernst-reuter/application

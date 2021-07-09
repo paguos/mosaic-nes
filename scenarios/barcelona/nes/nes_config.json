@@ -1,0 +1,18 @@
+{
+    "coordinator": {
+        "image": "paguos/nes-executable:zmq_enabled"
+    },
+    "nodes": [
+        {
+            "name": "sources_worker",
+            "nodes": []
+        },
+        {
+            "name": "sink_worker",
+            "nodes": []
+        }
+    ],
+    "worker": {
+        "image": "paguos/nes-executable:zmq_enabled"
+    }
+}
