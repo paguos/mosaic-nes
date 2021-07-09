@@ -18,13 +18,17 @@ public class ContainerController {
     /**
      * List of running containers
      */
-    private static final List<String> runningContainers = new ArrayList<>();
+    private final List<String> runningContainers;
+
+    public ContainerController() {
+        this.runningContainers = new ArrayList<>();
+    }
 
     /**
      * Run a new docker container
      * @param createContainerCmd unique identifier of the container
      */
-    public static void run(CreateContainerCmd createContainerCmd) {
+    public void run(CreateContainerCmd createContainerCmd) {
         DockerClient dockerClient = DockerController.getClient();
         CreateContainerResponse container = createContainerCmd.exec();
         dockerClient.startContainerCmd(container.getId()).exec();
@@ -41,7 +45,7 @@ public class ContainerController {
     /**
      * Stop all containers registered in the running list.
      */
-    public static void stopAll() {
+    public void stopAll() {
         DockerClient dockerClient = DockerController.getClient();
         for (String containerId :
                 runningContainers) {

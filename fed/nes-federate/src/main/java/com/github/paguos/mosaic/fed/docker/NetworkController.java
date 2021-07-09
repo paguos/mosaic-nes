@@ -14,13 +14,17 @@ public class NetworkController {
     /**
      * List of running networks
      */
-    private static final List<String> networks = new ArrayList<>();
+    private final List<String> networks;
+
+    public NetworkController() {
+        this.networks = new ArrayList<>();
+    }
 
     /**
      * Create a new docker network
      * @param networkName name of the network to be created
      */
-    public static void createNetwork(String networkName) {
+    public void createNetwork(String networkName) {
         DockerClient dockerClient = DockerController.getClient();
         List<Network> existingNetworks = dockerClient.listNetworksCmd().withNameFilter(networkName).exec();
 
@@ -34,7 +38,7 @@ public class NetworkController {
     /**
      * Remove all the created networks
      */
-    public static void removeNetworks() {
+    public void removeNetworks() {
         DockerClient dockerClient = DockerController.getClient();
         for (String networkName: networks) {
             dockerClient.removeNetworkCmd(networkName);
