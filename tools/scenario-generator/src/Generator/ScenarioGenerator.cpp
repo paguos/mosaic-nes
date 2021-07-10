@@ -30,7 +30,7 @@ void ScenarioGenerator::generateRoutes(ScenarioConvert scenarioConvert) {
     LOG_SCOPE_F(INFO, "routes generation");
 
     for (Route &route: scenario.routes) {
-        LOG_F(INFO, "Generating scenario '%d' ...", route.id);
+        LOG_F(INFO, "Generating route '%d' ...", route.id);
         scenarioConvert.osm2mosaic(route);
         string tempScenarioPath = rename(route.id);
         route.LoadSQLite(tempScenarioPath + "/application/" + config.scenarioName + ".db");
@@ -92,7 +92,7 @@ void ScenarioGenerator::updateScenarioConfig() {
     inputStream >> scenarioConfigJson;
 
     scenarioConfigJson["federates"]["nes"] = scenario.nesFederate.enabled;
-    scenarioConfigJson["federates"]["sns"] = true;
+    scenarioConfigJson["federates"]["cell"] = true;
 
     std::ofstream outputStream(scenarioConfigPath);
     outputStream << std::setw(4) << scenarioConfigJson << std::endl;

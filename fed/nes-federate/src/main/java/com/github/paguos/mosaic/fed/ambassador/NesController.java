@@ -26,12 +26,16 @@ public class NesController {
     private final NesClient nesClient;
     private final Coordinator coordinator;
 
+    private final ContainerController containerController;
+    private final NetworkController networkController;
 
     private NesController(CNes config) {
         this.coordinator = ConfigurationParser.parseConfig(config);
         this.nesCmdFactory = new NesCmdFactory(this.coordinator);
 
         this.nesClient = new NesClient(config.clientHost, config.clientPort);
+        this.containerController = new ContainerController();
+        this.networkController = new NetworkController();
     }
 
     public static NesController getController() throws InternalFederateException {
@@ -43,9 +47,9 @@ public class NesController {
     }
 
     public void start() throws InternalFederateException {
-        NetworkController.createNetwork(NetworkController.DEFAULT_NETWORK_NAME);
+        networkController.createNetwork(NetworkController.DEFAULT_NETWORK_NAME);
         CreateContainerCmd coordinatorCmd = nesCmdFactory.createNesCoordinatorCmd();
-        ContainerController.run(coordinatorCmd);
+        containerController.run(coordinatorCmd);
 
         try {
             Thread.sleep(2000);
@@ -63,19 +67,20 @@ public class NesController {
     }
 
     public void stop() {
-        ContainerController.stopAll();
-        NetworkController.removeNetworks();
+        containerController.stopAll();
+        networkController.removeNetworks();
+        controller = null;
     }
 
     public void addNode(NesNode node) throws InternalFederateException {
         CreateContainerCmd sourceCmd = nesCmdFactory.createNesNodeCmd(node);
-        ContainerController.run(sourceCmd);
+        containerController.run(sourceCmd);
     }
 
     private void startNodes(List<NesNode> nodes) throws InternalFederateException {
         for (NesNode node : nodes) {
             CreateContainerCmd createWorkerCmd = nesCmdFactory.createNesNodeCmd(node);
-            ContainerController.run(createWorkerCmd);
+            containerController.run(createWorkerCmd);
 
             if (node instanceof Worker) {
                 Worker worker = (Worker) node;

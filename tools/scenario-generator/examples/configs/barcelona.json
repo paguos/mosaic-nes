@@ -1,0 +1,187 @@
+{
+  "cars": [
+    {
+      "name": "Car",
+      "applications": ["com.github.paguos.mosaic.app.SpeedSensorApp"],
+      "metadata": {
+        "accel": 1.5,
+        "decel": 4.5,
+        "length": 5.00,
+        "maxSpeed": 10.0,
+        "minGap": 2.5,
+        "sigma": 0.5,
+        "tau": 1,
+        "color": "red"
+      }
+    },
+    {
+      "name": "NesSinkCar",
+      "applications": ["com.github.paguos.mosaic.app.NesSinkApp"],
+      "metadata": {
+        "accel": 1.5,
+        "decel": 4.5,
+        "length": 5.00,
+        "maxSpeed": 10.0,
+        "minGap": 2.5,
+        "sigma": 0.5,
+        "tau": 1,
+        "color": "blue"
+      }
+    }
+  ],
+  "federates": {
+    "nes": {
+      "enabled": true,
+      "coordinator": {
+        "image": "paguos/nes-executable:zmq_enabled"
+      },
+      "worker": {
+        "image": "paguos/nes-executable:zmq_enabled"
+      },
+      "nodes": [
+        {
+          "name": "sources_worker",
+          "nodes": []
+        },
+        {
+          "name": "sink_worker",
+          "nodes": []
+        }
+      ]
+    }
+  },
+  "rsus": [
+    {
+      "name": "NES-Sink-RSU",
+      "applications": [],
+      "positions": [
+        {
+          "latitude": "41.3914836",
+          "longitude": "2.1387871"
+        },
+        {
+          "latitude": "41.3926974",
+          "longitude": "2.1444968"
+        }
+      ]
+    },
+    {
+      "name": "NES-Source-RSU",
+      "applications": [
+        "com.github.paguos.mosaic.app.NesSourceApp"
+      ],
+      "positions": [
+        {
+          "latitude": "41.3913201",
+          "longitude": "2.1371809"
+        },
+        {
+          "latitude": "41.3912243",
+          "longitude": "2.1405043"
+        },
+        {
+          "latitude": "41.3929718",
+          "longitude": "2.1430725"
+        },
+        {
+          "latitude": "41.3925667",
+          "longitude": "2.1463334"
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "source": {
+        "latitude": "41.3906817",
+        "longitude": "2.1366214"
+      },
+      "target": {
+        "latitude": "41.3940055",
+        "longitude": "2.1495326"
+      }
+    },
+    {
+      "source": {
+        "latitude": "41.395114",
+        "longitude": "2.1535022"
+      },
+      "target": {
+        "latitude": "41.3908733",
+        "longitude": "2.1359329"
+      }
+    },
+    {
+      "source": {
+        "latitude": "41.3891507",
+        "longitude": "2.1492959"
+      },
+      "target": {
+        "latitude": "41.3915169",
+        "longitude": "2.1368325"
+      }
+    },
+    {
+      "source": {
+        "latitude": "41.3882592",
+        "longitude": "2.139645"
+      },
+      "target": {
+        "latitude": "41.3915898",
+        "longitude": "2.1364243"
+      }
+    },
+    {
+      "source": {
+        "latitude": "41.3938768",
+        "longitude": "2.1419869"
+      },
+      "target": {
+        "latitude": "41.390011",
+        "longitude": "2.1480853"
+      }
+    },
+    {
+      "source": {
+        "latitude": "41.395114",
+        "longitude": "2.1535022"
+      },
+      "target": {
+        "latitude": "41.3940778",
+        "longitude": "2.1421771"
+      }
+    }
+  ],
+  "vehicles": [
+    {
+      "car": "Car",
+      "routes": "*",
+      "metadata": {
+        "startingTime": 5,
+        "maxTime": 700,
+        "targetFlow": 500,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 10,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0,
+        "departSpeedMode": "MAXIMUM",
+        "deterministic": true
+      }
+    },
+    {
+      "car": "NesSinkCar",
+      "routes": "1",
+      "metadata": {
+        "startingTime": 20,
+        "maxTime": 700,
+        "targetFlow": 500,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 1,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0,
+        "departSpeedMode": "MAXIMUM",
+        "deterministic": true
+      }
+    }
+  ]
+}

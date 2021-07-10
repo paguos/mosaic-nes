@@ -20,10 +20,13 @@ import static org.junit.Assert.assertEquals;
 public class ContainerControllerTest {
 
     private final String TEST_IMAGE = "yobasystems/alpine-nginx:stable";
+
+    private ContainerController containerController;
     private DockerClient dockerClient;
 
     @Before
     public void setup() throws InterruptedException {
+        containerController = new ContainerController();
         DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
         DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
                 .dockerHost(config.getDockerHost())
@@ -40,7 +43,7 @@ public class ContainerControllerTest {
     @Test
     public void runAndStopContainerTest() {
         CreateContainerCmd testCmd = dockerClient.createContainerCmd(TEST_IMAGE).withName("test");
-        ContainerController.run(testCmd);
+        containerController.run(testCmd);
 
         List<Container> containers = dockerClient.listContainersCmd().exec();
         assertEquals(1, containers.size());
@@ -50,7 +53,7 @@ public class ContainerControllerTest {
                 testContainer.getNames()[0]);
         assertEquals(TEST_IMAGE, testContainer.getImage());
 
-        ContainerController.stopAll();
+        containerController.stopAll();
         containers = dockerClient.listContainersCmd().exec();
         assertEquals(0, containers.size());
     }
