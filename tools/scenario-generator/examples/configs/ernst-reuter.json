@@ -16,7 +16,7 @@
     },
     {
       "name": "NesSinkCar",
-      "applications": ["com.github.paguos.mosaic.app.NesSinkApp"],
+      "applications": ["com.github.paguos.mosaic.app.VehicleSinkApp"],
       "metadata": {
         "accel": 1.5,
         "decel": 4.5,

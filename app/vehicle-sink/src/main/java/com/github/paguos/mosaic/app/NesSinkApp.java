@@ -4,10 +4,8 @@ import com.github.paguos.mosaic.app.config.CNesSinkApp;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQSink;
 import org.eclipse.mosaic.fed.application.app.ConfigurableApplication;
-import org.eclipse.mosaic.fed.application.app.api.VehicleApplication;
-import org.eclipse.mosaic.fed.application.app.api.os.VehicleOperatingSystem;
+import org.eclipse.mosaic.fed.application.app.api.os.OperatingSystem;
 import org.eclipse.mosaic.lib.geo.GeoPoint;
-import org.eclipse.mosaic.lib.objects.vehicle.VehicleData;
 import org.eclipse.mosaic.lib.util.scheduling.Event;
 import org.eclipse.mosaic.rti.TIME;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
@@ -15,25 +13,26 @@ import stream.nebula.exceptions.EmptyFieldException;
 import stream.nebula.operators.sink.ZMQSink;
 import stream.nebula.queryinterface.Query;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOperatingSystem> implements VehicleApplication {
+public abstract class NesSinkApp<T extends OperatingSystem> extends ConfigurableApplication<CNesSinkApp, T> {
 
-    private final CNesSinkApp config = new CNesSinkApp();
-    private final Queue<String> receivedMessages = new LinkedList<>();
-    private final NesClient nesClient = new NesClient(config.nesRestApiHost, config.nesRestApiPort);
-
-    private int currenQueryId;
+    private final CNesSinkApp config;
+    private final NesClient nesClient;
     private Thread sinkThread;
     private final int zeroMQPort;
     private ZeroMQSink zeroMQSink;
 
+    protected int currenQueryId;
+    protected final Queue<String> receivedMessages;
+
     public NesSinkApp() {
         super(CNesSinkApp.class, "NesSinkApp");
+        this.config = new CNesSinkApp();
         this.currenQueryId = -1;
+        this.nesClient = new NesClient(config.nesRestApiHost, config.nesRestApiPort);
+        this.receivedMessages = new LinkedList<>();
         this.zeroMQPort = ZeroMQSink.getNextZeroMQPort();
     }
 
@@ -65,24 +64,18 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
         getLog().info("NES ZMQ Sink stopped!");
     }
 
-    @Override
-    public void processEvent(Event event) {
-        if (currenQueryId != -1) {
-            deleteQuery();
-        }
-        synchronized (receivedMessages) {
-            consumeMessages();
-            submitQuery(getOs().getPosition());
-        }
-        scheduleNextEvent();
-    }
-
-    private void scheduleNextEvent() {
+    protected void scheduleNextEvent() {
         long nextEventTime = getOs().getSimulationTime() + config.queryInterval * TIME.SECOND;
         getOs().getEventManager().addEvent(new Event(nextEventTime, this));
     }
 
-    private void deleteQuery () {
+    protected void consumeMessages() {
+        while (!receivedMessages.isEmpty()) {
+            getLog().info(String.format("Message received: %s",  receivedMessages.poll()));
+        }
+    }
+
+    protected void deleteQuery() {
         getLog().info("Deleting query ...");
         try {
             nesClient.deleteQuery(currenQueryId);
@@ -94,7 +87,7 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
         currenQueryId = -1;
     }
 
-    private void submitQuery(GeoPoint location) {
+    protected void submitQuery(GeoPoint location) {
         try {
             getLog().info("Submitting query ...");
             Query query = new Query().from("mosaic_nes")
@@ -116,12 +109,4 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
         }
     }
 
-    private void consumeMessages() {
-        while (!receivedMessages.isEmpty()) {
-            getLog().info(String.format("Message received: %s",  receivedMessages.poll()));
-        }
-    }
-
-    @Override
-    public void onVehicleUpdated(@Nullable VehicleData vehicleData, @Nonnull VehicleData vehicleData1) {}
 }

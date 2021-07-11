@@ -17,7 +17,7 @@
         {
             "accel": 1.5,
             "applications": [
-                "com.github.paguos.mosaic.app.NesSinkApp"
+                "com.github.paguos.mosaic.app.VehicleSinkApp"
             ],
             "color": "blue",
             "decel": 4.5,
