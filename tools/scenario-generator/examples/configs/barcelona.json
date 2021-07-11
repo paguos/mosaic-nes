@@ -16,7 +16,7 @@
     },
     {
       "name": "NesSinkCar",
-      "applications": ["com.github.paguos.mosaic.app.NesSinkApp"],
+      "applications": ["com.github.paguos.mosaic.app.VehicleSinkApp"],
       "metadata": {
         "accel": 1.5,
         "decel": 4.5,
@@ -53,7 +53,7 @@
   "rsus": [
     {
       "name": "NES-Sink-RSU",
-      "applications": [],
+      "applications": ["com.github.paguos.mosaic.app.RSUSinkApp"],
       "positions": [
         {
           "latitude": "41.3914836",

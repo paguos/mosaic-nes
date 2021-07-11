@@ -40,7 +40,7 @@ public class BarcelonaIT {
         LogAssert.exists(simulationRule, "apps/nes-coordinator/container.log");
 
         // Source
-        for (int i = 2; i < deployedRoadSideUnits; i++) {
+        for (int i = 0; i < deployedRoadSideUnits; i++) {
             LogAssert.exists(simulationRule, String.format("apps/rsu_%d/NesSourceApp.log", i));
             LogAssert.exists(simulationRule, String.format("SpeedReport-rsu_%d.csv", i));
         }
@@ -77,7 +77,7 @@ public class BarcelonaIT {
 
     @Test
     public void sourceReceivedV2xMessages() throws Exception {
-        for (int i = 2; i < deployedRoadSideUnits; i++) {
+        for (int i = 0; i < deployedRoadSideUnits; i++) {
             LogAssert.contains(
                     simulationRule,
                     String.format("apps/rsu_%d/NesSourceApp.log", i),
@@ -92,6 +92,16 @@ public class BarcelonaIT {
         LogAssert.contains(
                 simulationRule,
                 "apps/veh_18/VehicleSinkApp.log",
+                ".*Message received: veh_[0-9]*,[0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*"
+        );
+        LogAssert.contains(
+                simulationRule,
+                "apps/rsu_0/RSUSinkApp.log",
+                ".*Message received: veh_[0-9]*,[0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*"
+        );
+        LogAssert.contains(
+                simulationRule,
+                "apps/rsu_1/RSUSinkApp.log",
                 ".*Message received: veh_[0-9]*,[0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*"
         );
     }

@@ -41,7 +41,7 @@
     ],
     "rsus": [
         {
-            "applications": [],
+            "applications": ["com.github.paguos.mosaic.app.RSUSinkApp"],
             "name": "NES-Sink-RSU_0",
             "position": {
                 "latitude": 41.3914836,
@@ -49,7 +49,7 @@
             }
         },
         {
-            "applications": [],
+            "applications": ["com.github.paguos.mosaic.app.RSUSinkApp"],
             "name": "NES-Sink-RSU_1",
             "position": {
                 "latitude": 41.3926974,
