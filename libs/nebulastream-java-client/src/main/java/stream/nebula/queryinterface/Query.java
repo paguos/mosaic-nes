@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 
 public class Query {
-    private final ArrayList<Operator> operators;
+    protected final ArrayList<Operator> operators;
     private String logicalStreamName;
 
     public Query() {
