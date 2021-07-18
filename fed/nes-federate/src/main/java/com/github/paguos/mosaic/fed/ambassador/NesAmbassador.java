@@ -60,9 +60,7 @@ public class NesAmbassador extends AbstractFederateAmbassador implements EventMa
     }
 
     @Override
-    public void addEvent(@Nonnull Event event) {
-
-    }
+    public void addEvent(@Nonnull Event event) {}
 
     @Override
     public boolean isTimeConstrained() {
@@ -73,4 +71,5 @@ public class NesAmbassador extends AbstractFederateAmbassador implements EventMa
     public boolean isTimeRegulating() {
         return false;
     }
+
 }

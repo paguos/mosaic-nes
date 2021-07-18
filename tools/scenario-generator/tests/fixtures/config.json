@@ -27,6 +27,11 @@
       "coordinator": {
         "image": "nes-coordinator:test"
       },
+      "ui": {
+        "enabled": true,
+        "image": "nes-ui:test",
+        "reactPort": 12345
+      },
       "worker": {
         "image": "nes-worker:test"
       },

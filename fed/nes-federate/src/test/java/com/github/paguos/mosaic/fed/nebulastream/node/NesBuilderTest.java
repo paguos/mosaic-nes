@@ -54,7 +54,7 @@ public class NesBuilderTest {
         assertEquals("test-source", source.getName());
         assertEquals(-1, source.getParentId());
         assertEquals(3001, source.getDataPort());
-        assertEquals(3000, source.getRpcPort());
+        assertEquals(3002, source.getRpcPort());
         assertEquals("default_logical", source.getLogicalStreamName());
         assertEquals("default_physical", source.getPhysicalStreamName());
         assertEquals(0, source.getNumberOfTuplesToProducePerBuffer());
@@ -91,7 +91,7 @@ public class NesBuilderTest {
         assertEquals("test", defaultWorker.getName());
         assertEquals(-1, defaultWorker.getParentId());
         assertEquals(3001, defaultWorker.getDataPort());
-        assertEquals(3000, defaultWorker.getRpcPort());
+        assertEquals(3002, defaultWorker.getRpcPort());
         assertEquals(0, defaultWorker.getChildren().size());
     }
 

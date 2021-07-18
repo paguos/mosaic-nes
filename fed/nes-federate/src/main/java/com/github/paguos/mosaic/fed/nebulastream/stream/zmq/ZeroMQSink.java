@@ -14,7 +14,7 @@ import java.util.Queue;
 
 public class ZeroMQSink implements Runnable {
 
-    private static int nextZeroMQPort = 3000;
+    private static int nextZeroMQPort = 3131;
 
     private final String zeroMQAddress;
     private final Queue<String> receivedMessages;

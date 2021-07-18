@@ -23,6 +23,7 @@ jobs:
         run: mvn clean install
       - name: MOSAIC Integration Tests
         run: |
+          docker pull paguos/nes-ui:v0.0.1
           docker pull paguos/nes-executable:zmq_enabled
           mvn test -fae -P integration-tests
   tool-scenario-generator:

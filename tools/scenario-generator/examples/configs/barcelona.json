@@ -35,6 +35,11 @@
       "coordinator": {
         "image": "paguos/nes-executable:zmq_enabled"
       },
+      "ui": {
+        "enabled": true,
+        "image": "paguos/nes-ui:v0.0.1",
+        "reactPort": 3000
+      },
       "worker": {
         "image": "paguos/nes-executable:zmq_enabled"
       },
