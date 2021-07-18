@@ -98,7 +98,7 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
     private void submitQuery(GeoPoint location) {
         try {
             getLog().info("Submitting query ...");
-            Query query = new Query().from("mosaic_nes")
+            Query query = new RangeQuery(location, 500).from("mosaic_nes")
                     .sink(new ZMQSink("localhost", zeroMQPort));
             getLog().debug(String.format("Query: %s", query.generateCppCode()));
             currenQueryId = nesClient.executeQuery(query);

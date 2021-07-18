@@ -29,7 +29,11 @@ public class NesController {
     private final ContainerController containerController;
     private final NetworkController networkController;
 
+    private final CNes config;
+
+
     private NesController(CNes config) {
+        this.config = config;
         this.coordinator = ConfigurationParser.parseConfig(config);
         this.nesCmdFactory = new NesCmdFactory(this.coordinator);
 
@@ -64,6 +68,10 @@ public class NesController {
         nesClient.addLogicalStream(new LogicalStream(mosaicSchema));
 
         startNodes(coordinator.getChildren());
+
+        if (config.ui.enabled) {
+            startUI();
+        }
     }
 
     public void stop() {
@@ -87,6 +95,11 @@ public class NesController {
                 startNodes(worker.getChildren());
             }
         }
+    }
+
+    private void startUI() throws InternalFederateException {
+        CreateContainerCmd createNesUICmd = nesCmdFactory.createNesUICmd();
+        containerController.run(createNesUICmd);
     }
 
 }

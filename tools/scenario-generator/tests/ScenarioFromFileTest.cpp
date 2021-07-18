@@ -83,9 +83,10 @@ TEST_F(ScenarioFromFile, Cars) {
 
 TEST_F(ScenarioFromFile, NesFederate) {
     NesNodeConfig coordinatorConfig("nes-coordinator:test");
+    NesUIConfig uiConfig("nes-ui:test", 12345, true);
     NesNodeConfig workerConfig("nes-worker:test");
 
-    NesFederate expectedFederate(coordinatorConfig, workerConfig, true);
+    NesFederate expectedFederate(coordinatorConfig, workerConfig, uiConfig,true);
 
     NesNode w1("test_worker_1");
     NesNode w2("test_worker_2");

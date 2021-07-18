@@ -1,1 +1,8 @@
-*.java
+# Protobuf Classes
+NesSerializable.java
+SerializableDataType.java
+SerializableDataTypeOrBuilder.java
+SerializableField.java
+SerializableFieldOrBuilder.java
+SerializableSchema.java
+SerializableSchemaOrBuilder.java

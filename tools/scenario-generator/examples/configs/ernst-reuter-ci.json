@@ -35,6 +35,11 @@
       "coordinator": {
         "image": "nebulastream/nes-executable-image:0.0.408"
       },
+      "ui": {
+        "enabled": true,
+        "image": "paguos/nes-ui:v0.0.1",
+        "reactPort": 3000
+      },
       "worker": {
         "image": "nebulastream/nes-executable-image:0.0.408"
       },

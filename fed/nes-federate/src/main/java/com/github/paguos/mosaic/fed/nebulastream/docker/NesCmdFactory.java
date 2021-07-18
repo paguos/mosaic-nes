@@ -2,7 +2,6 @@ package com.github.paguos.mosaic.fed.nebulastream.docker;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
-import com.github.dockerjava.api.command.CreateNetworkCmd;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Ports;
 import com.github.paguos.mosaic.fed.config.CNes;
@@ -109,6 +108,27 @@ public class NesCmdFactory {
                 .withExposedPorts(dataPort, rpcPort)
                 .withPortBindings(portBindings)
                 .withEntrypoint(cmd);
+    }
+
+    /**
+     * Create a docker java api command to create a container for the NES UI
+     * @return the docker api command
+     * @throws InternalFederateException for errors related to the docker client
+     */
+    public CreateContainerCmd createNesUICmd() throws InternalFederateException {
+        DockerClient client = DockerController.getClient();
+        CNes config = ConfigurationReader.getConfig();
+
+        ExposedPort reactPort = ExposedPort.tcp(config.ui.reactPort);
+        Ports portBindings = new Ports();
+        portBindings.bind(reactPort, Ports.Binding.bindPort(config.ui.reactPort));
+
+        return client.createContainerCmd(config.ui.image)
+                .withName("nes-ui")
+                .withNetworkMode(NetworkController.DEFAULT_NETWORK_NAME)
+                .withExposedPorts(reactPort)
+                .withPortBindings(portBindings);
+
     }
 
 }

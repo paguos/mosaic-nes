@@ -4,7 +4,7 @@ package com.github.paguos.mosaic.fed.nebulastream.node;
 public abstract class NesNode extends NesComponent {
 
     public static final int DEFAULT_DATA_PORT = 3001;
-    public static final int DEFAULT_RPC_PORT = 3000;
+    public static final int DEFAULT_RPC_PORT = 3002;
 
     private static int nextId = 2;
     private static int nextDataPort = 6000;
