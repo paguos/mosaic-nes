@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>vehicle-sink</artifactId>
+    <artifactId>nes-applications</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -23,6 +23,11 @@
             <artifactId>nes-federate</artifactId>
             <version>${parent.version}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.mosaic</groupId>
+            <artifactId>mosaic-application</artifactId>
+            <version>${mosaic.version}</version>
         </dependency>
         <dependency>
             <groupId>stream.nebula</groupId>

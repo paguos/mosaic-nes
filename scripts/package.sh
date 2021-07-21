@@ -6,13 +6,13 @@ unzip mosaic/eclipse-mosaic-21.0.zip -d mosaic
 chmod +x mosaic/mosaic.sh
 echo "Downloading mosaic ... done!"
 
-echo "Prepare scenario ..."
+echo "Prepare scenarios ..."
 cp -r scenarios/barcelona mosaic/scenarios
+cp app/nes-applications/target/nes-applications-0.0.1-jar-with-dependencies.jar mosaic/scenarios/barcelona/application
+
 cp -r scenarios/ernst-reuter mosaic/scenarios
-cp app/rsu-source/target/rsu-source-0.0.1-jar-with-dependencies.jar mosaic/scenarios/ernst-reuter/application
-cp app/vehicle-sensor/target/vehicle-sensor-0.0.1-jar-with-dependencies.jar mosaic/scenarios/ernst-reuter/application
-cp app/vehicle-sink/target/vehicle-sink-0.0.1-jar-with-dependencies.jar mosaic/scenarios/ernst-reuter/application
-echo "Prepare scenario ... done!"
+cp app/nes-applications/target/nes-applications-0.0.1-jar-with-dependencies.jar mosaic/scenarios/ernst-reuter/application
+echo "Prepare scenarios ... done!"
 
 echo "Prepare nes federate ..."
 cp fed/nes-federate/target/nes-federate-0.0.1-jar-with-dependencies.jar mosaic/lib/mosaic
