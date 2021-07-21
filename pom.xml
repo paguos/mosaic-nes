@@ -39,11 +39,9 @@
         </plugins>
     </build>
     <modules>
+        <module>app/nes-applications</module>
         <module>fed/nes-federate</module>
         <module>tests/integration-tests</module>
-        <module>app/rsu-source</module>
-        <module>app/vehicle-sensor</module>
-        <module>app/vehicle-sink</module>
     </modules>
 
     <repositories>

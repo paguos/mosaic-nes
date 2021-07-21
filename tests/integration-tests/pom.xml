@@ -26,19 +26,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.paguos</groupId>
-            <artifactId>rsu-source</artifactId>
-            <version>${parent.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.paguos</groupId>
-            <artifactId>vehicle-sensor</artifactId>
-            <version>${parent.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.paguos</groupId>
-            <artifactId>vehicle-sink</artifactId>
+            <artifactId>nes-applications</artifactId>
             <version>${parent.version}</version>
             <scope>test</scope>
         </dependency>
