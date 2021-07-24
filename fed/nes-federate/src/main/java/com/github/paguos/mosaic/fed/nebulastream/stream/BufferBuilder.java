@@ -18,6 +18,11 @@ public class BufferBuilder {
         return new BufferBuilder(bufferSize);
     }
 
+    public BufferBuilder fill(boolean bool) {
+        buffer[offset++] = (byte)(bool? 1:0);
+        return this;
+    }
+
     public BufferBuilder fill(byte aByte) {
         buffer[offset++] = aByte;
         return this;

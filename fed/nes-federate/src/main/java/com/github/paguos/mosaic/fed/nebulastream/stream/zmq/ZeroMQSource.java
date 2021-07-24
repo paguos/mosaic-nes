@@ -27,7 +27,7 @@ public class ZeroMQSource implements Runnable {
 
             while (running) {
                 if (!messages.isEmpty()) {
-                    Envelope envelope = new Envelope(1, 0);
+                    Envelope envelope = new Envelope(false, 1, 0);
                     socket.send(envelope.toByteBuffer());
                     socket.send(messages.poll());
                 }

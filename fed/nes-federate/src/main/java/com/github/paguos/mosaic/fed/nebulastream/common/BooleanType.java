@@ -12,6 +12,10 @@ public class BooleanType extends DataType {
         return 1;
     }
 
+    public static boolean parse(byte b) {
+        return b!=0;
+    }
+
     @Override
     public String parseString(byte[] bytes) {
         if (bytes[0] == 1) {
