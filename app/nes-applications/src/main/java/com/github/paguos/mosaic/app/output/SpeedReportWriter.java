@@ -1,4 +1,4 @@
-package com.github.paguos.mosaic.app;
+package com.github.paguos.mosaic.app.output;
 
 import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.fed.utils.IOUtils;
@@ -28,6 +28,7 @@ public class SpeedReportWriter {
         );
 
         fileWriter.write(reportEntry);
+        fileWriter.flush();
     }
 
 

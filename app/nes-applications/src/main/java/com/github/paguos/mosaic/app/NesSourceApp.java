@@ -4,6 +4,7 @@ import com.github.paguos.mosaic.app.directory.RSUDirectory;
 import com.github.paguos.mosaic.app.directory.RoadSideUnit;
 import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.app.message.SpeedReportMsg;
+import com.github.paguos.mosaic.app.output.SpeedReportWriter;
 import com.github.paguos.mosaic.fed.ambassador.NesController;
 import com.github.paguos.mosaic.fed.nebulastream.node.*;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
