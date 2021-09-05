@@ -1,0 +1,16 @@
+{
+  "map": "ernst-reuter.osm",
+  "stepSize": 50000000,
+  "showVisualizer": true,
+  "cameraPosition": {
+    "latitude": 52.5047675,
+    "longitude": 13.3156317
+  },
+  "vehicleTypes": {
+    "Car": {
+      "sensors": [],
+      "skills": [],
+      "features": []
+    }
+  }
+}

@@ -14,7 +14,7 @@ import java.util.Queue;
 
 public class ZeroMQSink implements Runnable {
 
-    private static int nextZeroMQPort = 3131;
+    private static int nextZeroMQPort = 5555;
 
     private final String zeroMQAddress;
     private final Queue<String> receivedMessages;
@@ -73,7 +73,7 @@ public class ZeroMQSink implements Runnable {
 
     public static int getNextZeroMQPort() {
         int port = nextZeroMQPort;
-        nextZeroMQPort += 10;
+        nextZeroMQPort += 1;
         return port;
     }
 }

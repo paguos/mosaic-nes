@@ -23,10 +23,10 @@ public class RangeQueryTest {
         GeoPoint position = GeoPoint.latLon(52.5128417, 13.3213595);
         Query query = new RangeQuery(position, 1000).from("test-stream");
 
-        String expectedQuery = "Query::from(\"test-stream\").filter(" + "Attribute(\"latitude\")<=52.5150874882103" +
-                " && Attribute(\"latitude\")>=52.51059591178971" +
-                " && Attribute(\"longitude\")<=13.325049688516787" +
-                " && Attribute(\"longitude\")>=13.317669311483213" +
+        String expectedQuery = "Query::from(\"test-stream\").filter(" + "Attribute(\"latitude\")<=52.51298373611774" +
+                " && Attribute(\"latitude\")>=52.512699663882266" +
+                " && Attribute(\"longitude\")<=13.321592888014166" +
+                " && Attribute(\"longitude\")>=13.321126111985834" +
                 ");";
         assertEquals(expectedQuery, query.generateCppCode());
     }
