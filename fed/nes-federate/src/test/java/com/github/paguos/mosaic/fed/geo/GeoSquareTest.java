@@ -1,13 +1,13 @@
 package com.github.paguos.mosaic.fed.geo;
 
+import org.eclipse.mosaic.lib.geo.CartesianPoint;
 import org.eclipse.mosaic.lib.geo.GeoPoint;
 import org.eclipse.mosaic.lib.transform.GeoProjection;
 import org.eclipse.mosaic.lib.transform.Wgs84Projection;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class GeoSquareTest {
 
@@ -23,7 +23,7 @@ public class GeoSquareTest {
     @Test
     public void getBounds() {
         GeoPoint center = GeoPoint.latLon(52.5128417, 13.3213595);
-        GeoSquare square = new GeoSquare(center, 1000);
+        GeoSquare square = new GeoSquare(center, 10000);
 
         GeoPoint north = square.getNorthBound();
         assertEquals(center.getLongitude(), north.getLongitude(), 0.0);
@@ -45,9 +45,25 @@ public class GeoSquareTest {
     @Test
     public void distanceToBound() {
         GeoPoint center = GeoPoint.latLon(52.5128417, 13.3213595);
-        GeoSquare square = new GeoSquare(center, 1000);
+        GeoSquare square = new GeoSquare(center, 10000);
 
-        assertEquals(250, square.getDistanceToBound(), 0.0);
+        assertEquals(50, square.getDistanceToBound(), 0.0);
+    }
+
+    @Test
+    public void testContains() {
+        GeoPoint center = GeoPoint.latLon(52.5128417, 13.3213595);
+        GeoSquare square = new GeoSquare(center, 10000);
+
+        assertTrue(square.contains(center));
+
+        CartesianPoint a = center.toCartesian();
+
+        GeoPoint inside = CartesianPoint.xy(a.getX() + 20, a.getY() + 20).toGeo();
+        assertTrue(square.contains(inside));
+
+        GeoPoint outside = CartesianPoint.xy(a.getX() + 100, a.getY() + 500).toGeo();
+        assertFalse(square.contains(outside));
     }
 
 }

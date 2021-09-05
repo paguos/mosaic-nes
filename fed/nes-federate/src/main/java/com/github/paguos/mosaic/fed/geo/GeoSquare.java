@@ -45,6 +45,15 @@ public class GeoSquare {
     }
 
     public double getDistanceToBound() {
-        return this.area / 4;
+        return Math.sqrt(this.area) / 2.0;
+    }
+
+    public boolean contains(GeoPoint point) {
+        if ( point.getLongitude() < getWestBound().getLongitude()) { return false; }
+        if ( point.getLongitude() > getEastBound().getLongitude()) { return false; }
+        if ( point.getLatitude() > getNorthBound().getLatitude()) { return false; }
+        if ( point.getLatitude() < getSouthBound().getLatitude()) { return false; }
+
+        return true;
     }
 }

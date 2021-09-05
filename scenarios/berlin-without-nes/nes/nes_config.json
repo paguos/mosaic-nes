@@ -1,0 +1,23 @@
+{
+    "coordinator": {
+        "image": "paguos/nes-mobility:0.0.2"
+    },
+    "nodes": [
+        {
+            "name": "sources_worker",
+            "nodes": []
+        },
+        {
+            "name": "sink_worker",
+            "nodes": []
+        }
+    ],
+    "ui": {
+        "enabled": true,
+        "image": "paguos/nes-ui:v0.0.1",
+        "reactPort": 3000
+    },
+    "worker": {
+        "image": "paguos/nes-mobility:0.0.2"
+    }
+}

@@ -1,7 +1,7 @@
 package com.github.paguos.mosaic.app;
 
-import com.github.paguos.mosaic.app.directory.RSUDirectory;
-import com.github.paguos.mosaic.app.directory.RoadSideUnit;
+import com.github.paguos.mosaic.app.directory.LocationDirectory;
+import com.github.paguos.mosaic.app.directory.RSULocationData;
 import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.app.message.SpeedReportMsg;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.CamBuilder;
@@ -32,9 +32,9 @@ public class SpeedSensorApp extends AbstractApplication<VehicleOperatingSystem> 
     }
 
     private void sendAdHocBroadcast(VehicleData vehicleData) {
-        List<RoadSideUnit> roadSideUnits = RSUDirectory.getRoadSideUnitsInRange(vehicleData.getPosition());
+        List<RSULocationData> RSULocationData = LocationDirectory.getRoadSideUnitsInRange(vehicleData.getPosition());
 
-        for (RoadSideUnit rsu: roadSideUnits) {
+        for (RSULocationData rsu: RSULocationData) {
             Inet4Address rsuIp = IpResolver.getSingleton().nameToIp(rsu.getId());
             MessageRouting routing = getOs().getCellModule().createMessageRouting().topoCast(rsuIp.getAddress());
 

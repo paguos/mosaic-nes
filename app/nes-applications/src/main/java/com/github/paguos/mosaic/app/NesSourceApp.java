@@ -1,9 +1,10 @@
 package com.github.paguos.mosaic.app;
 
-import com.github.paguos.mosaic.app.directory.RSUDirectory;
-import com.github.paguos.mosaic.app.directory.RoadSideUnit;
+import com.github.paguos.mosaic.app.directory.LocationDirectory;
+import com.github.paguos.mosaic.app.directory.RSULocationData;
 import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.app.message.SpeedReportMsg;
+import com.github.paguos.mosaic.app.output.SpeedReportWriter;
 import com.github.paguos.mosaic.fed.ambassador.NesController;
 import com.github.paguos.mosaic.fed.nebulastream.node.*;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
@@ -40,7 +41,7 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
         getLog().infoSimTime(this, "Activated AdHoc Module");
 
         getLog().infoSimTime(this, "Registering RSU ..");
-        RSUDirectory.register(new RoadSideUnit(getOs().getId(), getOs().getPosition(), 100));
+        LocationDirectory.register(new RSULocationData(getOs().getId(), getOs().getPosition(), 100));
         getLog().infoSimTime(this, "RSU registered!");
 
         int zeroMQPort = com.github.paguos.mosaic.fed.nebulastream.node.ZeroMQSource.getNextZeroMQPort();
