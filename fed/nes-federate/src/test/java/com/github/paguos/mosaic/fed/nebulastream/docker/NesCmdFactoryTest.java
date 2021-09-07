@@ -49,8 +49,8 @@ public class NesCmdFactoryTest {
         assertEquals("test-coordinator:latest", testCmd.getImage());
         assertEquals("test-coordinator", testCmd.getName());
         String expectedCmd = String.format(
-                "/opt/local/nebula-stream/nesCoordinator --coordinatorIp=%s --restIp=%s",
-                "0.0.0.0", "0.0.0.0"
+                "/opt/local/nebula-stream/nesCoordinator --coordinatorIp=%s --restIp=%s --locationUpdateInterval=%d",
+                "0.0.0.0", "0.0.0.0", 500
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
 
@@ -78,8 +78,8 @@ public class NesCmdFactoryTest {
         assertEquals("test-source", testCmd.getName());
         assertEquals("test-worker:latest", testCmd.getImage());
         String expectedCmd = String.format(
-                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --logicalStreamName=%s --physicalStreamName=%s",
-                "127.0.0.1", 1000, 3000, "0.0.0.0", 4000, "DefaultSource", "default_logical", "default_physical"
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --coordinatorRestPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --logicalStreamName=%s --physicalStreamName=%s --registerLocation=%b --locationUpdateInterval=%d --workerName=%s --workerRange=%d",
+                "127.0.0.1", 1000, 2000, 3000, "0.0.0.0", 4000, "DefaultSource", "default_logical", "default_physical", false, 500, "test-source", 0
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
         testNodePorts(testCmd, false);
@@ -101,8 +101,8 @@ public class NesCmdFactoryTest {
         assertEquals("test-source", testCmd.getName());
         assertEquals("test-worker:latest", testCmd.getImage());
         String expectedCmd = String.format(
-                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --sourceConfig=%s --logicalStreamName=%s --physicalStreamName=%s --numberOfTuplesToProducePerBuffer=%d",
-                "127.0.0.1", 1000, 3000, "0.0.0.0", 4000, "CSVSource", "test_config", "test_logical", "test_physical", 2
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --coordinatorRestPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --sourceConfig=%s --logicalStreamName=%s --physicalStreamName=%s --registerLocation=%b --locationUpdateInterval=%d --workerName=%s --workerRange=%d --numberOfTuplesToProducePerBuffer=%d",
+                "127.0.0.1", 1000, 2000, 3000, "0.0.0.0", 4000, "CSVSource", "test_config", "test_logical", "test_physical", false, 500, "test-source", 0, 2
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
         testNodePorts(testCmd, false);
@@ -124,8 +124,8 @@ public class NesCmdFactoryTest {
         assertEquals("test-source", testCmd.getName());
         assertEquals("test-worker:latest", testCmd.getImage());
         String expectedCmd = String.format(
-                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --sourceConfig=%s --logicalStreamName=%s --physicalStreamName=%s --numberOfTuplesToProducePerBuffer=%d",
-                "127.0.0.1", 1000, 3000, "0.0.0.0", 4000, "ZMQSource", "127.0.0.1:12345", "test_logical", "test_physical", 2
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --coordinatorRestPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --sourceType=%s --sourceConfig=%s --logicalStreamName=%s --physicalStreamName=%s --registerLocation=%b --locationUpdateInterval=%d --workerName=%s --workerRange=%d --numberOfTuplesToProducePerBuffer=%d",
+                "127.0.0.1", 1000, 2000, 3000, "0.0.0.0", 4000, "ZMQSource", "127.0.0.1:12345", "test_logical", "test_physical", false, 500, "test-source", 0, 2
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
         testNodePorts(testCmd, true);
@@ -142,8 +142,8 @@ public class NesCmdFactoryTest {
         assertEquals("test-worker", testCmd.getName());
         assertEquals("test-worker:latest", testCmd.getImage());
         String expectedCmd = String.format(
-                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d",
-                "127.0.0.1", 1000, 3000, "0.0.0.0", 4000
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --coordinatorRestPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d",
+                "127.0.0.1", 1000, 2000,3000, "0.0.0.0", 4000
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
         testNodePorts(testCmd, false);
@@ -162,8 +162,8 @@ public class NesCmdFactoryTest {
         assertEquals("test-worker:latest", testCmd.getImage());
 
         String expectedCmd = String.format(
-                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --parentId=%d",
-                "127.0.0.1", 1000, 3000, "0.0.0.0", 4000, 2
+                "/opt/local/nebula-stream/nesWorker --coordinatorIp=%s --coordinatorPort=%d --coordinatorRestPort=%d --dataPort=%d --localWorkerIp=%s --rpcPort=%d --parentId=%d",
+                "127.0.0.1", 1000, 2000, 3000, "0.0.0.0", 4000, 2
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getEntrypoint())));
         testNodePorts(testCmd, false);
