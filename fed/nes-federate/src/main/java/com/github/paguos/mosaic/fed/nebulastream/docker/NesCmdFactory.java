@@ -42,6 +42,7 @@ public class NesCmdFactory {
         cmd.add("/opt/local/nebula-stream/nesCoordinator");
         cmd.add("--coordinatorIp=0.0.0.0");
         cmd.add("--restIp=0.0.0.0");
+        cmd.add(String.format("--locationUpdateInterval=%d", coordinator.getLocationUpdateInterval()));
 
         return  client.createContainerCmd(config.coordinator.image)
                 .withName(coordinator.getName())
@@ -78,6 +79,7 @@ public class NesCmdFactory {
         cmd.add("/opt/local/nebula-stream/nesWorker");
         cmd.add(String.format("--coordinatorIp=%s", "127.0.0.1"));
         cmd.add(String.format("--coordinatorPort=%d", coordinator.getCoordinatorPort()));
+        cmd.add(String.format("--coordinatorRestPort=%d", coordinator.getRestPort()));
         cmd.add(String.format("--dataPort=%d", node.getDataPort()));
         cmd.add("--localWorkerIp=0.0.0.0");
         cmd.add(String.format("--rpcPort=%d", node.getRpcPort()));
@@ -92,6 +94,10 @@ public class NesCmdFactory {
 
             cmd.add(String.format("--logicalStreamName=%s", source.getLogicalStreamName()));
             cmd.add(String.format("--physicalStreamName=%s", source.getPhysicalStreamName()));
+            cmd.add(String.format("--registerLocation=%b", source.registerLocation()));
+            cmd.add(String.format("--locationUpdateInterval=%d", source.getLocationUpdateInterval()));
+            cmd.add(String.format("--workerName=%s", source.getName()));
+            cmd.add(String.format("--workerRange=%d", source.getWorkerRange()));
 
             if (source.getNumberOfTuplesToProducePerBuffer() > 0) {
                 cmd.add(String.format("--numberOfTuplesToProducePerBuffer=%d", source.getNumberOfTuplesToProducePerBuffer()));

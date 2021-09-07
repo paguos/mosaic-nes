@@ -52,6 +52,7 @@ public class NesBuilder {
 
         protected int coordinatorPort;
         protected int restPort;
+        protected int locationUpdateInterval;
 
         protected List<NesNode> children;
 
@@ -59,6 +60,7 @@ public class NesBuilder {
             super(name);
             this.coordinatorPort = Coordinator.DEFAULT_COORDINATOR_PORT;
             this.restPort = Coordinator.DEFAULT_REST_PORT;
+            this.locationUpdateInterval = Coordinator.DEFAULT_UPDATE_INTERVAL;
             this.children = new ArrayList<>();
         }
 
@@ -69,6 +71,11 @@ public class NesBuilder {
 
         public NesCoordinatorBuilder restPort(int restPort) {
             this.restPort = restPort;
+            return this;
+        }
+
+        public NesCoordinatorBuilder locationUpdateInterval(int locationUpdateInterval) {
+            this.locationUpdateInterval = locationUpdateInterval;
             return this;
         }
 
@@ -106,6 +113,11 @@ public class NesBuilder {
         protected String sourceConfig;
         protected SourceType sourceType;
 
+        protected int coordinatorRestPort;
+        protected boolean registerLocation;
+        protected int locationUpdateInterval;
+        protected int workerRange;
+
         private NesSourceBuilder(String name) {
             super(name);
             this.logicalStreamName = "default_logical";
@@ -113,6 +125,10 @@ public class NesBuilder {
             this.numberOfTuplesToProducePerBuffer = 0;
             this.sourceConfig = null;
             this.sourceType = SourceType.DefaultSource;
+            this.coordinatorRestPort = Coordinator.DEFAULT_REST_PORT;
+            this.registerLocation = false;
+            this.locationUpdateInterval = 500;
+            this.workerRange = 0;
         }
 
         public NesSourceBuilder logicalStreamName(String logicalStreamName) {
@@ -137,6 +153,26 @@ public class NesBuilder {
 
         public NesSourceBuilder sourceType(SourceType sourceType) {
             this.sourceType = sourceType;
+            return this;
+        }
+
+        public NesSourceBuilder coordinatorRestPort(int coordinatorRestPort) {
+            this.coordinatorRestPort = coordinatorRestPort;
+            return this;
+        }
+
+        public NesSourceBuilder registerLocation(boolean registerLocation) {
+            this.registerLocation = registerLocation;
+            return this;
+        }
+
+        public NesSourceBuilder locationUpdateInterval(int locationUpdateInterval) {
+            this.locationUpdateInterval = locationUpdateInterval;
+            return this;
+        }
+
+        public NesSourceBuilder workerRange(int workerRange) {
+            this.workerRange = workerRange;
             return this;
         }
 
@@ -220,6 +256,26 @@ public class NesBuilder {
         }
 
         /** From Parent **/
+
+        public ZeroMQSourceBuilder coordinatorRestPort(int coordinatorRestPort) {
+            this.coordinatorRestPort = coordinatorRestPort;
+            return this;
+        }
+
+        public ZeroMQSourceBuilder registerLocation(boolean registerLocation) {
+            this.registerLocation = registerLocation;
+            return this;
+        }
+
+        public ZeroMQSourceBuilder locationUpdateInterval(int locationUpdateInterval) {
+            this.locationUpdateInterval = locationUpdateInterval;
+            return this;
+        }
+
+        public ZeroMQSourceBuilder workerRange(int workerRange) {
+            this.workerRange = workerRange;
+            return this;
+        }
 
         public ZeroMQSourceBuilder logicalStreamName(String logicalStreamName) {
             this.logicalStreamName = logicalStreamName;
