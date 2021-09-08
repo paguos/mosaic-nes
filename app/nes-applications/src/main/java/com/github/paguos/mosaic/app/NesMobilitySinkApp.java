@@ -1,6 +1,7 @@
 package com.github.paguos.mosaic.app;
 
 import com.github.paguos.mosaic.app.config.CNesSinkApp;
+import com.github.paguos.mosaic.app.output.SpeedReportWriter;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import com.github.paguos.mosaic.fed.nebulastream.query.MovingRangeQuery;
 import com.github.paguos.mosaic.fed.nebulastream.query.RangeQuery;
@@ -19,6 +20,7 @@ import stream.nebula.queryinterface.Query;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -32,6 +34,8 @@ public class NesMobilitySinkApp extends ConfigurableApplication<CNesSinkApp, Veh
     private Thread sinkThread;
     private final int zeroMQPort;
     private ZeroMQSink zeroMQSink;
+
+    private SpeedReportWriter reportWriter;
 
     public NesMobilitySinkApp() {
         super(CNesSinkApp.class, "NesSinkApp");
@@ -47,6 +51,13 @@ public class NesMobilitySinkApp extends ConfigurableApplication<CNesSinkApp, Veh
         sinkThread = new Thread(zeroMQSink);
         sinkThread.start();
         getLog().info("NES ZMQ Sink started!");
+
+        try {
+            reportWriter = new SpeedReportWriter(getOs().getId());
+        } catch (IOException e) {
+            getLog().error("Error creating file writer!");
+            getLog().error(e.getMessage());
+        }
 
         scheduleNextEvent();
     }
@@ -119,7 +130,14 @@ public class NesMobilitySinkApp extends ConfigurableApplication<CNesSinkApp, Veh
 
     private void consumeMessages() {
         while (!receivedMessages.isEmpty()) {
-            getLog().info(String.format("Message received: %s",  receivedMessages.poll()));
+            String msg = receivedMessages.poll();
+            getLog().info(String.format("Message received: %s",  msg));
+            try {
+                reportWriter.writeLine(msg);
+            } catch (IOException e) {
+                getLog().error("Writing line in report!");
+                e.printStackTrace();
+            }
         }
     }
 

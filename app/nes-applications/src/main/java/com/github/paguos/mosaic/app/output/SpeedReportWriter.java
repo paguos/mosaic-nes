@@ -31,5 +31,10 @@ public class SpeedReportWriter {
         fileWriter.flush();
     }
 
+    public void writeLine(String line) throws IOException {
+        fileWriter.write(line + "\n");
+        fileWriter.flush();
+    }
+
 
 }
