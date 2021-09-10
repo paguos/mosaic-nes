@@ -1,6 +1,6 @@
 package com.github.paguos.mosaic.app;
 
-import com.github.paguos.mosaic.app.config.CNesSinkApp;
+import com.github.paguos.mosaic.app.config.CNesApp;
 import com.github.paguos.mosaic.app.output.SpeedReportWriter;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import com.github.paguos.mosaic.fed.nebulastream.query.MovingRangeQuery;
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOperatingSystem> implements VehicleApplication {
+public class NesSinkApp extends ConfigurableApplication<CNesApp, VehicleOperatingSystem> implements VehicleApplication {
 
     private final Queue<String> receivedMessages = new LinkedList<>();
     private NesClient nesClient;
@@ -37,7 +37,7 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
     private SpeedReportWriter reportWriter;
 
     public NesSinkApp() {
-        super(CNesSinkApp.class, "NesSinkApp");
+        super(CNesApp.class, "NesApp");
         this.currenQueryId = -1;
         this.zeroMQPort = ZeroMQSink.getNextZeroMQPort();
     }

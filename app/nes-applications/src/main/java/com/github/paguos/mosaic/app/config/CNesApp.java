@@ -1,6 +1,6 @@
 package com.github.paguos.mosaic.app.config;
 
-public class CNesSinkApp {
+public class CNesApp {
 
     public String nesRestApiHost = "localhost";
     public String nesRestApiPort = "8081";
