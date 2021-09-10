@@ -10,6 +10,9 @@ echo "Prepare scenarios ..."
 cp -r scenarios/barcelona mosaic/scenarios
 cp app/nes-applications/target/nes-applications-0.0.1-jar-with-dependencies.jar mosaic/scenarios/barcelona/application
 
+cp -r scenarios/berlin-moving-range mosaic/scenarios
+cp app/nes-applications/target/nes-applications-0.0.1-jar-with-dependencies.jar mosaic/scenarios/berlin-moving-range/application
+
 cp -r scenarios/ernst-reuter mosaic/scenarios
 cp app/nes-applications/target/nes-applications-0.0.1-jar-with-dependencies.jar mosaic/scenarios/ernst-reuter/application
 echo "Prepare scenarios ... done!"
