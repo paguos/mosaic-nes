@@ -19,7 +19,6 @@
         "reactPort": 3000
     },
     "worker": {
-        "image": "paguos/nes-mobility:0.0.5",
-        "updateLocationInterval": 500
+        "image": "paguos/nes-mobility:0.0.5"
     }
 }

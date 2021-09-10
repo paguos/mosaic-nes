@@ -23,4 +23,8 @@ public class CNesApp {
      */
     public int rangeRadius = 100;
 
+    /**
+     * Interval for refreshing the status of the source (in milliseconds)
+     */
+    public int updateLocationInterval = 500;
 }

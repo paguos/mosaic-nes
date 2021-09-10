@@ -3,5 +3,6 @@
   "nesRestApiPort": "8081",
   "movingRangeEnabled": false,
   "queryInterval": 6,
-  "rangeRadius": 100
+  "rangeRadius": 100,
+  "updateLocationInterval" : 500
 }

@@ -64,7 +64,9 @@ public class NesSourceApp extends ConfigurableApplication<CNesApp,RoadSideUnitOp
                     .parentId(2);
 
             if (getConfiguration().movingRangeEnabled) {
-                builder.registerLocation(true).workerRange((int) range.getArea());
+                builder.registerLocation(true)
+                        .locationUpdateInterval(getConfiguration().updateLocationInterval)
+                        .workerRange((int) range.getArea());
             }
 
             ZeroMQSource source  = builder.build();

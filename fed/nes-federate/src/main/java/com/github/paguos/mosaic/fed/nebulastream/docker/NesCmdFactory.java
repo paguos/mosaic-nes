@@ -95,7 +95,7 @@ public class NesCmdFactory {
             cmd.add(String.format("--logicalStreamName=%s", source.getLogicalStreamName()));
             cmd.add(String.format("--physicalStreamName=%s", source.getPhysicalStreamName()));
             cmd.add(String.format("--registerLocation=%b", source.registerLocation()));
-            cmd.add(String.format("--locationUpdateInterval=%d", config.worker.updateLocationInterval));
+            cmd.add(String.format("--locationUpdateInterval=%d", source.getLocationUpdateInterval()));
             cmd.add(String.format("--workerName=%s", source.getName()));
             cmd.add(String.format("--workerRange=%d", source.getWorkerRange()));
 
