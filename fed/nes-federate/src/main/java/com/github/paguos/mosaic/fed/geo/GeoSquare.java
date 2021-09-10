@@ -1,6 +1,7 @@
 package com.github.paguos.mosaic.fed.geo;
 
 import org.eclipse.mosaic.lib.geo.*;
+import org.eclipse.mosaic.lib.math.MathUtils;
 import org.eclipse.mosaic.lib.math.Vector3d;
 import org.eclipse.mosaic.lib.transform.GeoProjection;
 
@@ -39,6 +40,9 @@ public class GeoSquare {
 
     }
 
+    public double getArea() {
+        return area;
+    }
 
     public GeoPoint getCenter() {
         return this.center;
@@ -55,5 +59,14 @@ public class GeoSquare {
         if ( point.getLatitude() < getSouthBound().getLatitude()) { return false; }
 
         return true;
+    }
+
+    public boolean contains(GeoCircle circle) {
+        CartesianPoint circleCenter = circle.getCenter().toCartesian();
+        double x = MathUtils.clamp(circleCenter.getX(), getWestBound().toCartesian().getX(), getEastBound().toCartesian().getX());
+        double y = MathUtils.clamp(circleCenter.getY(), getSouthBound().toCartesian().getY(), getNorthBound().toCartesian().getY());
+
+        CartesianPoint ref = CartesianPoint.xy(x, y);
+        return (circleCenter.distanceTo(ref) <= circle.getRadius());
     }
 }

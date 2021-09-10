@@ -9,10 +9,13 @@ public class RSULocationData {
     private final GeoPoint location;
     private final GeoCircle broadcastArea;
 
+    private boolean enabled;
+
     public RSULocationData(String id, GeoPoint location, float broadcastRadius) {
         this.id = id;
         this.location = location;
         this.broadcastArea = new GeoCircle(location, broadcastRadius);
+        this.enabled = false;
     }
 
     public String getId() {
@@ -27,4 +30,11 @@ public class RSULocationData {
         return broadcastArea;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }
