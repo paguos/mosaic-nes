@@ -47,7 +47,7 @@ public class BerlinMovingRangeIT {
         LogAssert.exists(simulationRule, "apps/sources_worker/container.log");
 
         // Sink
-        LogAssert.exists(simulationRule, "apps/veh_10/NesMobilitySinkApp.log");
+        LogAssert.exists(simulationRule, "apps/veh_10/NesSinkApp.log");
         LogAssert.exists(simulationRule, "apps/sink_worker/container.log");
     }
 
@@ -91,7 +91,7 @@ public class BerlinMovingRangeIT {
     public void sinkReceivedMessages() throws Exception {
         LogAssert.contains(
                 simulationRule,
-                "apps/veh_10/NesMobilitySinkApp.log",
+                "apps/veh_10/NesSinkApp.log",
                 ".*Message received: veh_[0-9]*,[0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*"
         );
     }
