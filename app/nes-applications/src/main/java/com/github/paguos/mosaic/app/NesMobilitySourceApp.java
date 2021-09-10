@@ -18,6 +18,7 @@ import org.eclipse.mosaic.fed.application.app.AbstractApplication;
 import org.eclipse.mosaic.fed.application.app.api.CommunicationApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.RoadSideUnitOperatingSystem;
 import org.eclipse.mosaic.interactions.communication.V2xMessageTransmission;
+import org.eclipse.mosaic.lib.geo.GeoCircle;
 import org.eclipse.mosaic.lib.objects.v2x.V2xMessage;
 import org.eclipse.mosaic.lib.util.scheduling.Event;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
@@ -41,7 +42,8 @@ public class NesMobilitySourceApp extends AbstractApplication<RoadSideUnitOperat
         getLog().infoSimTime(this, "Activated AdHoc Module");
 
         getLog().infoSimTime(this, "Registering RSU ..");
-        LocationDirectory.register(new RSULocationData(getOs().getId(), getOs().getPosition(), 100));
+        GeoCircle range = new GeoCircle(getOs().getPosition(), 100);
+        LocationDirectory.register(new RSULocationData(getOs().getId(), getOs().getPosition(), (float) range.getRadius()));
         getLog().infoSimTime(this, "RSU registered!");
 
         int zeroMQPort = com.github.paguos.mosaic.fed.nebulastream.node.ZeroMQSource.getNextZeroMQPort();
@@ -57,7 +59,7 @@ public class NesMobilitySourceApp extends AbstractApplication<RoadSideUnitOperat
                     .physicalStreamName(getOs().getId())
                     .parentId(2)
                     .registerLocation(true)
-                    .workerRange(98696)
+                    .workerRange((int) range.getArea())
                     .build();
             controller.addNode(source);
         } catch (InternalFederateException e) {
