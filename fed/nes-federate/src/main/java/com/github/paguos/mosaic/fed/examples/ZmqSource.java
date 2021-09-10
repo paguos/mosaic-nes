@@ -2,7 +2,7 @@ package com.github.paguos.mosaic.fed.examples;
 
 import com.github.paguos.mosaic.fed.nebulastream.catalog.SchemaCatalog;
 import com.github.paguos.mosaic.fed.nebulastream.stream.BufferBuilder;
-import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQSource;
+import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQProducer;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -12,7 +12,7 @@ public class ZmqSource {
 
     public static void main(String[] args) throws InterruptedException {
         ArrayBlockingQueue<byte[]> receivedMessages = new ArrayBlockingQueue<>(200);
-        Thread zmqThread = new Thread(new ZeroMQSource(ZmqAddress, receivedMessages));
+        Thread zmqThread = new Thread(new ZeroMQProducer(ZmqAddress, receivedMessages));
         zmqThread.start();
 
         while (true) {

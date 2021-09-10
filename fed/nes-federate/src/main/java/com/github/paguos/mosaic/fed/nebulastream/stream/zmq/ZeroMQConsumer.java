@@ -12,7 +12,7 @@ import org.zeromq.ZMQ;
 import java.util.Arrays;
 import java.util.Queue;
 
-public class ZeroMQSink implements Runnable {
+public class ZeroMQConsumer implements Runnable {
 
     private static int nextZeroMQPort = 5555;
 
@@ -23,7 +23,7 @@ public class ZeroMQSink implements Runnable {
     private Schema schema;
     private TupleParser tupleParser;
 
-    public ZeroMQSink(String zeroMQAddress, Queue<String> receivedMessages) {
+    public ZeroMQConsumer(String zeroMQAddress, Queue<String> receivedMessages) {
         this.zeroMQAddress = zeroMQAddress;
         this.receivedMessages = receivedMessages;
         this.running = true;

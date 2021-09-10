@@ -16,4 +16,11 @@ public class CNesApp {
      */
     public long queryInterval = 6;
 
+    /* Source related configs */
+
+    /**
+     * Radius of the circular range of the source (in meters)
+     */
+    public int rangeRadius = 100;
+
 }

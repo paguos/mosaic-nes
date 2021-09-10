@@ -5,7 +5,7 @@ import com.github.paguos.mosaic.app.output.SpeedReportWriter;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import com.github.paguos.mosaic.fed.nebulastream.query.MovingRangeQuery;
 import com.github.paguos.mosaic.fed.nebulastream.query.RangeQuery;
-import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQSink;
+import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQConsumer;
 import org.eclipse.mosaic.fed.application.app.ConfigurableApplication;
 import org.eclipse.mosaic.fed.application.app.api.VehicleApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.VehicleOperatingSystem;
@@ -32,14 +32,14 @@ public class NesSinkApp extends ConfigurableApplication<CNesApp, VehicleOperatin
     private int currenQueryId;
     private Thread sinkThread;
     private final int zeroMQPort;
-    private ZeroMQSink zeroMQSink;
+    private ZeroMQConsumer zeroMQConsumer;
 
     private SpeedReportWriter reportWriter;
 
     public NesSinkApp() {
         super(CNesApp.class, "NesApp");
         this.currenQueryId = -1;
-        this.zeroMQPort = ZeroMQSink.getNextZeroMQPort();
+        this.zeroMQPort = ZeroMQConsumer.getNextZeroMQPort();
     }
 
     @Override
@@ -48,8 +48,8 @@ public class NesSinkApp extends ConfigurableApplication<CNesApp, VehicleOperatin
 
         getLog().info("Starting NES ZMQ Sink ...");
         String zmqAddress = String.format("tcp://127.0.0.1:%d", zeroMQPort);
-        zeroMQSink = new ZeroMQSink(zmqAddress, receivedMessages);
-        sinkThread = new Thread(zeroMQSink);
+        zeroMQConsumer = new ZeroMQConsumer(zmqAddress, receivedMessages);
+        sinkThread = new Thread(zeroMQConsumer);
         sinkThread.start();
         getLog().info("NES ZMQ Sink started!");
 
@@ -66,7 +66,7 @@ public class NesSinkApp extends ConfigurableApplication<CNesApp, VehicleOperatin
     @Override
     public void onShutdown() {
         getLog().info("Stopping NES ZMQ Sink ...");
-        zeroMQSink.terminate();
+        zeroMQConsumer.terminate();
 
         getLog().info("Waiting for sink ...");
         try {
