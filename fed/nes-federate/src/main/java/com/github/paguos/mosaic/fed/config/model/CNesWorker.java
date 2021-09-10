@@ -7,4 +7,9 @@ public class CNesWorker {
      */
     public String image;
 
+    /**
+     * Interval to recalculate which sources should be enabled
+     */
+    public int updateLocationInterval = 500;
+
 }

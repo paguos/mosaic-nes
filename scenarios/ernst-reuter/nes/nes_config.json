@@ -1,6 +1,7 @@
 {
     "coordinator": {
-        "image": "paguos/nes-mobility:0.0.4"
+        "image": "paguos/nes-mobility:0.0.5",
+        "updateLocationInterval": 500
     },
     "nodes": [
         {
@@ -13,11 +14,12 @@
         }
     ],
     "ui": {
-        "enabled": true,
+        "enabled": false,
         "image": "paguos/nes-ui:v0.0.1",
         "reactPort": 3000
     },
     "worker": {
-        "image": "paguos/nes-mobility:0.0.4"
+        "image": "paguos/nes-mobility:0.0.5",
+        "updateLocationInterval": 500
     }
 }
