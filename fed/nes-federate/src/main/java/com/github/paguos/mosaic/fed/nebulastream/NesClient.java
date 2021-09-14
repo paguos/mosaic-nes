@@ -2,10 +2,12 @@ package com.github.paguos.mosaic.fed.nebulastream;
 
 import com.github.paguos.mosaic.fed.nebulastream.stream.LogicalStream;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.eclipse.mosaic.lib.geo.GeoPoint;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 import org.json.JSONObject;
@@ -18,6 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class NesClient {
 
@@ -82,7 +85,25 @@ public class NesClient {
         } catch (IOException e) {
             throw new InternalFederateException(e.getMessage());
         }
+    }
 
+    public boolean isSourceEnabled(String nodeId) throws InternalFederateException {
+        HttpGet request = new HttpGet("http://" + nebulaStreamRuntime.getConfig().getHost() + ":" + nebulaStreamRuntime.getConfig().getPort() + "/v1/nes/geo/source?nodeId=" + nodeId);
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+
+        CloseableHttpResponse response = null;
+        try {
+            response = httpClient.execute(request);
+            if (response.getStatusLine().getStatusCode() == 200) {
+                JSONObject responseJson = new JSONObject(EntityUtils.toString(response.getEntity()));
+                String status = responseJson.get("enabled").toString();
+                return (Objects.equals(status, "true"));
+            } else {
+                throw new RESTExecption(response.getStatusLine().getStatusCode());
+            }
+        } catch (IOException | RESTExecption e) {
+            throw new InternalFederateException(e.getMessage());
+        }
     }
 
 }

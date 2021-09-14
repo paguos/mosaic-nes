@@ -30,9 +30,12 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class NesSourceApp extends ConfigurableApplication<CNesApp,RoadSideUnitOperatingSystem> implements CommunicationApplication {
 
     private final ArrayBlockingQueue<byte[]> messages = new ArrayBlockingQueue<>(2000);
+    private NesClient nesClient;
     private SpeedReportWriter reportWriter;
     private Thread sourceThread;
     private ZeroMQProducer zeroMQProducer;
+
+    private boolean enabled = false;
 
     public NesSourceApp (){
         super(CNesApp.class, "NesApp");
@@ -82,7 +85,7 @@ public class NesSourceApp extends ConfigurableApplication<CNesApp,RoadSideUnitOp
         }
 
         try {
-            NesClient nesClient = new NesClient(getConfiguration().nesRestApiHost, getConfiguration().nesRestApiPort);
+            nesClient = new NesClient(getConfiguration().nesRestApiHost, getConfiguration().nesRestApiPort);
             List<String> logicalStreams = nesClient.getAvailableLogicalStreams();
             getLog().info(String.format("Found Logical Stream 'QnV': %b", logicalStreams.contains("QnV")));
             getLog().info(String.format("Found Logical Stream 'mosaic_nes': %b", logicalStreams.contains("mosaic_nes")));
@@ -113,6 +116,20 @@ public class NesSourceApp extends ConfigurableApplication<CNesApp,RoadSideUnitOp
 
     @Override
     public void onMessageReceived(ReceivedV2xMessage receivedV2xMessage) {
+        if (getConfiguration().movingRangeEnabled) {
+            try {
+                boolean status = nesClient.isSourceEnabled(getOs().getId());
+                if (status != enabled ) {
+                    getLog().infoSimTime(this,"Status changed to: " + status);
+                    enabled = status;
+                }
+
+            } catch (InternalFederateException e) {
+                getLog().error("Error while fetching status!");
+                getLog().error(e.getMessage());
+            }
+        }
+
         getLog().infoSimTime(this, "Received V2X Message from {}", receivedV2xMessage.getMessage().getRouting().getSource().getSourceName());
         V2xMessage msg = receivedV2xMessage.getMessage();
         if (msg instanceof SpeedReportMsg) {
