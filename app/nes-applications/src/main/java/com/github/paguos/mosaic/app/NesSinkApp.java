@@ -65,10 +65,16 @@ public class NesSinkApp extends ConfigurableApplication<CNesApp, VehicleOperatin
 
     @Override
     public void onShutdown() {
-        getLog().info("Stopping NES ZMQ Sink ...");
+
+        if (currenQueryId != -1) {
+            deleteQuery();
+            getLog().infoSimTime(this, "NES query deleted!");
+        }
+
+        getLog().infoSimTime(this,"Stopping NES ZMQ Sink ...");
         zeroMQConsumer.terminate();
 
-        getLog().info("Waiting for sink ...");
+        getLog().infoSimTime(this,"Waiting for sink ...");
         try {
             sinkThread.join(5000);
         } catch (InterruptedException e) {
@@ -80,7 +86,7 @@ public class NesSinkApp extends ConfigurableApplication<CNesApp, VehicleOperatin
             consumeMessages();
         }
 
-        getLog().info("NES ZMQ Sink stopped!");
+        getLog().infoSimTime(this, "NES ZMQ Sink stopped!");
     }
 
     @Override
