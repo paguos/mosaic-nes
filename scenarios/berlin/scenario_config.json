@@ -3,7 +3,7 @@
         "application": true,
         "cell": true,
         "environment": false,
-        "nes": true,
+        "nes": false,
         "ns3": false,
         "omnetpp": false,
         "output": true,
@@ -13,7 +13,7 @@
     },
     "simulation": {
         "duration": "1000s",
-        "id": "ernst-reuter",
+        "id": "berlin",
         "network": {
             "csNet": "10.4.0.0",
             "netMask": "255.255.0.0",

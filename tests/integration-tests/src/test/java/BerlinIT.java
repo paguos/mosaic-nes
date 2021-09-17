@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class BerlinWithoutNesIT {
+public class BerlinIT {
 
     @ClassRule
     public static MosaicSimulationRule simulationRule = new MosaicSimulationRule().logLevelOverride("INFO");
@@ -18,7 +18,7 @@ public class BerlinWithoutNesIT {
     @BeforeClass
     public static void runSimulation() {
         String scenariosDirectory = System.getProperty("scenariosDirectory");
-        simulationResult = simulationRule.executeSimulation(scenariosDirectory, "berlin-without-nes");
+        simulationResult = simulationRule.executeSimulation(scenariosDirectory, "berlin");
     }
 
     private final int deployedRoadSideUnits = 3;
