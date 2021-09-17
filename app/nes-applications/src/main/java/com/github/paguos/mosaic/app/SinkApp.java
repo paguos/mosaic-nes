@@ -1,5 +1,7 @@
 package com.github.paguos.mosaic.app;
 
+import com.github.paguos.mosaic.app.config.CSinkApp;
+import com.github.paguos.mosaic.app.config.CSourceApp;
 import com.github.paguos.mosaic.app.directory.LocationDirectory;
 import com.github.paguos.mosaic.app.directory.VehicleLocationData;
 import com.github.paguos.mosaic.app.message.SpeedReport;
@@ -10,6 +12,7 @@ import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.Ca
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedAcknowledgement;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedV2xMessage;
 import org.eclipse.mosaic.fed.application.app.AbstractApplication;
+import org.eclipse.mosaic.fed.application.app.ConfigurableApplication;
 import org.eclipse.mosaic.fed.application.app.api.CommunicationApplication;
 import org.eclipse.mosaic.fed.application.app.api.VehicleApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.VehicleOperatingSystem;
@@ -23,14 +26,21 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 
 
-public class SinkApp extends AbstractApplication<VehicleOperatingSystem> implements VehicleApplication, CommunicationApplication {
+public class SinkApp extends ConfigurableApplication<CSinkApp, VehicleOperatingSystem> implements VehicleApplication, CommunicationApplication {
 
+    private boolean localFilterEnabled;
     private GeoSquare range;
+    private long rangeArea;
     private SpeedReportWriter reportWriter;
+
+    public SinkApp() {
+        super(CSinkApp.class, "SinkApp");
+    }
 
     @Override
     public void onVehicleUpdated(@Nullable VehicleData vehicleData, @Nonnull VehicleData vehicleData1) {
-        range = new GeoSquare(vehicleData1.getPosition(), 1000000);
+        range = new GeoSquare(vehicleData1.getPosition(), rangeArea);
+        LocationDirectory.updateSinkLocation(vehicleData1.getPosition());
     }
 
     @Override
@@ -39,8 +49,14 @@ public class SinkApp extends AbstractApplication<VehicleOperatingSystem> impleme
         getOs().getCellModule().enable();
         getLog().infoSimTime(this, "Activated AdHoc Module");
 
+        localFilterEnabled = getConfiguration().localFilterEnabled;
+        rangeArea = getConfiguration().rangeArea;
+        range = new GeoSquare(getOs().getPosition(), rangeArea);
+
+        getLog().infoSimTime(this, String.format("Range: '%d' Filter: '%b'", rangeArea, localFilterEnabled));
+
         getLog().infoSimTime(this, "Registering focal point ..");
-        LocationDirectory.register(new VehicleLocationData(getOs().getId(), null));
+        LocationDirectory.register(new VehicleLocationData(getOs().getId(), getOs().getPosition(), rangeArea));
         getLog().infoSimTime(this, "Focal point registered!");
 
         try {
@@ -62,7 +78,14 @@ public class SinkApp extends AbstractApplication<VehicleOperatingSystem> impleme
 
     private void processSpeedReportMsg (SpeedReportMsg msg) {
         SpeedReport report = msg.getReport();
-        if (range.contains(msg.getReport().getVehiclePosition())) {
+        if (localFilterEnabled && range.contains(msg.getReport().getVehiclePosition())) {
+            try {
+                reportWriter.write(report);
+            } catch (IOException e) {
+                getLog().error("Error while writing report!");
+                getLog().error(e.getMessage());
+            }
+        } else {
             try {
                 reportWriter.write(report);
             } catch (IOException e) {

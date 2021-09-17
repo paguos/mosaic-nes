@@ -1,9 +1,11 @@
 package com.github.paguos.mosaic.app;
 
-import com.github.paguos.mosaic.app.config.CNesSinkApp;
+import com.github.paguos.mosaic.app.config.CNesApp;
+import com.github.paguos.mosaic.app.output.SpeedReportWriter;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
+import com.github.paguos.mosaic.fed.nebulastream.query.MovingRangeQuery;
 import com.github.paguos.mosaic.fed.nebulastream.query.RangeQuery;
-import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQSink;
+import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQConsumer;
 import org.eclipse.mosaic.fed.application.app.ConfigurableApplication;
 import org.eclipse.mosaic.fed.application.app.api.VehicleApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.VehicleOperatingSystem;
@@ -18,44 +20,61 @@ import stream.nebula.queryinterface.Query;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOperatingSystem> implements VehicleApplication {
+public class NesSinkApp extends ConfigurableApplication<CNesApp, VehicleOperatingSystem> implements VehicleApplication {
 
-    private final CNesSinkApp config = new CNesSinkApp();
     private final Queue<String> receivedMessages = new LinkedList<>();
-    private final NesClient nesClient = new NesClient(config.nesRestApiHost, config.nesRestApiPort);
+    private NesClient nesClient;
 
     private int currenQueryId;
     private Thread sinkThread;
     private final int zeroMQPort;
-    private ZeroMQSink zeroMQSink;
+    private ZeroMQConsumer zeroMQConsumer;
+
+    private SpeedReportWriter reportWriter;
 
     public NesSinkApp() {
-        super(CNesSinkApp.class, "NesSinkApp");
+        super(CNesApp.class, "NesApp");
         this.currenQueryId = -1;
-        this.zeroMQPort = ZeroMQSink.getNextZeroMQPort();
+        this.zeroMQPort = ZeroMQConsumer.getNextZeroMQPort();
     }
 
     @Override
     public void onStartup() {
+        nesClient = new NesClient(getConfiguration().nesRestApiHost, getConfiguration().nesRestApiPort);
+
         getLog().info("Starting NES ZMQ Sink ...");
         String zmqAddress = String.format("tcp://127.0.0.1:%d", zeroMQPort);
-        zeroMQSink = new ZeroMQSink(zmqAddress, receivedMessages);
-        sinkThread = new Thread(zeroMQSink);
+        zeroMQConsumer = new ZeroMQConsumer(zmqAddress, receivedMessages);
+        sinkThread = new Thread(zeroMQConsumer);
         sinkThread.start();
         getLog().info("NES ZMQ Sink started!");
+
+        try {
+            reportWriter = new SpeedReportWriter(getOs().getId());
+        } catch (IOException e) {
+            getLog().error("Error creating file writer!");
+            getLog().error(e.getMessage());
+        }
 
         scheduleNextEvent();
     }
 
     @Override
     public void onShutdown() {
-        getLog().info("Stopping NES ZMQ Sink ...");
-        zeroMQSink.terminate();
 
-        getLog().info("Waiting for sink ...");
+        if (currenQueryId != -1) {
+            deleteQuery();
+            getLog().infoSimTime(this, "NES query deleted!");
+        }
+
+        getLog().infoSimTime(this,"Stopping NES ZMQ Sink ...");
+        zeroMQConsumer.terminate();
+
+        getLog().infoSimTime(this,"Waiting for sink ...");
         try {
             sinkThread.join(5000);
         } catch (InterruptedException e) {
@@ -63,23 +82,29 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
             e.printStackTrace();
         }
 
-        getLog().info("NES ZMQ Sink stopped!");
+        synchronized (receivedMessages) {
+            consumeMessages();
+        }
+
+        getLog().infoSimTime(this, "NES ZMQ Sink stopped!");
     }
 
     @Override
     public void processEvent(Event event) {
-        if (currenQueryId != -1) {
-            deleteQuery();
+        if (getConfiguration().movingRangeEnabled) {
+            if (currenQueryId == -1) {
+                submitQuery(getOs().getPosition(), getConfiguration().movingRangeEnabled);
+            }
+        } else {
+            if (currenQueryId != -1) { deleteQuery(); }
+            submitQuery(getOs().getPosition(), getConfiguration().movingRangeEnabled);
         }
-        synchronized (receivedMessages) {
-            consumeMessages();
-            submitQuery(getOs().getPosition());
-        }
+
         scheduleNextEvent();
     }
 
     private void scheduleNextEvent() {
-        long nextEventTime = getOs().getSimulationTime() + config.queryInterval * TIME.SECOND;
+        long nextEventTime = getOs().getSimulationTime() + getConfiguration().queryInterval * TIME.SECOND;
         getOs().getEventManager().addEvent(new Event(nextEventTime, this));
     }
 
@@ -95,11 +120,20 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
         currenQueryId = -1;
     }
 
-    private void submitQuery(GeoPoint location) {
+    private void submitQuery(GeoPoint location, boolean movingRangeEnabled) {
         try {
             getLog().info("Submitting query ...");
-            Query query = new RangeQuery(location, 500).from("mosaic_nes")
-                    .sink(new ZMQSink("localhost", zeroMQPort));
+
+            Query query;
+
+            if (movingRangeEnabled) {
+                query = new MovingRangeQuery(getOs().getId(), 1000000).from("mosaic_nes")
+                        .sink(new ZMQSink("localhost", zeroMQPort));
+            } else {
+                query = new RangeQuery(location, 500).from("mosaic_nes")
+                        .sink(new ZMQSink("localhost", zeroMQPort));
+            }
+
             getLog().debug(String.format("Query: %s", query.generateCppCode()));
             currenQueryId = nesClient.executeQuery(query);
             getLog().info("Query submitted!");
@@ -119,10 +153,27 @@ public class NesSinkApp extends ConfigurableApplication<CNesSinkApp, VehicleOper
 
     private void consumeMessages() {
         while (!receivedMessages.isEmpty()) {
-            getLog().info(String.format("Message received: %s",  receivedMessages.poll()));
+            String msg = receivedMessages.poll();
+            getLog().info(String.format("Message received: %s",  msg));
+            try {
+                reportWriter.writeLine(msg);
+            } catch (IOException e) {
+                getLog().error("Writing line in report!");
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
-    public void onVehicleUpdated(@Nullable VehicleData vehicleData, @Nonnull VehicleData vehicleData1) {}
+    public void onVehicleUpdated(@Nullable VehicleData vehicleData, @Nonnull VehicleData vehicleData1) {
+        if (getConfiguration().movingRangeEnabled) {
+            try {
+                nesClient.updateLocation(getOs().getId(), vehicleData1.getPosition());
+            } catch (InternalFederateException e) {
+                getLog().error("Error updating the location!");
+                getLog().error(e.getMessage());
+            }
+        }
+
+    }
 }

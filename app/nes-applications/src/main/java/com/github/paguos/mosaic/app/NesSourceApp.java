@@ -1,5 +1,6 @@
 package com.github.paguos.mosaic.app;
 
+import com.github.paguos.mosaic.app.config.CNesApp;
 import com.github.paguos.mosaic.app.directory.LocationDirectory;
 import com.github.paguos.mosaic.app.directory.RSULocationData;
 import com.github.paguos.mosaic.app.message.SpeedReport;
@@ -9,14 +10,15 @@ import com.github.paguos.mosaic.fed.ambassador.NesController;
 import com.github.paguos.mosaic.fed.nebulastream.node.*;
 import com.github.paguos.mosaic.fed.nebulastream.NesClient;
 import com.github.paguos.mosaic.fed.nebulastream.stream.BufferBuilder;
-import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQSource;
+import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQProducer;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.CamBuilder;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedAcknowledgement;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedV2xMessage;
-import org.eclipse.mosaic.fed.application.app.AbstractApplication;
+import org.eclipse.mosaic.fed.application.app.ConfigurableApplication;
 import org.eclipse.mosaic.fed.application.app.api.CommunicationApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.RoadSideUnitOperatingSystem;
 import org.eclipse.mosaic.interactions.communication.V2xMessageTransmission;
+import org.eclipse.mosaic.lib.geo.GeoCircle;
 import org.eclipse.mosaic.lib.objects.v2x.V2xMessage;
 import org.eclipse.mosaic.lib.util.scheduling.Event;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
@@ -25,13 +27,19 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSystem> implements CommunicationApplication {
+public class NesSourceApp extends ConfigurableApplication<CNesApp,RoadSideUnitOperatingSystem> implements CommunicationApplication {
 
-    private final NesClient nesClient = new NesClient("localhost", "8081");
     private final ArrayBlockingQueue<byte[]> messages = new ArrayBlockingQueue<>(2000);
+    private NesClient nesClient;
     private SpeedReportWriter reportWriter;
     private Thread sourceThread;
-    private ZeroMQSource zeroMQSource;
+    private ZeroMQProducer zeroMQProducer;
+
+    private boolean enabled = false;
+
+    public NesSourceApp (){
+        super(CNesApp.class, "NesApp");
+    }
 
 
     @Override
@@ -41,7 +49,8 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
         getLog().infoSimTime(this, "Activated AdHoc Module");
 
         getLog().infoSimTime(this, "Registering RSU ..");
-        LocationDirectory.register(new RSULocationData(getOs().getId(), getOs().getPosition(), 100));
+        GeoCircle range = new GeoCircle(getOs().getPosition(), getConfiguration().rangeRadius);
+        LocationDirectory.register(new RSULocationData(getOs().getId(), getOs().getPosition(), getConfiguration().rangeRadius));
         getLog().infoSimTime(this, "RSU registered!");
 
         int zeroMQPort = com.github.paguos.mosaic.fed.nebulastream.node.ZeroMQSource.getNextZeroMQPort();
@@ -49,14 +58,21 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
 
         try {
             NesController controller = NesController.getController();
-            com.github.paguos.mosaic.fed.nebulastream.node.ZeroMQSource source = NesBuilder.createZeroMQSource(getOs().getId())
+            NesBuilder.ZeroMQSourceBuilder builder = NesBuilder.createZeroMQSource(getOs().getId())
                     .dataPort(NesNode.getNextDataPort())
                     .rpcPort(NesNode.getNextRPCPort())
                     .zmqPort(zeroMQPort)
                     .logicalStreamName("mosaic_nes")
                     .physicalStreamName(getOs().getId())
-                    .parentId(2)
-                    .build();
+                    .parentId(2);
+
+            if (getConfiguration().movingRangeEnabled) {
+                builder.registerLocation(true)
+                        .locationUpdateInterval(getConfiguration().updateLocationInterval)
+                        .workerRange((int) range.getArea());
+            }
+
+            ZeroMQSource source  = builder.build();
             controller.addNode(source);
         } catch (InternalFederateException e) {
             getLog().error("RSU couldn't start the nes container!");
@@ -69,6 +85,7 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
         }
 
         try {
+            nesClient = new NesClient(getConfiguration().nesRestApiHost, getConfiguration().nesRestApiPort);
             List<String> logicalStreams = nesClient.getAvailableLogicalStreams();
             getLog().info(String.format("Found Logical Stream 'QnV': %b", logicalStreams.contains("QnV")));
             getLog().info(String.format("Found Logical Stream 'mosaic_nes': %b", logicalStreams.contains("mosaic_nes")));
@@ -76,12 +93,17 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
             int nodeCount = nesClient.getTopologyNodeCount();
             getLog().info(String.format("The Nes Topology has '%d' nodes.", nodeCount));
 
+            if (getConfiguration().movingRangeEnabled) {
+                nesClient.updateLocation(getOs().getId(), getOs().getPosition());
+                getLog().info("Location updated in nes location service!");
+            }
+
         } catch (InternalFederateException e) {
             getLog().error("Error interacting with NES!");
         }
 
-        zeroMQSource = new ZeroMQSource(zmqAddress, messages);
-        sourceThread = new Thread(zeroMQSource);
+        zeroMQProducer = new ZeroMQProducer(zmqAddress, messages);
+        sourceThread = new Thread(zeroMQProducer);
         sourceThread.start();
 
         try {
@@ -94,6 +116,20 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
 
     @Override
     public void onMessageReceived(ReceivedV2xMessage receivedV2xMessage) {
+        if (getConfiguration().movingRangeEnabled) {
+            try {
+                boolean status = nesClient.isSourceEnabled(getOs().getId());
+                if (status != enabled ) {
+                    getLog().infoSimTime(this,"Status changed to: " + status);
+                    enabled = status;
+                }
+
+            } catch (InternalFederateException e) {
+                getLog().error("Error while fetching status!");
+                getLog().error(e.getMessage());
+            }
+        }
+
         getLog().infoSimTime(this, "Received V2X Message from {}", receivedV2xMessage.getMessage().getRouting().getSource().getSourceName());
         V2xMessage msg = receivedV2xMessage.getMessage();
         if (msg instanceof SpeedReportMsg) {
@@ -124,7 +160,7 @@ public class NesSourceApp extends AbstractApplication<RoadSideUnitOperatingSyste
     @Override
     public void onShutdown() {
         getLog().info("Stopping NES ZMQ Source ...");
-        zeroMQSource.terminate();
+        zeroMQProducer.terminate();
 
         try {
             sourceThread.join(5000);

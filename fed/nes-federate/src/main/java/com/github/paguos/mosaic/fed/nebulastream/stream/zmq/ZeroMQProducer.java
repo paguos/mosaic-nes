@@ -7,13 +7,13 @@ import org.zeromq.ZMQ;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class ZeroMQSource implements Runnable {
+public class ZeroMQProducer implements Runnable {
 
     private final String zmqAddress;
     private final ArrayBlockingQueue<byte[]> messages;
     private boolean running;
 
-    public ZeroMQSource(String zmqAddress, ArrayBlockingQueue<byte[]> messages) {
+    public ZeroMQProducer(String zmqAddress, ArrayBlockingQueue<byte[]> messages) {
         this.zmqAddress = zmqAddress;
         this.messages = messages;
         this.running = true;

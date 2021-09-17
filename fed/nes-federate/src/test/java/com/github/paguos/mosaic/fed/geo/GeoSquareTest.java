@@ -1,6 +1,7 @@
 package com.github.paguos.mosaic.fed.geo;
 
 import org.eclipse.mosaic.lib.geo.CartesianPoint;
+import org.eclipse.mosaic.lib.geo.GeoCircle;
 import org.eclipse.mosaic.lib.geo.GeoPoint;
 import org.eclipse.mosaic.lib.transform.GeoProjection;
 import org.eclipse.mosaic.lib.transform.Wgs84Projection;
@@ -64,6 +65,24 @@ public class GeoSquareTest {
 
         GeoPoint outside = CartesianPoint.xy(a.getX() + 100, a.getY() + 500).toGeo();
         assertFalse(square.contains(outside));
+    }
+
+    @Test
+    public void testContainsCircle() {
+        double area = 10000;
+        double radius = 50;
+        GeoPoint center = GeoPoint.latLon(52.5128417, 13.3213595);
+        GeoSquare square = new GeoSquare(center, area);
+        GeoCircle circle = new GeoCircle(center, radius);
+        assertTrue(square.contains(circle));
+
+        GeoPoint insideCenter = CartesianPoint.xy(center.toCartesian().getX() + 40, center.toCartesian().getY()).toGeo();
+        circle = new GeoCircle(insideCenter, radius);
+        assertTrue(square.contains(circle));
+
+        GeoPoint outsideCenter = CartesianPoint.xy(center.toCartesian().getX() + 101, center.toCartesian().getY()).toGeo();
+        circle = new GeoCircle(outsideCenter, radius);
+        assertFalse(square.contains(circle));
     }
 
 }

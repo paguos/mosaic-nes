@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-public class ErnstReuterIT {
+public class BerlinRangeQueryIT {
 
     @ClassRule
     public static MosaicSimulationRule simulationRule = new MosaicSimulationRule().logLevelOverride("INFO");
@@ -19,7 +19,7 @@ public class ErnstReuterIT {
     @BeforeClass
     public static void runSimulation() {
         String scenariosDirectory = System.getProperty("scenariosDirectory");
-        simulationResult = simulationRule.executeSimulation(scenariosDirectory, "ernst-reuter");
+        simulationResult = simulationRule.executeSimulation(scenariosDirectory, "berlin-range-query");
     }
 
     private final int deployedRoadSideUnits = 3;
