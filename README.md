@@ -9,12 +9,15 @@ This repository is part of the [Enabling Moving Range Queries in Stream Processi
 
 ## Requirements
 
+- [Docker](https://www.docker.com/)
 - [Java JDK](https://adoptopenjdk.net/) 8
 - [Gradle](https://gradle.org)
 - [Maven](https://maven.apache.org) (3.1.x or higher)
-- [Sumo](https://www.eclipse.org/sumo/) 1.8
+- [Sumo](https://www.eclipse.org/sumo/) 1.10
 
-## Development
+**Note:** Currently only support for linux
+
+## Setup
 
 Install the NES Java Client:
 
@@ -33,3 +36,20 @@ Integration tests:
 ```sh
 mvn test -fae -P integration-tests
 ```
+
+## Run Simulations
+
+Package the applications and scenarios with mosaic:
+
+```shell
+scripts/pacakge.sh
+```
+
+Run a simulation scenario:
+
+```shell
+cd mosaic
+./mosaic.sh -s <scenario-name> -b 1
+```
+
+To find the scenario name you visit the [list of available scenarios](scenarios/README.md).
