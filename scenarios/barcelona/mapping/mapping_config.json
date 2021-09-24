@@ -17,7 +17,7 @@
         {
             "accel": 1.5,
             "applications": [
-                "com.github.paguos.mosaic.app.NesSinkApp"
+                "com.github.paguos.mosaic.app.SinkApp"
             ],
             "color": "blue",
             "decel": 4.5,
@@ -27,74 +27,6 @@
             "name": "NesSinkCar",
             "sigma": 0.5,
             "tau": 1
-        },
-        {
-            "applications": [],
-            "name": "NES-Sink-RSU"
-        },
-        {
-            "applications": [
-                "com.github.paguos.mosaic.app.NesSourceApp"
-            ],
-            "name": "NES-Source-RSU"
-        }
-    ],
-    "rsus": [
-        {
-            "applications": [],
-            "name": "NES-Sink-RSU_0",
-            "position": {
-                "latitude": 41.3914836,
-                "longitude": 2.1387871
-            }
-        },
-        {
-            "applications": [],
-            "name": "NES-Sink-RSU_1",
-            "position": {
-                "latitude": 41.3926974,
-                "longitude": 2.1444968
-            }
-        },
-        {
-            "applications": [
-                "com.github.paguos.mosaic.app.NesSourceApp"
-            ],
-            "name": "NES-Source-RSU_0",
-            "position": {
-                "latitude": 41.3913201,
-                "longitude": 2.1371809
-            }
-        },
-        {
-            "applications": [
-                "com.github.paguos.mosaic.app.NesSourceApp"
-            ],
-            "name": "NES-Source-RSU_1",
-            "position": {
-                "latitude": 41.3912243,
-                "longitude": 2.1405043
-            }
-        },
-        {
-            "applications": [
-                "com.github.paguos.mosaic.app.NesSourceApp"
-            ],
-            "name": "NES-Source-RSU_2",
-            "position": {
-                "latitude": 41.3929718,
-                "longitude": 2.1430725
-            }
-        },
-        {
-            "applications": [
-                "com.github.paguos.mosaic.app.NesSourceApp"
-            ],
-            "name": "NES-Source-RSU_3",
-            "position": {
-                "latitude": 41.3925667,
-                "longitude": 2.1463334
-            }
         }
     ],
     "vehicles": [
@@ -103,7 +35,7 @@
             "departSpeedMode": "MAXIMUM",
             "deterministic": true,
             "laneSelectionMode": "BEST",
-            "maxNumberVehicles": 10,
+            "maxNumberVehicles": 1,
             "maxTime": 700,
             "pos": 0,
             "route": "1",
@@ -121,7 +53,7 @@
             "departSpeedMode": "MAXIMUM",
             "deterministic": true,
             "laneSelectionMode": "BEST",
-            "maxNumberVehicles": 10,
+            "maxNumberVehicles": 1,
             "maxTime": 700,
             "pos": 0,
             "route": "2",
@@ -139,7 +71,7 @@
             "departSpeedMode": "MAXIMUM",
             "deterministic": true,
             "laneSelectionMode": "BEST",
-            "maxNumberVehicles": 10,
+            "maxNumberVehicles": 1,
             "maxTime": 700,
             "pos": 0,
             "route": "3",
@@ -157,7 +89,7 @@
             "departSpeedMode": "MAXIMUM",
             "deterministic": true,
             "laneSelectionMode": "BEST",
-            "maxNumberVehicles": 10,
+            "maxNumberVehicles": 1,
             "maxTime": 700,
             "pos": 0,
             "route": "4",
@@ -175,7 +107,7 @@
             "departSpeedMode": "MAXIMUM",
             "deterministic": true,
             "laneSelectionMode": "BEST",
-            "maxNumberVehicles": 10,
+            "maxNumberVehicles": 1,
             "maxTime": 700,
             "pos": 0,
             "route": "5",
@@ -193,7 +125,7 @@
             "departSpeedMode": "MAXIMUM",
             "deterministic": true,
             "laneSelectionMode": "BEST",
-            "maxNumberVehicles": 10,
+            "maxNumberVehicles": 1,
             "maxTime": 700,
             "pos": 0,
             "route": "6",

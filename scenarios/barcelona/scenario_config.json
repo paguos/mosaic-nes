@@ -3,7 +3,7 @@
         "application": true,
         "cell": true,
         "environment": false,
-        "nes": true,
+        "nes": false,
         "ns3": false,
         "omnetpp": false,
         "output": true,
@@ -12,7 +12,7 @@
         "sumo": true
     },
     "simulation": {
-        "duration": "1000s",
+        "duration": "300s",
         "id": "barcelona",
         "network": {
             "csNet": "10.4.0.0",

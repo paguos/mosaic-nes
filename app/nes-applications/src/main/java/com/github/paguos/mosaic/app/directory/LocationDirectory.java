@@ -39,6 +39,19 @@ public class LocationDirectory {
     }
 
     /**
+     * Checks if a given location is inside the moving range
+     * @param location a GeoPoint of reference
+     * @return true if the location is inside the moving sink range
+     */
+    public static boolean isLocationInRange(GeoPoint location) {
+        if (SINK == null) {
+            return false;
+        }
+
+        return SINK.getMovingRange().contains(location);
+    }
+
+    /**
      * Update the sink location
      * @param point GeoPoint of its current location
      */

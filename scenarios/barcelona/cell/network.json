@@ -12,7 +12,7 @@
         "lossProbability": 0.0,
         "maxRetries": 2
       },
-      "capacity": 28000000
+      "capacity": 280000000000
     },
     "downlink": {
       "unicast": {
@@ -32,11 +32,11 @@
         },
         "transmission": {
           "lossProbability": 0.0,
-          "maxRetries": 0
+          "maxRetries": 2
         },
-        "usableCapacity": 0.6
+        "usableCapacity": 1.0
       },
-      "capacity": 42200000
+      "capacity": 28000000000
     }
   },
   "servers": []
