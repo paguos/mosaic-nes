@@ -1,0 +1,8 @@
+{
+  "nesRestApiHost": "localhost",
+  "nesRestApiPort": "8081",
+  "movingRangeEnabled": true,
+  "queryInterval": 6,
+  "rangeRadius": 0,
+  "updateLocationInterval" : 500
+}
