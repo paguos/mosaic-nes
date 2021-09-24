@@ -5,15 +5,16 @@ import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
+import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class ZeroMQProducer implements Runnable {
 
     private final String zmqAddress;
-    private final ArrayBlockingQueue<byte[]> messages;
+    private final Queue<byte[]> messages;
     private boolean running;
 
-    public ZeroMQProducer(String zmqAddress, ArrayBlockingQueue<byte[]> messages) {
+    public ZeroMQProducer(String zmqAddress, Queue<byte[]> messages) {
         this.zmqAddress = zmqAddress;
         this.messages = messages;
         this.running = true;
@@ -26,10 +27,12 @@ public class ZeroMQProducer implements Runnable {
             socket.connect(zmqAddress);
 
             while (running) {
-                if (!messages.isEmpty()) {
-                    Envelope envelope = new Envelope(false, 1, 0);
-                    socket.send(envelope.toByteBuffer());
-                    socket.send(messages.poll());
+                synchronized (messages) {
+                    if (!messages.isEmpty()) {
+                        Envelope envelope = new Envelope(false, 1, 0);
+                        socket.send(envelope.toByteBuffer());
+                        socket.send(messages.poll());
+                    }
                 }
             }
 
