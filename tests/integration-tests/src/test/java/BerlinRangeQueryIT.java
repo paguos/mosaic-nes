@@ -42,7 +42,7 @@ public class BerlinRangeQueryIT {
 
         // Source
         for (int i = 0; i < deployedRoadSideUnits; i++) {
-            LogAssert.exists(simulationRule, String.format("apps/rsu_%d/NesSourceApp.log", i));
+            LogAssert.exists(simulationRule, String.format("apps/rsu_%d/NesRSUSourceApp.log", i));
             LogAssert.exists(simulationRule, String.format("SpeedReport-rsu_%d.csv", i));
         }
         LogAssert.exists(simulationRule, "apps/sources_worker/container.log");
@@ -59,8 +59,8 @@ public class BerlinRangeQueryIT {
 
     @Test
     public void logicalStreamCreated() throws Exception {
-        LogAssert.contains(simulationRule, "apps/rsu_0/NesSourceApp.log", ".*Found Logical Stream 'QnV': true.*");
-        LogAssert.contains(simulationRule, "apps/rsu_0/NesSourceApp.log", ".*Found Logical Stream 'mosaic_nes': true.*");
+        LogAssert.contains(simulationRule, "apps/rsu_0/NesRSUSourceApp.log", ".*Found Logical Stream 'QnV': true.*");
+        LogAssert.contains(simulationRule, "apps/rsu_0/NesRSUSourceApp.log", ".*Found Logical Stream 'mosaic_nes': true.*");
     }
 
     @Test
@@ -70,7 +70,7 @@ public class BerlinRangeQueryIT {
         for (int i = 0; i < deployedRoadSideUnits; i++) {
             LogAssert.contains(
                     simulationRule,
-                    String.format("apps/rsu_%d/NesSourceApp.log", i),
+                    String.format("apps/rsu_%d/NesRSUSourceApp.log", i),
                     String.format(".*The Nes Topology has '%d' nodes.*", ++deployedNesNodes)
             );
         }
@@ -81,7 +81,7 @@ public class BerlinRangeQueryIT {
         for (int i = 0; i < deployedRoadSideUnits; i++) {
             LogAssert.contains(
                     simulationRule,
-                    String.format("apps/rsu_%d/NesSourceApp.log", i),
+                    String.format("apps/rsu_%d/NesRSUSourceApp.log", i),
                     ".*Received V2X Message from veh_.*"
             );
         }

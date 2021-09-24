@@ -30,7 +30,7 @@
         },
         {
             "applications": [
-                "com.github.paguos.mosaic.app.NesSourceApp"
+                "com.github.paguos.mosaic.app.NesRSUSourceApp"
             ],
             "name": "NES-Source-RSU"
         }
@@ -38,7 +38,7 @@
     "rsus": [
         {
             "applications": [
-                "com.github.paguos.mosaic.app.NesSourceApp"
+                "com.github.paguos.mosaic.app.NesRSUSourceApp"
             ],
             "name": "NES-Source-RSU_0",
             "position": {
@@ -48,7 +48,7 @@
         },
         {
             "applications": [
-                "com.github.paguos.mosaic.app.NesSourceApp"
+                "com.github.paguos.mosaic.app.NesRSUSourceApp"
             ],
             "name": "NES-Source-RSU_1",
             "position": {
@@ -58,7 +58,7 @@
         },
         {
             "applications": [
-                "com.github.paguos.mosaic.app.NesSourceApp"
+                "com.github.paguos.mosaic.app.NesRSUSourceApp"
             ],
             "name": "NES-Source-RSU_2",
             "position": {
