@@ -1,6 +1,4 @@
 {
-  "defaultDownlinkCapacity": 100000000000,
-  "defaultUplinkCapacity": 100000000000,
   "globalNetwork": {
     "id": "globalNetwork",
     "uplink": {
@@ -12,7 +10,7 @@
         "lossProbability": 0.0,
         "maxRetries": 2
       },
-      "capacity": 28000000
+      "capacity": "unlimited"
     },
     "downlink": {
       "unicast": {
@@ -34,9 +32,9 @@
           "lossProbability": 0.0,
           "maxRetries": 0
         },
-        "usableCapacity": 0.6
+        "usableCapacity": 1.0
       },
-      "capacity": 42200000
+      "capacity": "unlimited"
     }
   },
   "servers": []

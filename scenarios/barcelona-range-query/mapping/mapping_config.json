@@ -3,7 +3,7 @@
         {
             "accel": 1.5,
             "applications": [
-                "com.github.paguos.mosaic.app.SpeedSensorApp"
+                "com.github.paguos.mosaic.app.NesVehicleSourceApp"
             ],
             "color": "red",
             "decel": 4.5,
@@ -17,7 +17,7 @@
         {
             "accel": 1.5,
             "applications": [
-                "com.github.paguos.mosaic.app.SinkApp"
+                "com.github.paguos.mosaic.app.NesSinkApp"
             ],
             "color": "blue",
             "decel": 4.5,

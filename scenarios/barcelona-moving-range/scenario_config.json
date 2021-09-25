@@ -3,7 +3,7 @@
         "application": true,
         "cell": true,
         "environment": false,
-        "nes": false,
+        "nes": true,
         "ns3": false,
         "omnetpp": false,
         "output": true,
@@ -13,7 +13,7 @@
     },
     "simulation": {
         "duration": "300s",
-        "id": "berlin",
+        "id": "barcelona-moving-range",
         "network": {
             "csNet": "10.4.0.0",
             "netMask": "255.255.0.0",
@@ -25,12 +25,12 @@
         },
         "projection": {
             "cartesianOffset": {
-                "x": -384341.36,
-                "y": -5818097.61
+                "x": -427450.08,
+                "y": -4582011.43
             },
             "centerCoordinates": {
-                "latitude": 52.5047675,
-                "longitude": 13.3156317
+                "latitude": 41.3911504,
+                "longitude": 2.1394288
             }
         },
         "randomSeed": 268965854
