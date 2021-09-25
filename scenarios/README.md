@@ -15,7 +15,8 @@ The Berlin mosaic scenario is designed to test a configuration where NES sources
 
 The Barcelona mosaic scenario is designed to test a topology configuration where both NES sources and the single sink are mounted on moving vehicles.
 
-_TBD_
-
-
-
+| Scenario Name         	| Description                                                          	|
+|-----------------------	|----------------------------------------------------------------------	|
+| `barcelona`              	| Communication using only V2xMessages. NES is omitted in this setup.  	|
+| `barcelona-moving-range` 	| Moving sink submits a single moving range query.                     	|
+| `barcelona-range-query`  	| Moving sink submits multiple range queries in a defined interval.    	|
