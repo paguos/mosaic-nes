@@ -12,7 +12,7 @@
         "sumo": true
     },
     "simulation": {
-        "duration": "1000s",
+        "duration": "300s",
         "id": "berlin-moving-range",
         "network": {
             "csNet": "10.4.0.0",
