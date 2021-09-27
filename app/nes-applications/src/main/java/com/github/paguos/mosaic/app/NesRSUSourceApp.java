@@ -21,19 +21,6 @@ public class NesRSUSourceApp extends NesSourceApp<RoadSideUnitOperatingSystem> i
 
     @Override
     public void onMessageReceived(ReceivedV2xMessage receivedV2xMessage) {
-        if (getConfiguration().movingRangeEnabled) {
-            try {
-                boolean status = nesClient.isSourceEnabled(getOs().getId());
-                if (status != enabled ) {
-                    getLog().infoSimTime(this,"Status changed to: " + status);
-                    enabled = status;
-                }
-
-            } catch (InternalFederateException e) {
-                getLog().error("Error while fetching status!");
-                getLog().error(e.getMessage());
-            }
-        }
 
         getLog().infoSimTime(this, "Received V2X Message from {}", receivedV2xMessage.getMessage().getRouting().getSource().getSourceName());
         V2xMessage msg = receivedV2xMessage.getMessage();

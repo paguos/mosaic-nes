@@ -1,6 +1,7 @@
 {
     "coordinator": {
-        "image": "paguos/nes-mobility:0.0.6"
+        "image": "paguos/nes-mobility:0.0.6",
+        "updateLocationInterval": 500
     },
     "nodes": [],
     "ui": {

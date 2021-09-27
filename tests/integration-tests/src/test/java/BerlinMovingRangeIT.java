@@ -44,11 +44,9 @@ public class BerlinMovingRangeIT {
             LogAssert.exists(simulationRule, String.format("apps/rsu_%d/NesRSUSourceApp.log", i));
             LogAssert.exists(simulationRule, String.format("SpeedReport-rsu_%d.csv", i));
         }
-        LogAssert.exists(simulationRule, "apps/sources_worker/container.log");
 
         // Sink
         LogAssert.exists(simulationRule, "apps/veh_10/NesSinkApp.log");
-        LogAssert.exists(simulationRule, "apps/sink_worker/container.log");
     }
 
     @Test
