@@ -62,7 +62,7 @@ public class BerlinMovingRangeIT {
 
     @Test
     public void nesNodesCreated() throws Exception {
-        int deployedNesNodes = 3;
+        int deployedNesNodes = 1;
 
         for (int i = 0; i < deployedRoadSideUnits; i++) {
             LogAssert.contains(
