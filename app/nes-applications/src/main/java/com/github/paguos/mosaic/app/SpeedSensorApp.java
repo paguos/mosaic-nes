@@ -25,8 +25,11 @@ import java.util.List;
 
 public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, VehicleOperatingSystem> implements VehicleApplication, CommunicationApplication {
 
+    private boolean enabled;
+
     public SpeedSensorApp() {
         super(CSpeedSensorApp.class, "SpeedSensorApp");
+        enabled = false;
     }
 
     @Override
@@ -38,13 +41,11 @@ public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, Veh
 
     @Override
     public void onVehicleUpdated(@Nullable VehicleData vehicleData, @Nonnull VehicleData newVehicleData) {
-        getLog().infoSimTime(this, "Sending speed report ...");
         if (getConfiguration().rsuEnabled) {
             sendRSUAdHocBroadcast(newVehicleData);
         } else {
             sendVehicleAdHocBroadcast(newVehicleData);
         }
-        getLog().infoSimTime(this, "Speed report sent!");
     }
 
     private void sendRSUAdHocBroadcast(VehicleData vehicleData) {
@@ -60,13 +61,24 @@ public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, Veh
 
     private void sendVehicleAdHocBroadcast(VehicleData vehicleData) {
         if (LocationDirectory.isLocationInRange(vehicleData.getPosition())) {
+            if (!enabled) {
+                getLog().infoSimTime(this,"Speed sensor enabled!");
+            }
+
             Inet4Address vehicleIp = IpResolver.getSingleton().nameToIp(LocationDirectory.getSinkId());
             MessageRouting routing = getOs().getCellModule().createMessageRouting().topoCast(vehicleIp.getAddress());
             sendSeepReport(vehicleData, routing);
+            enabled = true;
+        } else {
+            if (enabled) {
+                getLog().infoSimTime(this,"Speed sensor disabled!");
+                enabled = false;
+            }
         }
     }
 
     private void sendSeepReport(VehicleData vehicleData, MessageRouting routing) {
+        getLog().infoSimTime(this, "Sending speed report ...");
         final SpeedReport report = new SpeedReport(
                 getOs().getSimulationTime(),
                 getOs().getId(),
@@ -76,7 +88,7 @@ public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, Veh
 
         final SpeedReportMsg message = new SpeedReportMsg(routing, report);
         getOs().getCellModule().sendV2xMessage(message);
-
+        getLog().infoSimTime(this, "Speed report sent!");
     }
 
     @Override
