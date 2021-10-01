@@ -1,0 +1,121 @@
+{
+    "prototypes": [
+        {
+            "accel": 1.5,
+            "applications": ["com.github.paguos.mosaic.app.NesVehicleSourceApp"],
+            "color": "red",
+            "decel": 4.5,
+            "length": 5.0,
+            "maxSpeed": 20.0,
+            "minGap": 2.5,
+            "name": "Car",
+            "sigma": 0.5,
+            "tau": 1
+        },
+        {
+            "accel": 1.5,
+            "applications": ["com.github.paguos.mosaic.app.NesSinkApp"],
+            "color": "blue",
+            "decel": 4.5,
+            "length": 5.0,
+            "maxSpeed": 20.0,
+            "minGap": 2.5,
+            "name": "NesSinkCar",
+            "sigma": 0.5,
+            "tau": 1
+        }
+    ],
+    "rsus": [],
+    "vehicles": [
+        {
+            "departSpeed": 0,
+            "departSpeedMode": "MAXIMUM",
+            "deterministic": true,
+            "laneSelectionMode": "BEST",
+            "maxNumberVehicles": 1,
+            "maxTime": 700,
+            "pos": 0,
+            "route": "1",
+            "spawningMode": "CONSTANT",
+            "startingTime": 20,
+            "targetFlow": 500,
+            "types": [
+                {
+                    "name": "NesSinkCar"
+                }
+            ]
+        },
+        {
+            "departSpeed": 0,
+            "departSpeedMode": "MAXIMUM",
+            "deterministic": true,
+            "laneSelectionMode": "BEST",
+            "maxNumberVehicles": 1,
+            "maxTime": 700,
+            "pos": 0,
+            "route": "1",
+            "spawningMode": "CONSTANT",
+            "startingTime": 25,
+            "targetFlow": 500,
+            "types": [
+                {
+                    "name": "Car"
+                }
+            ]
+        },
+        {
+            "departSpeed": 0,
+            "departSpeedMode": "MAXIMUM",
+            "deterministic": true,
+            "laneSelectionMode": "BEST",
+            "maxNumberVehicles": 2,
+            "maxTime": 700,
+            "pos": 0,
+            "route": "2",
+            "spawningMode": "CONSTANT",
+            "startingTime": 50,
+            "targetFlow": 500,
+            "types": [
+                {
+                    "name": "Car"
+                }
+            ]
+        },
+        {
+            "departSpeed": 0,
+            "departSpeedMode": "MAXIMUM",
+            "deterministic": true,
+            "laneSelectionMode": "BEST",
+            "maxNumberVehicles": 2,
+            "maxTime": 700,
+            "pos": 0,
+            "route": "3",
+            "spawningMode": "CONSTANT",
+            "startingTime": 5,
+            "targetFlow": 500,
+            "types": [
+                {
+                    "name": "Car"
+                }
+            ]
+        },
+        {
+            "departSpeed": 0,
+            "departSpeedMode": "MAXIMUM",
+            "deterministic": true,
+            "laneSelectionMode": "BEST",
+            "maxNumberVehicles": 2,
+            "maxTime": 700,
+            "pos": 0,
+            "route": "4",
+            "spawningMode": "CONSTANT",
+            "startingTime": 50,
+            "targetFlow": 500,
+            "types": [
+                {
+                    "name": "Car"
+                }
+            ]
+        }
+    ]
+}
