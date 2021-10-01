@@ -1,0 +1,124 @@
+{
+  "cars": [
+    {
+      "name": "Car",
+      "applications": ["com.github.paguos.mosaic.app.SpeedSensorApp"],
+      "metadata": {
+        "accel": 1.5,
+        "decel": 4.5,
+        "length": 5.00,
+        "maxSpeed": 10.0,
+        "minGap": 2.5,
+        "sigma": 0.5,
+        "tau": 1,
+        "color": "red"
+      }
+    },
+    {
+      "name": "NesSinkCar",
+      "applications": ["com.github.paguos.mosaic.app.NesSinkApp"],
+      "metadata": {
+        "accel": 1.5,
+        "decel": 4.5,
+        "length": 5.00,
+        "maxSpeed": 10.0,
+        "minGap": 2.5,
+        "sigma": 0.5,
+        "tau": 1,
+        "color": "blue"
+      }
+    }
+  ],
+  "federates": {
+    "nes": {
+      "enabled": true,
+      "coordinator": {
+        "image": "paguos/nes-mobility:0.0.7"
+      },
+      "ui": {
+        "enabled": false,
+        "image": "paguos/nes-ui:v0.0.1",
+        "reactPort": 3000
+      },
+      "worker": {
+        "image": "paguos/nes-mobility:0.0.7"
+      },
+      "nodes": []
+    }
+  },
+  "rsus": [],
+  "routes": [
+    {
+      "source": {
+        "latitude": "51.4085317",
+        "longitude": "12.1872601"
+      },
+      "target": {
+        "latitude": "51.4471305",
+        "longitude": "12.2092566"
+      }
+    },
+    {
+      "source": {
+        "latitude": "51.4470661",
+        "longitude": "12.2094634"
+      },
+      "target": {
+        "latitude": "51.4085755",
+        "longitude": "12.1870253"
+      }
+    },
+    {
+      "source": {
+        "latitude": "51.4356211",
+        "longitude": "12.1548963"
+      },
+      "target": {
+        "latitude": "51.4207172",
+        "longitude": "12.24845"
+      }
+    },
+    {
+      "source": {
+        "latitude": "51.4208462",
+        "longitude": "12.2485324"
+      },
+      "target": {
+        "latitude": "51.4357181",
+        "longitude": "12.1549502"
+      }
+    }
+  ],
+  "vehicles": [
+    {
+      "car": "Car",
+      "routes": "*",
+      "metadata": {
+        "startingTime": 5,
+        "maxTime": 700,
+        "targetFlow": 500,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 10,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0,
+        "departSpeedMode": "MAXIMUM",
+        "deterministic": true
+      }
+    },
+    {
+      "car": "NesSinkCar",
+      "routes": "1",
+      "metadata": {
+        "startingTime": 20,
+        "maxTime": 700,
+        "targetFlow": 500,
+        "spawningMode": "CONSTANT",
+        "maxNumberVehicles": 1,
+        "laneSelectionMode": "BEST",
+        "departSpeed": 0,
+        "departSpeedMode": "MAXIMUM",
+        "deterministic": true
+      }
+    }
+  ]
+}
