@@ -3,6 +3,7 @@ package com.github.paguos.mosaic.app;
 import com.github.paguos.mosaic.app.config.CSpeedSensorApp;
 import com.github.paguos.mosaic.app.directory.LocationDirectory;
 import com.github.paguos.mosaic.app.directory.RSULocationData;
+import com.github.paguos.mosaic.app.directory.VehicleLocationData;
 import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.app.message.SpeedReportMsg;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.CamBuilder;
@@ -37,6 +38,11 @@ public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, Veh
         getLog().infoSimTime(this, "Initializing speed sensor application ...");
         getOs().getCellModule().enable();
         getLog().infoSimTime(this, "Cell module activated!");
+
+        if (!getConfiguration().rsuEnabled) {
+            LocationDirectory.registerVehicle(new VehicleLocationData(getOs().getId(), getOs().getPosition()));
+            getLog().infoSimTime(this, "Vehicle registered in location directory!");
+        }
     }
 
     @Override
@@ -44,6 +50,7 @@ public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, Veh
         if (getConfiguration().rsuEnabled) {
             sendRSUAdHocBroadcast(newVehicleData);
         } else {
+            LocationDirectory.updateVehicleLocation(getOs().getId(), newVehicleData.getPosition());
             sendVehicleAdHocBroadcast(newVehicleData);
         }
     }
@@ -60,7 +67,7 @@ public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, Veh
     }
 
     private void sendVehicleAdHocBroadcast(VehicleData vehicleData) {
-        if (LocationDirectory.isLocationInRange(vehicleData.getPosition())) {
+        if (LocationDirectory.isVehicleEnabled(getOs().getId())) {
             if (!enabled) {
                 getLog().infoSimTime(this,"Speed sensor enabled!");
             }

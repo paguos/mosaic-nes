@@ -9,18 +9,24 @@ import java.util.Map;
 
 public class LocationDirectory {
 
-    private static VehicleLocationData SINK = null;
+    private static SinkLocationData sink = null;
 
-    private static final Map<String, RSULocationData> ROADSIDE_UNITS = new HashMap<>();
+    private static final Map<String, RSULocationData> roadside_units = new HashMap<>();
+
+    private static final Map<String, VehicleLocationData> vehicles = new HashMap<>();
 
     public static void register(RSULocationData RSULocationData) {
-        ROADSIDE_UNITS.put(RSULocationData.getId(), RSULocationData);
+        roadside_units.put(RSULocationData.getId(), RSULocationData);
     }
 
-    public static void register(VehicleLocationData vehicleLocationData) { SINK = vehicleLocationData; }
+    public static void registerSink(SinkLocationData sinkLocationData) { sink = sinkLocationData; }
+
+    public static void registerVehicle(VehicleLocationData vehicleLocationData) {
+        vehicles.put(vehicleLocationData.getId(), vehicleLocationData);
+    }
 
     public static String getSinkId() {
-        return SINK.getId();
+        return sink.getId();
     }
 
     /**
@@ -30,7 +36,7 @@ public class LocationDirectory {
      */
     public static List<RSULocationData> getRoadSideUnitsInRange(GeoPoint location) {
         List<RSULocationData> roadSideUnitsInRange = new LinkedList<>();
-        for (RSULocationData rsu: ROADSIDE_UNITS.values()) {
+        for (RSULocationData rsu: roadside_units.values()) {
             if (rsu.getBroadcastArea().contains(location)) {
                 roadSideUnitsInRange.add(rsu);
             }
@@ -44,11 +50,11 @@ public class LocationDirectory {
      * @return true if the location is inside the moving sink range
      */
     public static boolean isLocationInRange(GeoPoint location) {
-        if (SINK == null) {
+        if (sink == null) {
             return false;
         }
 
-        return SINK.getMovingRange().contains(location);
+        return sink.getMovingRange().contains(location);
     }
 
     /**
@@ -56,10 +62,18 @@ public class LocationDirectory {
      * @param point GeoPoint of its current location
      */
     public static void updateSinkLocation(GeoPoint point) {
-        SINK.updateLocation(point);
-        for (RSULocationData rsu: ROADSIDE_UNITS.values()) {
-            rsu.setEnabled(SINK.getMovingRange().contains(rsu.getBroadcastArea()));
+        sink.updateLocation(point);
+        for (RSULocationData rsu: roadside_units.values()) {
+            rsu.setEnabled(sink.getMovingRange().contains(rsu.getBroadcastArea()));
         }
+
+        for(VehicleLocationData vehicle: vehicles.values()) {
+            vehicle.setEnabled(sink.getMovingRange().contains(vehicle.getLocation()));
+        }
+    }
+
+    public static void updateVehicleLocation(String id, GeoPoint point) {
+        vehicles.get(id).setLocation(point);
     }
 
     /**
@@ -68,7 +82,11 @@ public class LocationDirectory {
      * @return true if enabled, false otherwise
      */
     public static boolean isRSUEnabled(String rsuId) {
-        return ROADSIDE_UNITS.get(rsuId).isEnabled();
+        return roadside_units.get(rsuId).isEnabled();
+    }
+
+    public static boolean isVehicleEnabled(String vehicleId) {
+        return vehicles.get(vehicleId).isEnabled();
     }
 
 }
