@@ -34,7 +34,10 @@ public class NesVehicleSourceApp extends NesSourceApp<VehicleOperatingSystem> im
                 newVehicleData.getPosition(),
                 newVehicleData.getSpeed()
         );
-        processSpeedReportMsg(report);
+
+        if (startProcessingTime <= getOs().getSimulationTime() ) {
+            processSpeedReportMsg(report);
+        }
     }
 
     @Override

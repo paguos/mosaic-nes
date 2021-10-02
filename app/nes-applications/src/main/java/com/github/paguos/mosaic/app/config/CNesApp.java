@@ -23,6 +23,11 @@ public class CNesApp {
      */
     public long queryInterval = 6;
 
+    /**
+     * Min time to submit a query to NES
+     */
+    public int startProcessingTime = 0;
+
     /* Source related configs */
 
     /**

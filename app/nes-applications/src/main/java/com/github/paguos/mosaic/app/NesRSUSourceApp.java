@@ -30,8 +30,10 @@ public class NesRSUSourceApp extends NesSourceApp<RoadSideUnitOperatingSystem> i
     }
 
     private void processSpeedReportMsg (SpeedReportMsg msg) {
-        SpeedReport report = msg.getReport();
-        processSpeedReportMsg(report);
+        if (startProcessingTime <= getOs().getSimulationTime() ) {
+            SpeedReport report = msg.getReport();
+            processSpeedReportMsg(report);
+        }
     }
 
     @Override

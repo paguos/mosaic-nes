@@ -18,6 +18,7 @@ import org.eclipse.mosaic.lib.objects.addressing.IpResolver;
 import org.eclipse.mosaic.lib.objects.v2x.MessageRouting;
 import org.eclipse.mosaic.lib.objects.vehicle.VehicleData;
 import org.eclipse.mosaic.lib.util.scheduling.Event;
+import org.eclipse.mosaic.rti.TIME;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,6 +28,7 @@ import java.util.List;
 public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, VehicleOperatingSystem> implements VehicleApplication, CommunicationApplication {
 
     private boolean enabled;
+    private long startProcessingTime;
 
     public SpeedSensorApp() {
         super(CSpeedSensorApp.class, "SpeedSensorApp");
@@ -43,10 +45,16 @@ public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, Veh
             LocationDirectory.registerVehicle(new VehicleLocationData(getOs().getId(), getOs().getPosition()));
             getLog().infoSimTime(this, "Vehicle registered in location directory!");
         }
+
+        startProcessingTime = getConfiguration().startProcessingTime * TIME.SECOND;
     }
 
     @Override
     public void onVehicleUpdated(@Nullable VehicleData vehicleData, @Nonnull VehicleData newVehicleData) {
+        if (startProcessingTime > getOs().getSimulationTime()) {
+            return;
+        }
+
         if (getConfiguration().rsuEnabled) {
             sendRSUAdHocBroadcast(newVehicleData);
         } else {

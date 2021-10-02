@@ -35,6 +35,7 @@ public class NesSinkApp extends ConfigurableApplication<CNesApp, VehicleOperatin
     private ZeroMQConsumer zeroMQConsumer;
 
     private SpeedReportWriter reportWriter;
+    private long startProcessingTime;
 
     public NesSinkApp() {
         super(CNesApp.class, "NesApp");
@@ -60,6 +61,7 @@ public class NesSinkApp extends ConfigurableApplication<CNesApp, VehicleOperatin
             getLog().error(e.getMessage());
         }
 
+        startProcessingTime = getConfiguration().startProcessingTime * TIME.SECOND;
         scheduleNextEvent();
     }
 
@@ -91,6 +93,11 @@ public class NesSinkApp extends ConfigurableApplication<CNesApp, VehicleOperatin
 
     @Override
     public void processEvent(Event event) {
+        if (startProcessingTime > getOs().getSimulationTime()) {
+            scheduleNextEvent();
+            return;
+        }
+
         if (getConfiguration().movingRangeEnabled) {
             if (currenQueryId == -1) {
                 submitQuery(getOs().getPosition(), getConfiguration().movingRangeEnabled);
