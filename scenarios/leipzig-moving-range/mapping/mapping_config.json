@@ -37,7 +37,7 @@
             "pos": 0,
             "route": "1",
             "spawningMode": "CONSTANT",
-            "startingTime": 20,
+            "startingTime": 5,
             "targetFlow": 500,
             "types": [
                 {
@@ -55,7 +55,7 @@
             "pos": 0,
             "route": "1",
             "spawningMode": "CONSTANT",
-            "startingTime": 25,
+            "startingTime": 10,
             "targetFlow": 500,
             "types": [
                 {
@@ -91,7 +91,7 @@
             "pos": 0,
             "route": "3",
             "spawningMode": "CONSTANT",
-            "startingTime": 5,
+            "startingTime": 45,
             "targetFlow": 500,
             "types": [
                 {
@@ -119,3 +119,4 @@
         }
     ]
 }
+

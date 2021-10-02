@@ -36,8 +36,8 @@ public class LeipzigIT {
         LogAssert.exists(simulationRule, "Communication.log");
 
         // Sink
-        LogAssert.exists(simulationRule, "apps/veh_2/SinkApp.log");
-        LogAssert.exists(simulationRule, "SpeedReport-veh_2.csv");
+        LogAssert.exists(simulationRule, "apps/veh_0/SinkApp.log");
+        LogAssert.exists(simulationRule, "SpeedReport-veh_0.csv");
     }
 
     @Test
@@ -49,7 +49,7 @@ public class LeipzigIT {
     public void sinkReceivedMessages() throws Exception {
         LogAssert.contains(
                 simulationRule,
-                "SpeedReport-veh_2.csv",
+                "SpeedReport-veh_0.csv",
                 ".*veh_[0-9]*,[0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*"
         );
     }
