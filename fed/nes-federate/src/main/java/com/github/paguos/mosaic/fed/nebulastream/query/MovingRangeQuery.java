@@ -8,9 +8,9 @@ import stream.nebula.queryinterface.Query;
 public class MovingRangeQuery extends Query {
 
     private final String nodeId;
-    private final int area;
+    private final long area;
 
-    public MovingRangeQuery(String nodeId, int area) {
+    public MovingRangeQuery(String nodeId, long area) {
         this.nodeId = nodeId;
         this.area = area;
     }

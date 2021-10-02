@@ -44,8 +44,8 @@ public abstract class NesSourceApp<T extends OperatingSystem> extends Configurab
         getLog().infoSimTime(this, "Activated AdHoc Module");
 
         getLog().infoSimTime(this, "Registering RSU ..");
-        GeoCircle range = new GeoCircle(getOs().getPosition(), getConfiguration().rangeRadius);
-        LocationDirectory.register(new RSULocationData(getOs().getId(), getOs().getPosition(), getConfiguration().rangeRadius));
+        GeoCircle range = new GeoCircle(getOs().getPosition(), getConfiguration().sourceRangeRadius);
+        LocationDirectory.register(new RSULocationData(getOs().getId(), getOs().getPosition(), getConfiguration().sourceRangeRadius));
         getLog().infoSimTime(this, "RSU registered!");
 
         int zeroMQPort = com.github.paguos.mosaic.fed.nebulastream.node.ZeroMQSource.getNextZeroMQPort();
