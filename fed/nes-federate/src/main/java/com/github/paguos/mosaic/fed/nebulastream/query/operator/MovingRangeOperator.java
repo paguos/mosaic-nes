@@ -5,9 +5,9 @@ import stream.nebula.operators.Operator;
 public class MovingRangeOperator extends Operator  {
 
     private final String nodeId;
-    private final int area;
+    private final long area;
 
-    public MovingRangeOperator(String nodeId, int area) {
+    public MovingRangeOperator(String nodeId, long area) {
         this.nodeId = nodeId;
         this.area = area;
     }
