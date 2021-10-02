@@ -18,9 +18,9 @@ import org.eclipse.mosaic.lib.geo.GeoCircle;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public abstract class NesSourceApp<T extends OperatingSystem> extends ConfigurableApplication<CNesApp, T> {
 
@@ -34,7 +34,7 @@ public abstract class NesSourceApp<T extends OperatingSystem> extends Configurab
 
     public NesSourceApp() {
         super(CNesApp.class, "NesApp");
-        this.messages = new LinkedList<>();
+        this.messages = new ArrayBlockingQueue<>(20000);
         this.enabled = false;
     }
 
@@ -126,9 +126,7 @@ public abstract class NesSourceApp<T extends OperatingSystem> extends Configurab
                 .fill(report.getVehicleSpeed())
                 .build();
 
-        synchronized (messages) {
-            messages.add(msgBuffer);
-        }
+        messages.add(msgBuffer);
 
     }
 

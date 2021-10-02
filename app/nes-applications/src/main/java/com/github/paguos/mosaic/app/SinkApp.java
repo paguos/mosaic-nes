@@ -1,9 +1,8 @@
 package com.github.paguos.mosaic.app;
 
 import com.github.paguos.mosaic.app.config.CSinkApp;
-import com.github.paguos.mosaic.app.config.CSourceApp;
 import com.github.paguos.mosaic.app.directory.LocationDirectory;
-import com.github.paguos.mosaic.app.directory.VehicleLocationData;
+import com.github.paguos.mosaic.app.directory.SinkLocationData;
 import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.app.message.SpeedReportMsg;
 import com.github.paguos.mosaic.app.output.SpeedReportWriter;
@@ -11,7 +10,6 @@ import com.github.paguos.mosaic.fed.geo.GeoSquare;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.CamBuilder;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedAcknowledgement;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.ReceivedV2xMessage;
-import org.eclipse.mosaic.fed.application.app.AbstractApplication;
 import org.eclipse.mosaic.fed.application.app.ConfigurableApplication;
 import org.eclipse.mosaic.fed.application.app.api.CommunicationApplication;
 import org.eclipse.mosaic.fed.application.app.api.VehicleApplication;
@@ -56,7 +54,7 @@ public class SinkApp extends ConfigurableApplication<CSinkApp, VehicleOperatingS
         getLog().infoSimTime(this, String.format("Range: '%d' Filter: '%b'", rangeArea, localFilterEnabled));
 
         getLog().infoSimTime(this, "Registering focal point ..");
-        LocationDirectory.register(new VehicleLocationData(getOs().getId(), getOs().getPosition(), rangeArea));
+        LocationDirectory.registerSink(new SinkLocationData(getOs().getId(), getOs().getPosition(), rangeArea));
         getLog().infoSimTime(this, "Focal point registered!");
 
         try {

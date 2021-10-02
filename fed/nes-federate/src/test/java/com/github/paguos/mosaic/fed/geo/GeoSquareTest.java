@@ -60,11 +60,20 @@ public class GeoSquareTest {
 
         CartesianPoint a = center.toCartesian();
 
-        GeoPoint inside = CartesianPoint.xy(a.getX() + 20, a.getY() + 20).toGeo();
+        GeoPoint inside = CartesianPoint.xy(a.getX() + 50, a.getY() + 50).toGeo();
         assertTrue(square.contains(inside));
 
-        GeoPoint outside = CartesianPoint.xy(a.getX() + 100, a.getY() + 500).toGeo();
-        assertFalse(square.contains(outside));
+        GeoPoint outsideEast = CartesianPoint.xy(a.getX() - 51, a.getY()).toGeo();
+        assertFalse(square.contains(outsideEast));
+
+        GeoPoint outsideWest = CartesianPoint.xy(a.getX() + 51, a.getY()).toGeo();
+        assertFalse(square.contains(outsideWest));
+
+        GeoPoint outsideNorth = CartesianPoint.xy(a.getX(), a.getY() + 51).toGeo();
+        assertFalse(square.contains(outsideNorth));
+
+        GeoPoint outsideSouth = CartesianPoint.xy(a.getX(), a.getY() - 51).toGeo();
+        assertFalse(square.contains(outsideSouth));
     }
 
     @Test

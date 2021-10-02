@@ -27,12 +27,10 @@ public class ZeroMQProducer implements Runnable {
             socket.connect(zmqAddress);
 
             while (running) {
-                synchronized (messages) {
-                    if (!messages.isEmpty()) {
-                        Envelope envelope = new Envelope(false, 1, 0);
-                        socket.send(envelope.toByteBuffer());
-                        socket.send(messages.poll());
-                    }
+                if (!messages.isEmpty()) {
+                    Envelope envelope = new Envelope(false, 1, 0);
+                    socket.send(envelope.toByteBuffer());
+                    socket.send(messages.poll());
                 }
             }
 

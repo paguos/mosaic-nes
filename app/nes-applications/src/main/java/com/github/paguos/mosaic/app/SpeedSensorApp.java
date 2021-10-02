@@ -3,6 +3,7 @@ package com.github.paguos.mosaic.app;
 import com.github.paguos.mosaic.app.config.CSpeedSensorApp;
 import com.github.paguos.mosaic.app.directory.LocationDirectory;
 import com.github.paguos.mosaic.app.directory.RSULocationData;
+import com.github.paguos.mosaic.app.directory.VehicleLocationData;
 import com.github.paguos.mosaic.app.message.SpeedReport;
 import com.github.paguos.mosaic.app.message.SpeedReportMsg;
 import org.eclipse.mosaic.fed.application.ambassador.simulation.communication.CamBuilder;
@@ -25,8 +26,11 @@ import java.util.List;
 
 public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, VehicleOperatingSystem> implements VehicleApplication, CommunicationApplication {
 
+    private boolean enabled;
+
     public SpeedSensorApp() {
         super(CSpeedSensorApp.class, "SpeedSensorApp");
+        enabled = false;
     }
 
     @Override
@@ -34,17 +38,21 @@ public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, Veh
         getLog().infoSimTime(this, "Initializing speed sensor application ...");
         getOs().getCellModule().enable();
         getLog().infoSimTime(this, "Cell module activated!");
+
+        if (!getConfiguration().rsuEnabled) {
+            LocationDirectory.registerVehicle(new VehicleLocationData(getOs().getId(), getOs().getPosition()));
+            getLog().infoSimTime(this, "Vehicle registered in location directory!");
+        }
     }
 
     @Override
     public void onVehicleUpdated(@Nullable VehicleData vehicleData, @Nonnull VehicleData newVehicleData) {
-        getLog().infoSimTime(this, "Sending speed report ...");
         if (getConfiguration().rsuEnabled) {
             sendRSUAdHocBroadcast(newVehicleData);
         } else {
+            LocationDirectory.updateVehicleLocation(getOs().getId(), newVehicleData.getPosition());
             sendVehicleAdHocBroadcast(newVehicleData);
         }
-        getLog().infoSimTime(this, "Speed report sent!");
     }
 
     private void sendRSUAdHocBroadcast(VehicleData vehicleData) {
@@ -59,14 +67,25 @@ public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, Veh
     }
 
     private void sendVehicleAdHocBroadcast(VehicleData vehicleData) {
-        if (LocationDirectory.isLocationInRange(vehicleData.getPosition())) {
+        if (LocationDirectory.isVehicleEnabled(getOs().getId())) {
+            if (!enabled) {
+                getLog().infoSimTime(this,"Speed sensor enabled!");
+            }
+
             Inet4Address vehicleIp = IpResolver.getSingleton().nameToIp(LocationDirectory.getSinkId());
             MessageRouting routing = getOs().getCellModule().createMessageRouting().topoCast(vehicleIp.getAddress());
             sendSeepReport(vehicleData, routing);
+            enabled = true;
+        } else {
+            if (enabled) {
+                getLog().infoSimTime(this,"Speed sensor disabled!");
+                enabled = false;
+            }
         }
     }
 
     private void sendSeepReport(VehicleData vehicleData, MessageRouting routing) {
+        getLog().infoSimTime(this, "Sending speed report ...");
         final SpeedReport report = new SpeedReport(
                 getOs().getSimulationTime(),
                 getOs().getId(),
@@ -76,7 +95,7 @@ public class SpeedSensorApp extends ConfigurableApplication<CSpeedSensorApp, Veh
 
         final SpeedReportMsg message = new SpeedReportMsg(routing, report);
         getOs().getCellModule().sendV2xMessage(message);
-
+        getLog().infoSimTime(this, "Speed report sent!");
     }
 
     @Override

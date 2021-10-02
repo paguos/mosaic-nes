@@ -3,38 +3,17 @@ package com.github.paguos.mosaic.app.directory;
 import org.eclipse.mosaic.lib.geo.GeoCircle;
 import org.eclipse.mosaic.lib.geo.GeoPoint;
 
-public class RSULocationData {
+public class RSULocationData extends LocationData{
 
-    private final String id;
-    private final GeoPoint location;
     private final GeoCircle broadcastArea;
 
-    private boolean enabled;
-
     public RSULocationData(String id, GeoPoint location, float broadcastRadius) {
-        this.id = id;
-        this.location = location;
+        super(id, location);
         this.broadcastArea = new GeoCircle(location, broadcastRadius);
-        this.enabled = false;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public GeoPoint getLocation() {
-        return location;
     }
 
     public GeoCircle getBroadcastArea() {
         return broadcastArea;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
 }

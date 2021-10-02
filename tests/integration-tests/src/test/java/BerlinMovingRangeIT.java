@@ -44,11 +44,9 @@ public class BerlinMovingRangeIT {
             LogAssert.exists(simulationRule, String.format("apps/rsu_%d/NesRSUSourceApp.log", i));
             LogAssert.exists(simulationRule, String.format("SpeedReport-rsu_%d.csv", i));
         }
-        LogAssert.exists(simulationRule, "apps/sources_worker/container.log");
 
         // Sink
         LogAssert.exists(simulationRule, "apps/veh_10/NesSinkApp.log");
-        LogAssert.exists(simulationRule, "apps/sink_worker/container.log");
     }
 
     @Test
@@ -64,7 +62,7 @@ public class BerlinMovingRangeIT {
 
     @Test
     public void nesNodesCreated() throws Exception {
-        int deployedNesNodes = 3;
+        int deployedNesNodes = 1;
 
         for (int i = 0; i < deployedRoadSideUnits; i++) {
             LogAssert.contains(
