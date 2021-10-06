@@ -54,14 +54,14 @@
         "longitude": "12.1872601"
       },
       "target": {
-        "latitude": "51.4471305",
-        "longitude": "12.2092566"
+        "latitude": "51.4356384",
+        "longitude": "12.2028476"
       }
     },
     {
       "source": {
-        "latitude": "51.4470661",
-        "longitude": "12.2094634"
+        "latitude": "51.4367234",
+        "longitude": "12.20332578"
       },
       "target": {
         "latitude": "51.4085755",
@@ -70,8 +70,8 @@
     },
     {
       "source": {
-        "latitude": "51.4356211",
-        "longitude": "12.1548963"
+        "latitude": "51.4294727",
+        "longitude": "12.1895052"
       },
       "target": {
         "latitude": "51.4207172",

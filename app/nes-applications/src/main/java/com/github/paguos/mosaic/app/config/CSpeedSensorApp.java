@@ -8,4 +8,9 @@ public class CSpeedSensorApp {
      */
     public boolean rsuEnabled = true;
 
+    /**
+     * Min time to enable the sending of data.
+     */
+    public int startProcessingTime = 0;
+
 }

@@ -1,8 +1,10 @@
 {
   "nesRestApiHost": "localhost",
   "nesRestApiPort": "8081",
+  "movingRangeArea": 6400000,
   "movingRangeEnabled": true,
   "queryInterval": 6,
   "rangeRadius": 0,
+  "startProcessingTime": 51,
   "updateLocationInterval" : 500
 }

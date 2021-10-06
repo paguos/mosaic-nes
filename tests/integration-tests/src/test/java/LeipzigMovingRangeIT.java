@@ -39,15 +39,14 @@ public class LeipzigMovingRangeIT {
         LogAssert.exists(simulationRule, "apps/nes-coordinator/container.log");
 
         // Source
-        for (int i = 0; i < deployedSources; i++) {
-            if (i == 2) { continue; }
+        for (int i = 1; i < deployedSources; i++) {
             LogAssert.exists(simulationRule, String.format("apps/veh_%d/NesVehicleSourceApp.log", i));
             LogAssert.exists(simulationRule, String.format("SpeedReport-veh_%d.csv", i));
         }
 
         // Sink
-        LogAssert.exists(simulationRule, "apps/veh_2/NesSinkApp.log");
-        LogAssert.exists(simulationRule, "SpeedReport-veh_2.csv");
+        LogAssert.exists(simulationRule, "apps/veh_0/NesSinkApp.log");
+        LogAssert.exists(simulationRule, "SpeedReport-veh_0.csv");
     }
 
     @Test
@@ -57,8 +56,8 @@ public class LeipzigMovingRangeIT {
 
     @Test
     public void logicalStreamCreated() throws Exception {
-        LogAssert.contains(simulationRule, "apps/veh_0/NesVehicleSourceApp.log", ".*Found Logical Stream 'QnV': true.*");
-        LogAssert.contains(simulationRule, "apps/veh_0/NesVehicleSourceApp.log", ".*Found Logical Stream 'mosaic_nes': true.*");
+        LogAssert.contains(simulationRule, "apps/veh_2/NesVehicleSourceApp.log", ".*Found Logical Stream 'QnV': true.*");
+        LogAssert.contains(simulationRule, "apps/veh_2/NesVehicleSourceApp.log", ".*Found Logical Stream 'mosaic_nes': true.*");
     }
 
     @Test
@@ -74,7 +73,7 @@ public class LeipzigMovingRangeIT {
     public void sinkReceivedMessages() throws Exception {
         LogAssert.contains(
                 simulationRule,
-                "SpeedReport-veh_2.csv",
+                "SpeedReport-veh_0.csv",
                 ".*veh_[0-9]*,[0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*,[0-9]*[.][0-9]*"
         );
     }

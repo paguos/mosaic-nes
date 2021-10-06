@@ -15,6 +15,7 @@ import com.github.paguos.mosaic.fed.nebulastream.stream.zmq.ZeroMQProducer;
 import org.eclipse.mosaic.fed.application.app.ConfigurableApplication;
 import org.eclipse.mosaic.fed.application.app.api.os.OperatingSystem;
 import org.eclipse.mosaic.lib.geo.GeoCircle;
+import org.eclipse.mosaic.rti.TIME;
 import org.eclipse.mosaic.rti.api.InternalFederateException;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ public abstract class NesSourceApp<T extends OperatingSystem> extends Configurab
     private ZeroMQProducer zeroMQProducer;
 
     protected boolean enabled;
+    protected long startProcessingTime;
 
     public NesSourceApp() {
         super(CNesApp.class, "NesApp");
@@ -108,6 +110,7 @@ public abstract class NesSourceApp<T extends OperatingSystem> extends Configurab
             getLog().error(e.getMessage());
         }
 
+        startProcessingTime = getConfiguration().startProcessingTime * TIME.SECOND;
     }
 
     protected void processSpeedReportMsg (SpeedReport report) {

@@ -37,7 +37,7 @@ class Simulation:
         for l in logs_path.iterdir():
             if Path(f"{path}/{self.id}").exists():
                 shutil.rmtree(f"{path}/{self.id}")
-            shutil.copytree(l, f"{path}/{self.id}")
+            shutil.copytree(l, f"{path}/{self.scenario}/{self.id}")
             shutil.rmtree(l)
             
 
