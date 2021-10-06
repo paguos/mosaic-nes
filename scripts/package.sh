@@ -9,7 +9,7 @@ unzip mosaic/eclipse-mosaic-21.0.zip -d mosaic
 chmod +x mosaic/mosaic.sh
 echo "Downloading mosaic ... done!"
 
-scenarios=( barcelona barcelona-moving-range barcelona-range-query berlin berlin-moving-range berlin-range-query leipzig leipzig-moving-range )
+scenarios=( barcelona barcelona-moving-range barcelona-range-query berlin berlin-moving-range berlin-range-query leipzig leipzig-duplicates leipzig-moving-range )
 for scenario in "${scenarios[@]}"
 do
 	echo "Preparing $scenario scenario ..."
