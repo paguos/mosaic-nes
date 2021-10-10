@@ -15,7 +15,9 @@ public class RangeQueryTest {
     @BeforeClass
     public static void setup() {
         GeoPoint origin = GeoPoint.latLon(52.5047675, 13.3156317);
-        GeoProjection.initialize(new Wgs84Projection(origin));
+        if (!GeoProjection.isInitialized()) {
+            GeoProjection.initialize(new Wgs84Projection(origin));
+        }
     }
 
     @Test
