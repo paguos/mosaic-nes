@@ -3,10 +3,7 @@ Eclipse MOSAIC integration with NebulaStream.
 
 ## Project
 
-This repository is part of the [Enabling Moving Range Queries in Stream Processing Systems](https://github.com/users/paguos/projects/1) project, alongside the following repositories:
-
-- [Mobility Aware NES](https://github.com/paguos/nes-mobility)
-
+This repository is part of the [Enabling Moving Range Queries in Stream Processing Systems](https://github.com/users/paguos/projects/1) project.
 ## Requirements
 
 - [Docker](https://www.docker.com/)
