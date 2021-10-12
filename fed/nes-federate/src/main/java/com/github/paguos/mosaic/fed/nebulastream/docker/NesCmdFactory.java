@@ -42,7 +42,11 @@ public class NesCmdFactory {
         cmd.add("/opt/local/nebula-stream/nesCoordinator");
         cmd.add("--coordinatorIp=0.0.0.0");
         cmd.add("--restIp=0.0.0.0");
-        cmd.add(String.format("--locationUpdateInterval=%d", config.coordinator.updateLocationInterval));
+        cmd.add(String.format("--locationUpdateInterval=%d", coordinator.getLocationUpdateInterval()));
+        cmd.add(String.format("--isDynamicDuplicatesFilterEnabled=%b", coordinator.isDynamicDuplicatesFilterEnabled()));
+        cmd.add(String.format("--isRoutePredictionEnabled=%b", coordinator.isRoutePredictionEnabled()));
+        cmd.add(String.format("--numberOfPointsInLocationStorage=%d", coordinator.getNumberOfPointsInLocationStorage()));
+        cmd.add(String.format("--numberOfTuplesInFilterStorage=%d", coordinator.getNumberOfTuplesInFilterStorage()));
 
         return  client.createContainerCmd(config.coordinator.image)
                 .withName(coordinator.getName())

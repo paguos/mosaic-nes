@@ -17,6 +17,11 @@ public class ConfigurationParser {
 
         return NesBuilder.createCoordinator("nes-coordinator")
                 .children(nodes)
+                .locationUpdateInterval(config.coordinator.updateLocationInterval)
+                .dynamicDuplicatesFilterEnabled(config.coordinator.dynamicDuplicatesFilterEnabled)
+                .routePredictionEnabled(config.coordinator.routePredictionEnabled)
+                .numberOfPointsInLocationStorage(config.coordinator.numberOfPointsInLocationStorage)
+                .numberOfTuplesInFilterStorage(config.coordinator.numberOfTuplesInFilterStorage)
                 .build();
     }
 

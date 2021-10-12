@@ -12,4 +12,12 @@ public class CNesCoordinator {
      */
     public int updateLocationInterval = 500;
 
+    public boolean dynamicDuplicatesFilterEnabled = false;
+
+    public boolean routePredictionEnabled = false;
+
+    public int numberOfPointsInLocationStorage = 10;
+
+    public int numberOfTuplesInFilterStorage = 50;
+
 }
