@@ -25,12 +25,6 @@ public final class CNes {
     public CNesCoordinator coordinator;
 
     /**
-     * Interval for refreshing the location of the sources (in milliseconds)
-     */
-    public int updateLocationInterval = 500;
-
-
-    /**
      * General properties of the NES UI
      */
     public CNesUI ui;

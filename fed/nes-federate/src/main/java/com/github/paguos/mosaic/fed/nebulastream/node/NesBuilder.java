@@ -54,6 +54,11 @@ public class NesBuilder {
         protected int restPort;
         protected int locationUpdateInterval;
 
+        protected boolean dynamicDuplicatesFilterEnabled;
+        protected boolean routePredictionEnabled;
+        protected int numberOfPointsInLocationStorage;
+        protected int numberOfTuplesInFilterStorage;
+
         protected List<NesNode> children;
 
         private NesCoordinatorBuilder(String name) {
@@ -61,6 +66,10 @@ public class NesBuilder {
             this.coordinatorPort = Coordinator.DEFAULT_COORDINATOR_PORT;
             this.restPort = Coordinator.DEFAULT_REST_PORT;
             this.locationUpdateInterval = Coordinator.DEFAULT_UPDATE_INTERVAL;
+            this.dynamicDuplicatesFilterEnabled = Coordinator.DEFAULT_DYNAMIC_FILTER_ENABLED;
+            this.routePredictionEnabled = Coordinator.DEFAULT_ROUTE_PREDICTION_ENABLED;
+            this.numberOfPointsInLocationStorage = Coordinator.DEFAULT_POINTS_IN_LOCAL_STORAGE;
+            this.numberOfTuplesInFilterStorage = Coordinator.DEFAULT_TUPLES_IN_FILTER_STORAGE;
             this.children = new ArrayList<>();
         }
 
@@ -76,6 +85,26 @@ public class NesBuilder {
 
         public NesCoordinatorBuilder locationUpdateInterval(int locationUpdateInterval) {
             this.locationUpdateInterval = locationUpdateInterval;
+            return this;
+        }
+
+        public NesCoordinatorBuilder dynamicDuplicatesFilterEnabled(boolean dynamicDuplicatesFilterEnabled) {
+            this.dynamicDuplicatesFilterEnabled = dynamicDuplicatesFilterEnabled;
+            return this;
+        }
+
+        public NesCoordinatorBuilder routePredictionEnabled(boolean routePredictionEnabled) {
+            this.routePredictionEnabled = routePredictionEnabled;
+            return this;
+        }
+
+        public NesCoordinatorBuilder numberOfPointsInLocationStorage(int numberOfPointsInLocationStorage) {
+            this.numberOfPointsInLocationStorage = numberOfPointsInLocationStorage;
+            return this;
+        }
+
+        public NesCoordinatorBuilder numberOfTuplesInFilterStorage(int numberOfTuplesInFilterStorage) {
+            this.numberOfTuplesInFilterStorage = numberOfTuplesInFilterStorage;
             return this;
         }
 
