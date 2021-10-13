@@ -1,6 +1,6 @@
 {
     "coordinator": {
-        "image": "paguos/nes-mobility:0.0.8"
+        "image": "paguos/nes-mobility:0.0.9"
     },
     "nodes": [],
     "ui": {
@@ -9,6 +9,6 @@
         "reactPort": 3000
     },
     "worker": {
-        "image": "paguos/nes-mobility:0.0.8"
+        "image": "paguos/nes-mobility:0.0.9"
     }
 }
