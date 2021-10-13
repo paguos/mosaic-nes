@@ -1,6 +1,11 @@
 {
     "coordinator": {
-        "image": "paguos/nes-mobility:0.0.8"
+        "image": "paguos/nes-mobility:0.0.8",
+        "updateLocationInterval": 500,
+        "dynamicDuplicatesFilterEnabled": false,
+        "routePredictionEnabled": false,
+        "numberOfPointsInLocationStorage": 10,
+        "numberOfTuplesInFilterStorage": 50
     },
     "nodes": [],
     "ui": {
