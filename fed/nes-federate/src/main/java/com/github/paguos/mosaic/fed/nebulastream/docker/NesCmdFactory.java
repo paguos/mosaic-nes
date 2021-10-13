@@ -43,8 +43,8 @@ public class NesCmdFactory {
         cmd.add("--coordinatorIp=0.0.0.0");
         cmd.add("--restIp=0.0.0.0");
         cmd.add(String.format("--locationUpdateInterval=%d", coordinator.getLocationUpdateInterval()));
-        cmd.add(String.format("--isDynamicDuplicatesFilterEnabled=%b", coordinator.isDynamicDuplicatesFilterEnabled()));
-        cmd.add(String.format("--isRoutePredictionEnabled=%b", coordinator.isRoutePredictionEnabled()));
+        cmd.add(String.format("--dynamicDuplicatesFilterEnabled=%b", coordinator.isDynamicDuplicatesFilterEnabled()));
+        cmd.add(String.format("--routePredictionEnabled=%b", coordinator.isRoutePredictionEnabled()));
         cmd.add(String.format("--numberOfPointsInLocationStorage=%d", coordinator.getNumberOfPointsInLocationStorage()));
         cmd.add(String.format("--numberOfTuplesInFilterStorage=%d", coordinator.getNumberOfTuplesInFilterStorage()));
 

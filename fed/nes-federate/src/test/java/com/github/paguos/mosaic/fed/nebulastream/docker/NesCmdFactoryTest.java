@@ -49,7 +49,7 @@ public class NesCmdFactoryTest {
         assertEquals("test-coordinator:latest", testCmd.getImage());
         assertEquals("test-coordinator", testCmd.getName());
         String expectedCmd = String.format(
-                "/opt/local/nebula-stream/nesCoordinator --coordinatorIp=%s --restIp=%s --locationUpdateInterval=%d --isDynamicDuplicatesFilterEnabled=%b --isRoutePredictionEnabled=%b --numberOfPointsInLocationStorage=%d --numberOfTuplesInFilterStorage=%d",
+                "/opt/local/nebula-stream/nesCoordinator --coordinatorIp=%s --restIp=%s --locationUpdateInterval=%d --dynamicDuplicatesFilterEnabled=%b --routePredictionEnabled=%b --numberOfPointsInLocationStorage=%d --numberOfTuplesInFilterStorage=%d",
                 "0.0.0.0", "0.0.0.0", 500, false, false, 10, 50
         );
         assertEquals(expectedCmd, listToString(Objects.requireNonNull(testCmd.getCmd())));
