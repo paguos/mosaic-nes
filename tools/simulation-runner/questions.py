@@ -22,7 +22,11 @@ questions = [
             'type': 'list',
             'name': 'scenario',
             'message': 'Scenario:',
-            'choices': ['barcelona', 'barcelona-moving-range', 'barcelona-range-query', 'berlin', 'berlin-moving-range', 'berlin-range-query'],
+            'choices': [
+                'barcelona', 'barcelona-moving-range', 'barcelona-range-query', 
+                'berlin', 'berlin-moving-range', 'berlin-range-query',
+                'leipzig', 'leipzig-moving-range', 'leipzig-duplicates', 'leipzig-duplicates-moving-range'
+                ],
         },
         {
             'type': 'input',

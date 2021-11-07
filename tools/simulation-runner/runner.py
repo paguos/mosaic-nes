@@ -27,11 +27,11 @@ class SimulationRunner:
 
         for experiment in self.experiments:
             logger.info(f"Starting {self.scenario} for experiment {experiment.name} with value {experiment.value} ...")
-            experiment.apply()
+            experiment.apply(experiment.value)
             simulation = Simulation(self.scenario, f"{self.name}_{experiment.value}", brake)
             simulation.run()
             simulation.copy_results(self.cwd)
-            experiment.reset()
+            experiment.restore()
             logger.info(f"Starting {self.scenario} for experiment {experiment.name} with value {experiment.value} ... done!")
         
         logger.info("Simulation runner done!")
