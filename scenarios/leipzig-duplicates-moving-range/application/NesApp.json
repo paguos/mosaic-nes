@@ -5,6 +5,6 @@
   "movingRangeEnabled": true,
   "queryInterval": 6,
   "sourceRangeRadius": 300,
-  "startProcessingTime": 51,
+  "startProcessingTime": 61,
   "updateLocationInterval" : 500
 }
