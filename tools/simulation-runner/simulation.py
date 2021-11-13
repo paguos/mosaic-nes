@@ -35,8 +35,8 @@ class Simulation:
     def copy_results(self, path: Path):
         logs_path = Path("logs")
         for l in logs_path.iterdir():
-            if Path(f"{path}/{self.id}").exists():
-                shutil.rmtree(f"{path}/{self.id}")
+            if Path(f"{path}/{self.scenario}/{self.id}").exists():
+                shutil.rmtree(f"{path}/{self.scenario}/{self.id}")
             shutil.copytree(l, f"{path}/{self.scenario}/{self.id}")
             shutil.rmtree(l)
             

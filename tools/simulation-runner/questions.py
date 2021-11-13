@@ -11,11 +11,12 @@ questions = [
                 'variable_update_intervals',
                 'variable_coordinator_update_interval',
                 'variable_source_update_interval',
-                'max_speed',
                 'max_speed_sink',
                 'max_speed_source',
                 'moving_range',
-                'rsu_range'
+                'rsu_range',
+                'range_query_interval',
+                'filter_storage'
             ],
         },
         {
