@@ -24,7 +24,7 @@ jobs:
       - name: MOSAIC Integration Tests
         run: |
           docker pull paguos/nes-ui:v0.0.1
-          docker pull paguos/nes-mobility:0.0.9
+          docker pull paguos/nes-mobility:0.0.10
           mvn test -fae -P integration-tests
   tool-scenario-generator:
     runs-on: ubuntu-latest
