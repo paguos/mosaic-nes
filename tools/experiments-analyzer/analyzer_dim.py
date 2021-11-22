@@ -39,7 +39,6 @@ class ExperimentAnalyzer:
             f.truncate()
 
     def collect_metrics(self) -> dict:
-        df_base = pd.read_csv(self.baseline, names=field_names, dtype=data_types)
         data = {}
 
         for filename in os.listdir(f"{self.experiments_path}/{self.scenario}"):
@@ -48,6 +47,9 @@ class ExperimentAnalyzer:
 
                 expermient_results = f"{self.experiments_path}/{self.scenario}/{filename}/SpeedReport-{self.resource}.csv"
                 df_exp = pd.read_csv(expermient_results, names=field_names, dtype=data_types)
+
+                baseline_results = f"{self.experiments_path}/{self.baseline}/{filename}/SpeedReport-{self.resource}.csv"
+                df_base = pd.read_csv(baseline_results, names=field_names, dtype=data_types)
                 interval = filename.split(self.name)[1].split("_")[1]
 
                 baseline_len = df_base.shape[0]
@@ -63,7 +65,8 @@ class ExperimentAnalyzer:
                     "duplicates": exp_duplicates,
                     "correct": overlaping_tuples,
                     "missing": missing_tuples,
-                    "extra": extra_tuples
+                    "extra": extra_tuples,
+                    "expected": baseline_len
                 }
 
                 data[int(interval)] = experiment_data
@@ -75,10 +78,10 @@ class ExperimentAnalyzer:
 
 if __name__ == "__main__":
     scenario = "leipzig-moving-range"
-    experiment_name = "variable_coordinator_update_interval"
+    experiment_name = "moving_range"
     resource_name = "veh_0"
     experimments_path = "/home/parallels/Development/mosaic-nes/tools/simulation-runner/experiments"
-    baseline_results = f"{experimments_path}/leipzig/max_speed_sink_20/SpeedReport-{resource_name}.csv"
+    baseline_results = f"leipzig"
 
     analyzer = ExperimentAnalyzer(scenario, experiment_name, resource_name, experimments_path, baseline_results)
     analyzer.run()

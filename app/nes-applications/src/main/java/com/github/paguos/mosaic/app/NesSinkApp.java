@@ -137,7 +137,7 @@ public class NesSinkApp extends ConfigurableApplication<CNesApp, VehicleOperatin
                 query = new MovingRangeQuery(getOs().getId(), getConfiguration().movingRangeArea).from("mosaic_nes")
                         .sink(new ZMQSink("localhost", zeroMQPort));
             } else {
-                query = new RangeQuery(location, 500).from("mosaic_nes")
+                query = new RangeQuery(location, getConfiguration().movingRangeArea).from("mosaic_nes")
                         .sink(new ZMQSink("localhost", zeroMQPort));
             }
 
